@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-public class HereBase : MonoBehaviour
+public class HeroBase : MonoBehaviour
 {
     /// <summary>
     /// 식물 기본 Status
@@ -30,7 +30,8 @@ public class HereBase : MonoBehaviour
 
     ///추가로 필요할 것이라 생각되는 필드
 
-    [SerializeField] private GameObject hereObject;
+    [SerializeField] private GameObject heroObject;
+    public GameObject HeroObject => heroObject;
     //마나 추가에 따른 매직넘버 제거용.
     [SerializeField] private int addMana = 0;
     //랭크 업 이벤트
@@ -39,24 +40,24 @@ public class HereBase : MonoBehaviour
     public event Action OnBuy;
     // 다음 스테이지 이동 이벤트
     public event Action NextStage;
-    //기물 리스트 향후 플레이어에서 처리할 것으로 보임.
-    //private List<GameObject> Units = new List<GameObject>();
+
     // 랭크업 관련 기물 갯수 파악용
     private int pieceCount;
     // 랭크 단계
     [SerializeField] private int currentRank = 1;
     public int CurrentRank => currentRank;
-    
-    [SerializeField] private int maxRank;
+
+    [SerializeField] private int maxRank = 10;
     public int MaxRank
     {
         get { return maxRank; }
     }
 
-    //같은 종류의 here를 구분하기 위한 hereType 선언
-    [Header("here Info")]
-    [SerializeField] private string hereType = "normalFlower";
-    
+    //같은 종류의 hero를 구분하기 위한 heroType 선언
+    [Header("hero Info")]
+    [SerializeField] private string heroType = "normalhero";
+    public string HeroType => heroType;
+
     // 생성 위치를 인터페이스로부터 위한 자표 변수 향후 변경예정
     public Vector2Int GridPosition { get; private set; }
 
@@ -111,9 +112,9 @@ public class HereBase : MonoBehaviour
 
         if (hp <= 0)
         {
-            if (hereObject != null)
+            if (heroObject != null)
             {
-                hereObject.SetActive(false);
+                heroObject.SetActive(false);
                 Debug.Log("채력이 0보다 낮아 죽었습니다.");
 
             }
@@ -128,7 +129,7 @@ public class HereBase : MonoBehaviour
 
         if (pieceCount >= 3)
         {
-            Debug.Log($"3개 이상 {hereObject.name} Rank {currentRank} 기물이 있습니다. 랭크업 이벤트 발생!");
+            Debug.Log($"3개 이상 {heroObject.name} Rank {currentRank} 기물이 있습니다. 랭크업 이벤트 발생!");
             OnRankUp?.Invoke();
             currentRank += 1;
             Debug.Log($"현재 랭크는 : {currentRank} 입니다.");
@@ -144,10 +145,10 @@ public class HereBase : MonoBehaviour
         //{
             //생성 위치 정보 획득에 관한 논의 필요.
             Vector3 spawnPosition = GridToWorldPosition(GridPosition);
-            Instantiate(hereObject, spawnPosition, Quaternion.identity);
+            Instantiate(heroObject, spawnPosition, Quaternion.identity);
 
         OnBuy?.Invoke();
-        Debug.Log($"{hereObject.name} 구매 완료.");
+        Debug.Log($"{heroObject.name} 구매 완료.");
 
         //}
     }
@@ -172,20 +173,35 @@ public class HereBase : MonoBehaviour
         //죽은 경우
         if (hp == 0)
         {
-            hereObject.SetActive(true);
-            Debug.Log($"스테이지 이동으로 죽었던 {hereObject.name}이/가 되살아났습니다.");
+            heroObject.SetActive(true);
+            Debug.Log($"스테이지 이동으로 죽었던 {heroObject.name}이/가 되살아났습니다.");
 
         }
         // 체력이 떨어진 경우
         else
         {
             hp = maxHp;
-            Debug.Log($"스테이지 이동으로 체력이 떨어진 {hereObject.name}이/가 회복했습니다.");
+            Debug.Log($"스테이지 이동으로 체력이 떨어진 {heroObject.name}이/가 회복했습니다.");
         }
 
         NextStage?.Invoke();
        
 
     }
+
+
+    public void IncreaseRank()
+    {
+        if (currentRank < maxRank)
+        {
+            currentRank++;
+            Debug.Log($"{HeroType} 랭크가 {currentRank}로 상승했습니다!");
+        }
+        else
+        {
+            Debug.Log($"{HeroType}은 이미 최대 랭크({maxRank})입니다. 랭크업 불가.");
+        }
+    }
+
 
 }
