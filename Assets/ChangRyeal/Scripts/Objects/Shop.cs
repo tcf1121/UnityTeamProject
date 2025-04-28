@@ -17,7 +17,6 @@ public class Shop : MonoBehaviour
     private List<object>[] CostHero = new List<object>[5];
 
 
-
     #region 상점에 기물 추가
     // 레벨에 따라 상점에 나올 기물을 보여줌
     private void ShopLevel()
