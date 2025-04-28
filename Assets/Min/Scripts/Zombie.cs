@@ -10,7 +10,7 @@ public abstract class Zombie : MonoBehaviour
     private Coroutine AttackCoroutine;
 
     // 바꿔야될 클래스
-    private TestPlant targetPlant;
+    //private TestPlant targetPlant;
 
     protected abstract string Name { get; set; }
 
@@ -79,44 +79,44 @@ public abstract class Zombie : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Turret"))
-        {
-            targetPlant = other.GetComponent<TestPlant>();
-            if (targetPlant != null)
-            {
-                isAttacking = true;
-                AttackCoroutine = StartCoroutine(AttackRoutine());
-            }
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Turret"))
+    //    {
+    //        targetPlant = other.GetComponent<TestPlant>();
+    //        if (targetPlant != null)
+    //        {
+    //            isAttacking = true;
+    //            AttackCoroutine = StartCoroutine(AttackRoutine());
+    //        }
+    //    }
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Turret"))
-        {
-            if (targetPlant == other.GetComponent<TestPlant>())
-            {
-                isAttacking = false;
-                StopCoroutine(AttackCoroutine);
-            }
-        }
-    }
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Turret"))
+    //    {
+    //        if (targetPlant == other.GetComponent<TestPlant>())
+    //        {
+    //            isAttacking = false;
+    //            StopCoroutine(AttackCoroutine);
+    //        }
+    //    }
+    //}
 
 
-    IEnumerator AttackRoutine()
-    {
-        while (true)
-        {
-            if (targetPlant == null)
-            {
-                isAttacking = false;
-                yield break;
-            }
+    //IEnumerator AttackRoutine()
+    //{
+    //    while (true)
+    //    {
+    //        if (targetPlant == null)
+    //        {
+    //            isAttacking = false;
+    //            yield break;
+    //        }
 
-            targetPlant.TakeDamage(Power);
-            yield return new WaitForSeconds(AttackSpeed);
-        }
-    }
+    //        targetPlant.TakeDamage(Power);
+    //        yield return new WaitForSeconds(AttackSpeed);
+    //    }
+    //}
 }
