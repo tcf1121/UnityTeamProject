@@ -20,10 +20,7 @@ public abstract class Bullets : MonoBehaviour
     {
         timer = returnTime;
     }
-    private void Update()
-    {
-        Shot();
-    }
+
 
     protected void OnCollisionEnter(Collision collision)
     {
@@ -35,7 +32,7 @@ public abstract class Bullets : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void Shot()
+    public void Shot()
     {
         AttackMethod();
         timer -= Time.time;
