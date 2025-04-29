@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Shooter : MonoBehaviour
+public class TowerShooter : MonoBehaviour
 {
+    [SerializeField] Transform Muzzle;
     [SerializeField] Bullets baseBullets;
     [SerializeField] Bullets skillBullets;
     [SerializeField] float delayTime;
     [SerializeField] int Mp;
     private Coroutine shotCorutine;
+
     IEnumerator FireRoutine()
     {
         WaitForSeconds delay = new WaitForSeconds(delayTime);
@@ -30,11 +33,13 @@ public class Shooter : MonoBehaviour
         {
             if (Mp <= 100)
             {
+                Instantiate(baseBullets,Muzzle.position,Muzzle.rotation);
                 shotCorutine = null;
                 shotCorutine = StartCoroutine(FireRoutine());
             }
             else if (Mp > 100)
             {
+                Instantiate(skillBullets, Muzzle.position, Muzzle.rotation);
                 StopCoroutine(shotCorutine);
                 SkilShot();
                 Mp = 0;
