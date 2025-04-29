@@ -8,7 +8,7 @@ public abstract class Bullets : MonoBehaviour
 {
     [Header("Range and Tageting")]
     [SerializeField] private Transform rangeOrigin;
-    [SerializeField] protected float range;
+    [SerializeField] protected float attackRange;
     [SerializeField] protected LayerMask targetLayer;
 
     protected Zombie target;
@@ -40,7 +40,7 @@ public abstract class Bullets : MonoBehaviour
 
     private void AcqireTarget()
     {
-        Collider[] hits = Physics.OverlapSphere(rangeOrigin.position, range, targetLayer);
+        Collider[] hits = Physics.OverlapSphere(rangeOrigin.position, attackRange, targetLayer);
 
         float minDist =float.MaxValue;
         foreach (var hit in hits)
@@ -51,7 +51,6 @@ public abstract class Bullets : MonoBehaviour
             {
                 minDist = dist;
                 target = zombie;
-                
             }
         }
     }

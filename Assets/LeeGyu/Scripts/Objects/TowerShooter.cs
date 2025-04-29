@@ -38,6 +38,7 @@ public class TowerShooter : MonoBehaviour
         else if (Mp > 100)
         {
             Fire(skillBulletPrefab);
+            Mp = 0;
         }
         else if (gameObject == null)
         {
