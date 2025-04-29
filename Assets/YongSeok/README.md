@@ -13,7 +13,7 @@
 
 GitHub Repository URL : http://github.com/tcf1121/TeamProjectSelect
 
-250428_Day1_용석석
+250428_Day1_용석
 ------
 구현
 ## 식물 디자인
@@ -92,3 +92,8 @@ GitHub Repository URL : http://github.com/tcf1121/TeamProjectSelect
 
 ----------
 6. Tag 및 Layer 
+
+
+# 250429 용석
+
+1. Herobase는 히어로의 상태를 나타내고 스폰이나 랭크업의 경우 HeroManager로 옯기는 것이 좋다 판단됨.
