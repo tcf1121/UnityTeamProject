@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace YongSeok
 {
@@ -10,6 +11,10 @@ namespace YongSeok
 
         private Dictionary<HeroType, GameObject> heroPrefabDict;
 
+        [Header("Grid Info")]
+        [SerializeField] private Dictionary<int, Vector2Int> gridPositions = new Dictionary<int, Vector2Int>();
+        private Dictionary<int, HeroBase> occupiedPositions = new Dictionary<int, HeroBase>();
+       
         [SerializeField] private HeroManager heroManager;
 
         private void Awake()

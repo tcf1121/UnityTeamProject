@@ -46,7 +46,6 @@ namespace YongSeok
         [SerializeField] private GameObject heroObject;
         public GameObject HeroObject => heroObject;
         //같은 종류의 hero를 구분하기 위한 heroType 선언
-        [Header("hero Info")]
         [Header("Hero Info")]
         [SerializeField] private HeroType heroType;
         public HeroType HeroType => heroType;
