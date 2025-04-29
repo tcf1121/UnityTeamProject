@@ -39,19 +39,15 @@ public class HeroMovement : MonoBehaviour
             {
                 targetTransform = nearest;
 
-
-                // 수정: Detect만 한다 (경로 이동은 TestMove에서 따로)
-                Debug.Log($"[타겟 탐지 완료] 타겟 위치: {targetTransform.position}");
-
-                // 경로 탐색 필요: AStar.FindPath(transform.position, targetTransform.position);
-                // 여기서는 예시용 더미 경로 사용
-                //List<Vector3> dummyPath = new List<Vector3>
-                //{
-                //    transform.position,
-                //    targetTransform.position
-                //};
+                //TODO: 추후 HexGrid / A * 연동 시 아래 코드로 교체 예정
+                //Vector2Int startCoord = HexGrid.Instance.GetCoordFromWorld(transform.position);
+                //Vector2Int targetCoord = HexGrid.Instance.GetCoordFromWorld(targetTransform.position);
                 //
-                //MoveTowardTarget(dummyPath);
+                //List<HexTile> hexPath = HexAStarPathfinder.Instance.FindPath(startCoord, targetCoord);
+                //if (hexPath == null || hexPath.Count == 0) return;
+                //
+                //List<Vector3> path = hexPath.ConvertAll(tile => tile.worldPos);
+                //MoveTowardTarget(path);
             }
         }
     }
@@ -154,13 +150,21 @@ public class HeroMovement : MonoBehaviour
 
         Debug.Log($"[테스트 시작] 타겟 위치: {targetTransform.position}");
 
+        // ★★ 이후 교체 예정: A*로 경로 생성 (HexGrid 좌표 기반으로)
+        // TODO: 추후 targetHexCoord, startHexCoord 기반으로 변경
+        // Vector2Int startCoord = HexGrid.Instance.GetCoordFromWorld(transform.position);
+        // Vector2Int targetCoord = HexGrid.Instance.GetCoordFromWorld(targetTransform.position);
+        // List<HexTile> hexPath = HexAStarPathfinder.Instance.FindPath(startCoord, targetCoord);
+        // List<Vector3> path = hexPath.ConvertAll(tile => tile.worldPos);
+
+        // ★★ 임시 경로 생성 (1.5m 간격 3칸 이동)
         List<Vector3> testPath = new List<Vector3>();
         Vector3 start = transform.position;
         Vector3 end = targetTransform.position;
 
         Vector3 dir = (end - start).normalized;
-        float stepDistance = 1.5f; // 1.5m 간격
-        int stepCount = 3; // 총 3스텝
+        float stepDistance = 1.5f; // 헥사 타일 크기 기준 거리
+        int stepCount = 3;
 
         for (int i = 1; i <= stepCount; i++)
         {

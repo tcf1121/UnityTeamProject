@@ -47,7 +47,7 @@ namespace YongSeok
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                SpawnTestHero(HeroType.normalHero, new Vector2Int(2, 3));
+                SpawnTestHero(HeroType.warriorHero, new Vector2Int(2, 3));
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {

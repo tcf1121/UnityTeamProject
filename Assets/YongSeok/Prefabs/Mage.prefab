@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 932474925383292935}
   - component: {fileID: 6401232671450629753}
   m_Layer: 0
-  m_Name: Normal
+  m_Name: Mage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,8 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce2840f137182504db0efdc41a7c9fe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 5
-  maxHp: 10
+  hp: 50
+  maxHp: 50
   defense: 5
   cost: 10
   mana: 20
@@ -188,7 +188,7 @@ MonoBehaviour:
   currentRank: 1
   maxRank: 10
   heroObject: {fileID: 6758666376273876375}
-  heroType: 0
+  heroType: 2
   damage: 0
 --- !u!114 &6401232671450629753
 MonoBehaviour:

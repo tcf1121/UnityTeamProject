@@ -54,9 +54,9 @@ namespace YongSeok
 
 
         //랭크 업 이벤트
-        public event Action OnRankUp;
-        //생성 이벤트
-        public event Action OnBuy;
+        //public event Action OnRankUp;
+        ////생성 이벤트
+        //public event Action OnBuy;
         // 다음 스테이지 이동 이벤트
         public event Action NextStage;
 
@@ -194,29 +194,35 @@ namespace YongSeok
                 return;
             }
 
+            // 플레이 중이면 material, 에디터(Inspector)에서는 sharedMaterial 사용
+            var mat = Application.isPlaying ? renderer.material : renderer.sharedMaterial;
+
             switch (currentRank)
             {
                 case 1:
-                    renderer.material.color = Color.white;
+                    mat.color = Color.white;
                     break;
                 case 2:
-                    renderer.material.color = Color.green;
+                    mat.color = Color.green;
                     break;
                 case 3:
-                    renderer.material.color = Color.blue;
+                    mat.color = Color.blue;
                     break;
                 case 4:
-                    renderer.material.color = Color.red;
+                    mat.color = Color.red;
                     break;
                 default:
-                    renderer.material.color = Color.black;
+                    mat.color = Color.black;
                     break;
             }
         }
 
+        private void OnValidate()
+        {
+            UpdateVisualByRank();
+        }
 
-        //GameManger로 이동
-
+        //GameManager 와 HeroManager가 따로 담당하게 됨.
         ////승습 랭크업 (이벤트)
         //private void RankUp()
         //{

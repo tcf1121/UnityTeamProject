@@ -6,8 +6,12 @@ namespace YongSeok
 {
     public enum HeroType
     {
-        normalHero,
-        tankerHero
+        warriorHero,
+        tankerHero,
+        mageHero,
+        archerHero,
+        AssassinHero
+
     }
 }
    
