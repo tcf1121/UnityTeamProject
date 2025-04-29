@@ -18,8 +18,6 @@ public class Player : MonoBehaviour
     [SerializeField] private int level;
     [SerializeField] private int stage;
 
-    [Header("UI")]
-    [SerializeField] private GameObject PlayerInfo;
     // 보관함
     // 전장
 
@@ -37,7 +35,6 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerInfo.SetActive(true);
         setPlayer();
     }
 

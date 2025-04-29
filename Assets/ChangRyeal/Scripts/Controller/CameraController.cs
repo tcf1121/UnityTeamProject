@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] new Camera camera = new();
     void Start()
     {
-        camera.transform.position = new Vector3(0, 5, -8);
+        camera.transform.position = new Vector3(-6, 10, -4);
         camera.transform.rotation = Quaternion.Euler(new Vector3(45, 0, 0));
     }
 

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,148 +10,78 @@ public class Shop : MonoBehaviour
 {
     [SerializeField] GameObject Player;
     [SerializeField] private int level;
-
+    [SerializeField] private bool lockHero = false;
+    [SerializeField] private ShopHeroController sHctrl;
     [Header("UI")]
-    [SerializeField] private Button[] HeroBtn;
+    [SerializeField] private GameObject shopPanel;
+    [SerializeField] private Image[] heroImage;
+    [SerializeField] private TMP_Text[] costTxt;
+    [SerializeField] private TMP_Text[] nameTxt;
+    [SerializeField] private Button[] heroBtn;
+    [SerializeField] private GameObject[] sellPanel;
 
-    private object[] Hero = new object[5];
+    private Hero[] hero = new Hero[5];
+    
+    
 
-    private List<object>[] CostHero = new List<object>[5];
-
-
-    #region 상점에 기물 추가
-    // 레벨에 따라 상점에 나올 기물을 보여줌
-    private void ShopLevel()
+    private void OnEnable()
     {
-        int randcost;
+        shopPanel.SetActive(true);
+        if (!lockHero)
+        {
+            DrawShopHero();
+        }
+        //heroBtn[0] = GameObject.Find("HeroBtn1").GetComponent<Button>();
+        //heroBtn[1] = GameObject.Find("HeroBtn2").GetComponent<Button>();
+        //heroBtn[2] = GameObject.Find("HeroBtn3").GetComponent<Button>();
+        //heroBtn[3] = GameObject.Find("HeroBtn4").GetComponent<Button>();
+        //heroBtn[4] = GameObject.Find("HeroBtn5").GetComponent<Button>();
+    }
+    private void OnDisable()
+    {
+        shopPanel.SetActive(false);
+        if (!lockHero)
+        {
+            sHctrl.RevertHero(hero);
+        }
+    }
+    public void DrawShopHero()
+    {
+        hero = sHctrl.DrawHero();
+        SetHeroBtn();
+    }
+
+    public void SetHeroBtn()
+    {
         for(int i = 0; i < 5; i++)
         {
-            do
+            sellPanel[i].SetActive(false);
+            heroBtn[i].interactable = true;
+            if (hero[i] != null)
             {
-                randcost = RandomCost();
-                if (CostHero[randcost].Count != 0)
-                    RandomHero(ref Hero[i], randcost);
+                heroImage[i].sprite = hero[i].sprite;
+                nameTxt[i].text = hero[i].name;
+                costTxt[i].text = hero[i].cost.ToString();
             }
-            while (CostHero[randcost].Count == 0);
+
         }
     }
 
-    // 코스트 값에 따라 랜덤으로 기물을 가져옴
-    private void RandomHero(ref object hero, int cost)
-    {
-        Random randHero = new Random();
-        int randNum = randHero.Next(CostHero[cost - 1].Count);
-        hero = CostHero[cost - 1][randNum];
-        CostHero[cost - 1].Remove(hero);
-    }
-
-
-    // 레벨에 따른 확률에 따라 코스트를 랜덤으로 가져옴
-    private int RandomCost()
-    {
-        Random randCost = new Random();
-        int prob = randCost.Next(100);
-        int cost = 0;
-        switch (level)
-        {
-            case 1:
-                cost = 1;
-                break;
-            case 2:
-                cost = 1;
-                break;
-            case 3:
-                if (prob < 75)
-                    cost = 1;
-                else
-                    cost = 2;
-                break;
-            case 4:
-                if (prob < 55)
-                    cost = 1;
-                else if (prob < 85)
-                    cost = 2;
-                else
-                    cost = 3;
-                break;
-            case 5:
-                if (prob < 45)
-                    cost = 1;
-                else if (prob < 78)
-                    cost = 2;
-                else if (prob < 98)
-                    cost = 3;
-                else
-                    cost = 4;
-                break;
-            case 6:
-                if (prob < 25)
-                    cost = 1;
-                else if (prob < 65)
-                    cost = 2;
-                else if (prob < 95)
-                    cost = 3;
-                else
-                    cost = 4;
-                break;
-            case 7:
-                if (prob < 19)
-                    cost = 1;
-                else if (prob < 49)
-                    cost = 2;
-                else if (prob < 84)
-                    cost = 3;
-                else if (prob < 99)
-                    cost = 4;
-                else
-                    cost = 5;
-                break;
-            case 8:
-                if (prob < 16)
-                    cost = 1;
-                else if (prob < 36)
-                    cost = 2;
-                else if (prob < 71)
-                    cost = 3;
-                else if (prob < 96)
-                    cost = 4;
-                else
-                    cost = 5;
-                break;
-            case 9:
-                if (prob < 9)
-                    cost = 1;
-                else if (prob < 24)
-                    cost = 2;
-                else if (prob < 54)
-                    cost = 3;
-                else if (prob < 84)
-                    cost = 4;
-                else
-                    cost = 5;
-                break;
-            case 10:
-                if (prob < 5)
-                    cost = 1;
-                else if (prob < 20)
-                    cost = 2;
-                else if (prob < 50)
-                    cost = 3;
-                else if (prob < 80)
-                    cost = 4;
-                else
-                    cost = 5;
-                break;
-        }
-        return cost;
-    }
-
-    #endregion
 
     #region 상점 기물 구매
     public void BuyHero(int index)
     {
-        Debug.Log(index);
+        if (GameManager.Instance.player.CanBuy(hero[index].cost))
+        {
+            GameManager.Instance.player.BuyHero(hero[index].cost);
+            sellPanel[index].SetActive(true);
+            heroBtn[index].interactable = false;
+            hero[index] = null;
+        }
+        else
+        {
+            Debug.Log("돈 부족");
+        }
         // 
         //if(GameManager.Instance.player.CanBuy(Hero[index].cost))
     }
@@ -159,14 +91,22 @@ public class Shop : MonoBehaviour
     // 리롤 : 2 골드 필요
     public void Reroll()
     {
-        if(GameManager.Instance.player.Gold >= 2)
+        if (!lockHero)
         {
-            GameManager.Instance.player.Gold -= 2;
-            Debug.Log("리롤");
-            ShopLevel();
+            if (GameManager.Instance.player.Gold >= 2)
+            {
+                GameManager.Instance.player.Gold -= 2;
+                Debug.Log("리롤");
+                sHctrl.RevertHero(hero);
+                DrawShopHero();
+            }
+            else
+                Debug.Log("돈 부족");
         }
         else
-            Debug.Log("돈 부족");
+        {
+            Debug.Log("잠김");
+        }
     }
 
     // 경험치 구매 : 4골드로 4의 경험치 획득
@@ -182,4 +122,18 @@ public class Shop : MonoBehaviour
     }
 
     #endregion
+
+    public void Ready()
+    {
+        if (!lockHero)
+        {
+            sHctrl.RevertHero(hero);
+        }
+        shopPanel.SetActive(false);
+    }
+
+    public void LockShop()
+    {
+        lockHero = !lockHero;
+    }
 }
