@@ -9,7 +9,7 @@ public class TowerShooter : MonoBehaviour
 
     [Header("Property")]
     [SerializeField] Transform muzzle;
-    [SerializeField] BaseBullet baseBulletPrefab;
+    [SerializeField] BaseBullets baseBulletPrefab;
     [SerializeField] Bullets skillBulletPrefab;
 
     [Header("Components")]
