@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    //private SceneChanger scene;
-    //public SceneChanger Scene { get { return scene; } }
-    
+    private SceneChanger scene;
+    public SceneChanger Scene { get { return scene; } }
+
     public Player player;
 
     private static GameManager instance;
@@ -49,8 +50,7 @@ public class GameManager : MonoBehaviour
         //플레이어 활성화
         //player.setPlayer();
         playerObject.SetActive(true);
-        // UI 비활성화
-        startPanel.SetActive(false);
+        SceneManager.LoadScene(1);
     }
 
 
@@ -75,4 +75,6 @@ public class GameManager : MonoBehaviour
             player.Gold++;
         }
     }
+
+
 }
