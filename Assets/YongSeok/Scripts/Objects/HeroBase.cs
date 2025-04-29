@@ -71,7 +71,15 @@ namespace YongSeok
         //Test를 위한 선언
         [SerializeField] int damage;
 
+        public void TestDamage(int damage)
+        {
+            OnDamageTaken(damage);
+        }
 
+        public void TestStageChange()
+        {
+            OnStageChange();
+        }
 
 
         private void Start()
@@ -82,7 +90,6 @@ namespace YongSeok
 
         private void Update()
         {
-
 
 
         }
@@ -115,7 +122,7 @@ namespace YongSeok
             {
                 if (heroObject != null)
                 {
-                    heroObject.SetActive(false);
+                    gameObject.SetActive(false);
                     Debug.Log("채력이 0보다 낮아 죽었습니다.");
 
                 }
@@ -145,7 +152,7 @@ namespace YongSeok
             //죽은 경우
             if (hp == 0)
             {
-                heroObject.SetActive(true);
+                gameObject.SetActive(true);
                 Debug.Log($"스테이지 이동으로 죽었던 {heroObject.name}이/가 되살아났습니다.");
 
             }
@@ -162,12 +169,14 @@ namespace YongSeok
 
         }
 
+        
 
         public void IncreaseRank()
         {
             if (currentRank < maxRank)
             {
                 currentRank++;
+                UpdateVisualByRank();
                 Debug.Log($"{HeroType} 랭크가 {currentRank}로 상승했습니다!");
             }
             else
@@ -175,6 +184,37 @@ namespace YongSeok
                 Debug.Log($"{HeroType}은 이미 최대 랭크({maxRank})입니다. 랭크업 불가.");
             }
         }
+
+        public void UpdateVisualByRank()
+        {
+            Renderer renderer = GetComponentInChildren<Renderer>();
+
+            if (renderer == null)
+            {
+                Debug.LogWarning($"{name}에 Renderer가 없습니다!");
+                return;
+            }
+
+            switch (currentRank)
+            {
+                case 1:
+                    renderer.material.color = Color.white;
+                    break;
+                case 2:
+                    renderer.material.color = Color.green;
+                    break;
+                case 3:
+                    renderer.material.color = Color.blue;
+                    break;
+                case 4:
+                    renderer.material.color = Color.red;
+                    break;
+                default:
+                    renderer.material.color = Color.black;
+                    break;
+            }
+        }
+
 
         //GameManger로 이동
 
