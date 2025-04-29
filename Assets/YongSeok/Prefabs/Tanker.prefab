@@ -183,9 +183,9 @@ MonoBehaviour:
   defense: 5
   cost: 10
   mana: 20
-  hereObject: {fileID: 6758666376273876375}
   addMana: 1
   currentRank: 1
   maxRank: 10
-  hereType: Tanker
+  heroObject: {fileID: 6758666376273876375}
+  heroType: 1
   damage: 0
