@@ -2,25 +2,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public abstract class Bullets : MonoBehaviour
 {
-    [Header("Components")]
-    [SerializeField] Rigidbody rigid;
-    [SerializeField] private float returnTime;
-    private float timer;
+    [Header("Range and Tageting")]
+    [SerializeField] private Transform rangeOrigin;
+    [SerializeField] protected float range;
+    [SerializeField] protected LayerMask targetLayer;
 
+    protected Zombie target;
+
+    [Header("Components")]
+    [SerializeField] private float returnTime;
+    [SerializeField] protected float delayTime;
 
     [Header("Property")]
     [SerializeField] private float attackPower;
-    [SerializeField] protected float speed;
+
     public float AttackPower
     { get { return attackPower; } set { attackPower = value; } }
-
-    private void OnEnable()
-    {
-        timer = returnTime;
-    }
 
     protected void OnCollisionEnter(Collision collision)
     {
@@ -32,18 +33,33 @@ public abstract class Bullets : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void Shot()
+    public virtual void Shot()
     {
-        AttackMethod();
-        timer -= Time.time;
-        if (timer < 0)
-        {
-            Destroy(gameObject);
-        }
-
+        AcqireTarget();
     }
-    protected abstract void AttackMethod();
 
+    private void AcqireTarget()
+    {
+        Collider[] hits = Physics.OverlapSphere(rangeOrigin.position, range, targetLayer);
+
+        float minDist =float.MaxValue;
+        foreach (var hit in hits)
+        {
+            Zombie zombie = hit.GetComponent<Zombie>();
+            float dist = Vector3.Distance(rangeOrigin.position,zombie.transform.position);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                target = zombie;
+                
+            }
+        }
+    }
+
+    public virtual void AttackMethod()
+    {
+        target = gameObject.GetComponent<Zombie>();
+    }
     public void Attack(IDamgable damgable)
     {
         damgable.TakeDamage(gameObject, attackPower);

@@ -2,59 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TowerShooter : MonoBehaviour
 {
-    [SerializeField] Transform Muzzle;
-    [SerializeField] Bullets baseBullets;
-    [SerializeField] Bullets skillBullets;
-    [SerializeField] float delayTime;
-    [SerializeField] int Mp;
-    private Coroutine shotCorutine;
 
-    IEnumerator FireRoutine()
+    [Header("Property")]
+    [SerializeField] Transform muzzle;
+    [SerializeField] BaseBullet baseBulletPrefab;
+    [SerializeField] Bullets skillBulletPrefab;
+
+    [Header("Components")]
+    [SerializeField] int Mp;
+   
+
+    private void Update()
     {
-        WaitForSeconds delay = new WaitForSeconds(delayTime);
-        while (true)
-        {
-            baseBullets.Shot();
-            yield return delay;
-        }
+        FireActing();
     }
 
-    private void SkilShot()
+    private void Fire(Bullets bullets)
     {
-        skillBullets.Shot();
+        Bullets instance = Instantiate(bullets, muzzle.position, muzzle.rotation);
+        instance.Shot();
     }
 
     private void FireActing()
-    {
-        while (true)
+    {    
+        if (Mp <= 100)
         {
-            if (Mp <= 100)
-            {
-                Instantiate(baseBullets,Muzzle.position,Muzzle.rotation);
-                shotCorutine = null;
-                shotCorutine = StartCoroutine(FireRoutine());
-            }
-            else if (Mp > 100)
-            {
-                Instantiate(skillBullets, Muzzle.position, Muzzle.rotation);
-                StopCoroutine(shotCorutine);
-                SkilShot();
-                Mp = 0;
-            }
-            else if (gameObject == null)
-            {
-                shotCorutine = null;
-                StopCoroutine(shotCorutine);
-                break;
-            }
+            Fire(baseBulletPrefab);
+            StopCoroutine(baseBulletPrefab.shotCorutine);
+            baseBulletPrefab.shotCorutine = null;
         }
-
-    }
-    private void OnEnable()
-    {
-        FireActing();
+        else if (Mp > 100)
+        {
+            Fire(skillBulletPrefab);
+        }
+        else if (gameObject == null)
+        {
+            StopCoroutine(baseBulletPrefab.shotCorutine);
+            baseBulletPrefab.shotCorutine = null;
+        }
     }
 }

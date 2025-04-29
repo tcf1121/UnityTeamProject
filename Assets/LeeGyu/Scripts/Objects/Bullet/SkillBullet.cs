@@ -1,16 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SkillBullet : Bullets
 {
+    [Header("Speed")]
     [SerializeField] float moveSpeed;
     [SerializeField] float rotatespeed;
 
-    protected override void AttackMethod()
+
+    public override void Shot()
     {
-        gameObject.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
-        gameObject.transform.RotateAround(gameObject.transform.position, Vector3.up, rotatespeed * Time.deltaTime);
-        
+        AttackMethod();
+        base.Shot();
+    }
+    public override void AttackMethod()
+    {
+        transform.position = Vector3.MoveTowards
+            (transform.position, target.transform.position, moveSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.forward, rotatespeed * Time.deltaTime);
     }
 }
