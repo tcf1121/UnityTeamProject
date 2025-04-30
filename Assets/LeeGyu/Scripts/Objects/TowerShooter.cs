@@ -5,12 +5,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HeroShooter : MonoBehaviour
+public class TowerShooter : MonoBehaviour
 {
 
     [Header("Property")]
-    [SerializeField] Transform muzzlePoint;
-
+    [SerializeField] Transform muzzle;
     [Header("AttackMethod")]
     [SerializeField] BaseAM basePrefab;
     [SerializeField] SkillAM skillPrefab;
@@ -26,7 +25,7 @@ public class HeroShooter : MonoBehaviour
 
     private void Fire(ParentsAM bullets)
     {
-        ParentsAM instance = Instantiate(bullets, muzzlePoint.position, muzzlePoint.rotation);
+        ParentsAM instance = Instantiate(bullets, muzzle.position, muzzle.rotation);
         instance.Shot();
     }
 
