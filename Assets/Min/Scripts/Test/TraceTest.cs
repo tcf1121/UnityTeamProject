@@ -18,7 +18,8 @@ public class TraceTest : MonoBehaviour
     {
         if (tilemap == null)
             tilemap = FindObjectOfType<Tilemap>();
-
+        
+        // TODO: 게임 시작 버튼이 눌렸을 때, StartCoroutine -> 이벤트 구독
         StartCoroutine(EnemyRoutine());
     }
 
@@ -38,7 +39,7 @@ public class TraceTest : MonoBehaviour
 
                     if (dist <= attackRange)
                     {
-                        Debug.Log("공격");
+                        Debug.Log($"{gameObject.name}공격, {target.name}피격");
                         // TODO: 데미지
                     }
                     else
@@ -56,7 +57,7 @@ public class TraceTest : MonoBehaviour
                         }
                         else
                         {
-                            Debug.Log("공격");
+                            Debug.Log($"{gameObject.name}공격, {target.name}피격");
                             // TODO: 데미지
                         }
                     }
@@ -187,4 +188,5 @@ public class TraceTest : MonoBehaviour
     }
 
     //TODO: DIE 메서드에서 StopCoroutine
+    //TODO: 
 }
