@@ -96,6 +96,8 @@ GameObject:
   - component: {fileID: 8610114961518879992}
   - component: {fileID: 932474925383292935}
   - component: {fileID: -4136103987258448974}
+  - component: {fileID: 890521041556080547}
+  - component: {fileID: 2147080234941241995}
   m_Layer: 0
   m_Name: Tanker
   m_TagString: Untagged
@@ -162,7 +164,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
@@ -209,3 +211,32 @@ MonoBehaviour:
   moveSpeed: 3
   rotateSpeed: 5
   attackRange: 3
+--- !u!114 &890521041556080547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6758666376273876375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8614dad8630d3a44a9ca5dd26f71105, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: eaa289f6ea40a5448b62d7d98899862f, type: 3}
+  name: Tanker
+  cost: 4
+--- !u!114 &2147080234941241995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6758666376273876375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22b317550b3b7db428db6624143a1209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startPoint: {x: 0, y: 0, z: 0}
+  curPoint: {x: 0, y: 0, z: 0}
