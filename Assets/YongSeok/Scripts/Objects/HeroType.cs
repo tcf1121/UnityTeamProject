@@ -10,7 +10,7 @@ namespace YongSeok
         tankerHero,
         mageHero,
         archerHero,
-        AssassinHero
+        assassinHero
 
     }
 }

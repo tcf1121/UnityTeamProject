@@ -65,7 +65,7 @@ namespace YongSeok
         // 랭크 단계
 
         // 생성 위치를 인터페이스로부터 위한 자표 변수 향후 변경예정
-        public Vector2Int GridPosition { get; private set; }
+        public Vector3Int GridPosition { get; private set; }
 
         //Test를 위한 선언
         [SerializeField] int damage;
@@ -81,17 +81,7 @@ namespace YongSeok
         }
 
 
-        private void Start()
-        {
 
-
-        }
-
-        private void Update()
-        {
-
-
-        }
 
 
 
@@ -132,17 +122,10 @@ namespace YongSeok
 
 
         // 맵의 스폰 좌표 얻기
-        public void Init(Vector2Int gridPos, Vector3 worldPos)
+        public void Init(Vector3Int gridPos, Vector3 worldPos)
         {
             GridPosition = gridPos;
             transform.position = worldPos;
-        }
-
-        //월드맵 상 좌표로 스폰 위치 할당 Y축 위치 임의 선정
-        private Vector3 GridToWorldPosition(Vector2Int gridPos)
-        {
-            float fixedHeight = 1f; // 원하는 높이 설정
-            return new Vector3(gridPos.x, fixedHeight, gridPos.y);
         }
 
         //다음 스테이지로 이동시 (이벤트)
@@ -219,6 +202,7 @@ namespace YongSeok
 
         private void OnValidate()
         {
+            if (!Application.isPlaying || heroObject == null) return;
             UpdateVisualByRank();
         }
 
