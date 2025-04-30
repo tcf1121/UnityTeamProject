@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         SetSingleton();
+        // 테스트용 추가
+        testGameStart();
     }
     private void SetSingleton()
     {
@@ -49,10 +51,16 @@ public class GameManager : MonoBehaviour
     {
         //플레이어 활성화
         //player.setPlayer();
-        playerObject.SetActive(true);
+        
         SceneManager.LoadScene(1);
     }
 
+
+    private void testGameStart()
+    {
+        //플레이어 활성화
+        playerObject.SetActive(true);
+    }
 
     private void GameOver()
     {

@@ -138,3 +138,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: aecd97af158773540b68ee0d4df0d444, type: 3}
   name: Phantom
   cost: 4
+  star: 1
+  battle: 0
+  heroObject: {fileID: 9198759410384958477}
+  unit: {fileID: 3145164035345969993}

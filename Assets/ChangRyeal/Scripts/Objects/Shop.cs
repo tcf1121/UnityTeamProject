@@ -31,11 +31,6 @@ public class Shop : MonoBehaviour
         {
             DrawShopHero();
         }
-        //heroBtn[0] = GameObject.Find("HeroBtn1").GetComponent<Button>();
-        //heroBtn[1] = GameObject.Find("HeroBtn2").GetComponent<Button>();
-        //heroBtn[2] = GameObject.Find("HeroBtn3").GetComponent<Button>();
-        //heroBtn[3] = GameObject.Find("HeroBtn4").GetComponent<Button>();
-        //heroBtn[4] = GameObject.Find("HeroBtn5").GetComponent<Button>();
     }
     private void OnDisable()
     {
@@ -60,7 +55,7 @@ public class Shop : MonoBehaviour
             if (hero[i] != null)
             {
                 heroImage[i].sprite = hero[i].sprite;
-                nameTxt[i].text = hero[i].name;
+                nameTxt[i].text = hero[i].heroname;
                 costTxt[i].text = hero[i].cost.ToString();
             }
 
@@ -71,16 +66,23 @@ public class Shop : MonoBehaviour
     #region 상점 기물 구매
     public void BuyHero(int index)
     {
-        if (GameManager.Instance.player.CanBuy(hero[index].cost))
+        if (!GameManager.Instance.player.playerHero.FullHero())
         {
-            GameManager.Instance.player.BuyHero(hero[index].cost);
-            sellPanel[index].SetActive(true);
-            heroBtn[index].interactable = false;
-            hero[index] = null;
+            if (GameManager.Instance.player.CanBuy(hero[index].cost))
+            {
+                GameManager.Instance.player.BuyHero(hero[index], hero[index].cost);
+                sellPanel[index].SetActive(true);
+                heroBtn[index].interactable = false;
+                hero[index] = null;
+            }
+            else
+            {
+                Debug.Log("돈 부족");
+            }
         }
         else
         {
-            Debug.Log("돈 부족");
+            Debug.Log("자리 부족");
         }
         // 
         //if(GameManager.Instance.player.CanBuy(Hero[index].cost))
@@ -93,7 +95,7 @@ public class Shop : MonoBehaviour
     {
         if (!lockHero)
         {
-            if (GameManager.Instance.player.Gold >= 2)
+            if (GameManager.Instance.player.CanBuy(2))
             {
                 GameManager.Instance.player.Gold -= 2;
                 Debug.Log("리롤");
@@ -112,13 +114,21 @@ public class Shop : MonoBehaviour
     // 경험치 구매 : 4골드로 4의 경험치 획득
     public void BuyExp()
     {
-        if (GameManager.Instance.player.Gold >= 4)
+        if(GameManager.Instance.player.Level == 10)
         {
-            GameManager.Instance.player.Gold -= 4;
-            GameManager.Instance.player.BuyExp();
+            Debug.Log("레벨 최대");
         }
         else
-            Debug.Log("돈 부족");
+        {
+            if (GameManager.Instance.player.CanBuy(4))
+            {
+                GameManager.Instance.player.Gold -= 4;
+                GameManager.Instance.player.BuyExp();
+            }
+            else
+                Debug.Log("돈 부족");
+        }
+
     }
 
     #endregion

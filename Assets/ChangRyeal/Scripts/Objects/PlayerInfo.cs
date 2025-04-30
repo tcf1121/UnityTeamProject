@@ -10,9 +10,12 @@ public class PlayerInfo : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text levelUI;
     [SerializeField] private TMP_Text goldUI;
-    [SerializeField] private Slider HpBar;
-    [SerializeField] private Slider ExpBar;
+    [SerializeField] private Slider hpBar;
+    [SerializeField] private Slider expBar;
+    [SerializeField] private GameObject stagePanel;
+    [SerializeField] private TMP_Text stage;
     private StringBuilder setstring = new StringBuilder();
+
 
     private void OnEnable()
     {
@@ -20,11 +23,15 @@ public class PlayerInfo : MonoBehaviour
         SetGold();
         SetExp();
         SetHp();
+        SetStage();
 
         GameManager.Instance.player.OnLevelChanged += SetLevel;
         GameManager.Instance.player.OnGoldChanged += SetGold;
         GameManager.Instance.player.OnHelthChanged += SetHp;
         GameManager.Instance.player.OnExpChanged += SetExp;
+        GameManager.Instance.player.OnStageChanged += SetStage;
+
+        stagePanel.SetActive(true);
     }
 
     private void OnDisable()
@@ -33,6 +40,9 @@ public class PlayerInfo : MonoBehaviour
         GameManager.Instance.player.OnGoldChanged -= SetGold;
         GameManager.Instance.player.OnHelthChanged -= SetHp;
         GameManager.Instance.player.OnExpChanged -= SetExp;
+        GameManager.Instance.player.OnStageChanged -= SetStage;
+
+        stagePanel.SetActive(false);
     }
 
 
@@ -41,7 +51,7 @@ public class PlayerInfo : MonoBehaviour
         setstring.Clear();
         setstring.Append("Lv. ");
         setstring.Append(GameManager.Instance.player.Level);
-        ExpBar.maxValue = GameManager.Instance.player.MaxExp;
+        expBar.maxValue = GameManager.Instance.player.MaxExp;
         levelUI.text = setstring.ToString();
     }
 
@@ -56,11 +66,16 @@ public class PlayerInfo : MonoBehaviour
     private void SetHp()
     {
         float hpValue = (float)GameManager.Instance.player.Health / GameManager.Instance.player.MaxHealth;
-        HpBar.value = hpValue;
+        hpBar.value = hpValue;
     }
 
     private void SetExp()
     {
-        ExpBar.value = GameManager.Instance.player.Exp;
+        expBar.value = GameManager.Instance.player.Exp;
+    }
+
+    private void SetStage()
+    {
+        stage.text = GameManager.Instance.player.Stage.ToString();
     }
 }

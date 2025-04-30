@@ -138,3 +138,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: eedb22fa36fe126409cdf85b241a1546, type: 3}
   name: Eunwol
   cost: 1
+  star: 1
+  battle: 0
+  heroObject: {fileID: 7597472981554551776}
+  unit: {fileID: 1040973487814420076}
