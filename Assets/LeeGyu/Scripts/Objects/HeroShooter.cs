@@ -4,9 +4,17 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class HeroShooter : MonoBehaviour
 {
+
+    [Header("Range and Tageting")]
+    [SerializeField] protected float attackRange;
+    [SerializeField] private string tagName;
+
+    public Zombie target
+    {  get; private set; }
 
     [Header("Property")]
     [SerializeField] Transform muzzlePoint;
@@ -14,39 +22,95 @@ public class HeroShooter : MonoBehaviour
     [Header("AttackMethod")]
     [SerializeField] BaseAM basePrefab;
     [SerializeField] SkillAM skillPrefab;
+    [SerializeField] float delayTime;
+    private Coroutine FireCorotine;
+
 
     [Header("Components")]
-    [SerializeField] int Mp;
-   
+    private int Mp;
+    [SerializeField] int upSetMp;
+
 
     private void Update()
     {
+        AcquireTarget();
         FireActing();
     }
 
+    IEnumerator FireRoutine()
+    {
+        WaitForSeconds delay = new(delayTime);
+        while (true)
+        {
+            Fire(basePrefab);
+            Debug.Log("기본평타!");
+            SetMp(upSetMp);
+            yield return delay;
+        }
+    }
+    private void SetMp(int mp)
+    {
+        Mp += mp;
+    }
+    
+    private void AcquireTarget()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, attackRange);
+
+        float minDist = float.MaxValue;
+        Zombie closest = null;
+        foreach (var hit in hits)
+        {
+            if (hit.CompareTag(tagName))
+            { 
+                Zombie tagName = hit.GetComponent<Zombie>();
+                float dist = Vector3.Distance(transform.position, tagName.transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    closest = tagName;
+                }
+            }
+        }
+        target = closest;
+    }
+    
     private void Fire(ParentsAM bullets)
     {
         ParentsAM instance = Instantiate(bullets, muzzlePoint.position, muzzlePoint.rotation);
-        instance.Shot();
+        instance.Shot(target);
     }
 
     private void FireActing()
-    {    
-        if (Mp <= 100)
+    {
+        if (target != null && Mp <= 100)
         {
-            Fire(basePrefab);
-            StopCoroutine(basePrefab.shotCorutine);
-            basePrefab.shotCorutine = null;
+            if (FireCorotine == null)
+                FireCorotine = StartCoroutine(FireRoutine());
+
+            
         }
-        else if (Mp > 100)
+        else
         {
+            if (FireCorotine != null)
+            {
+                StopCoroutine(FireCorotine);
+                FireCorotine = null;
+            }
+        }
+
+        if (target != null && Mp > 100)
+        {
+            if (FireCorotine != null)
+            {
+                StopCoroutine(FireCorotine);
+                FireCorotine = null;
+                
+            }
+
             Fire(skillPrefab);
+            Debug.Log("기본스킬");
             Mp = 0;
-        }
-        else if (gameObject == null)
-        {
-            StopCoroutine(basePrefab.shotCorutine);
-            basePrefab.shotCorutine = null;
         }
     }
 }

@@ -10,15 +10,12 @@ public class SkillAM : ParentsAM
     [SerializeField] float rotatespeed;
 
 
-    public override void Shot()
+    public override void MoveMethod(Zombie target)
     {
-        AttackMethod();
-        base.Shot();
-    }
-    public override void AttackMethod()
-    {
-        transform.position = Vector3.MoveTowards
-            (transform.position, target.transform.position, moveSpeed * Time.deltaTime);
+        
+        transform.position = Vector3.Lerp(transform.position, target.transform.position, moveSpeed);
+
         transform.Rotate(Vector3.forward, rotatespeed * Time.deltaTime);
+        
     }
 }
