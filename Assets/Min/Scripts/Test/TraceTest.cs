@@ -8,11 +8,11 @@ using UnityEngine.Tilemaps;
 public class TraceTest : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
-    [SerializeField] private float moveInterval = 1.0f;
-    [SerializeField] private float moveDuration = 0.25f;
-    [SerializeField] private int attackRange = 3;
-
     [SerializeField] private string targetTag;
+
+    [SerializeField] private float moveInterval = 1.0f; // 행동 결정 시간
+    [SerializeField] private float moveDuration = 0.25f; // 이동 시간
+    [SerializeField] private int attackRange = 3; // 감지 범위, 공격 사거리랑 다름
 
     private bool isMoving = false;
 
@@ -20,21 +20,41 @@ public class TraceTest : MonoBehaviour
     {
         if (tilemap == null)
             tilemap = FindObjectOfType<Tilemap>();
-        
+
         // TODO: 게임 시작 버튼이 눌렸을 때, StartCoroutine -> 이벤트 구독
-        StartCoroutine(EnemyRoutine());
+        // TODO: Player 클래스에서 
+        // TODO: battle 중인지 아닌지 - NonBattleHero 태그로 추가해주심
+        if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
+            StartCoroutine(UnitRoutine());
+
         // TODO: 게임이 끝났을 때, TileReservation.Clear();
+
+        // 이벤트이름.AddListener(StartCoroutine);
     }
 
-    private IEnumerator EnemyRoutine()
+    // 구독용 함수
+    private void StartCoroutine()
     {
+        if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
+            StartCoroutine(UnitRoutine());
+    }
+
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
+    private IEnumerator UnitRoutine()
+    {
+        Transform target = FindNearestTarget();
         while (true)
         {
             if (!isMoving)
             {
-                Transform target = FindNearestTarget();
                 if (target == null)
                 {
+                    target = FindNearestTarget();
                     yield return new WaitForSeconds(moveInterval);
                     continue;
                 }
@@ -50,6 +70,7 @@ public class TraceTest : MonoBehaviour
                     Debug.Log($"{gameObject.name}공격, {target.name}피격");
                     // TODO: 데미지
                     yield return new WaitForSeconds(moveInterval);
+                    // 공격 속도용 변수 추가 moveInterval 대신 넣어서 구현 가능
                     continue;
                 }
 
@@ -93,11 +114,13 @@ public class TraceTest : MonoBehaviour
         isMoving = false;
     }
 
+
     private Vector2Int GetCurrentCell()
     {
         Vector3Int cell = tilemap.WorldToCell(transform.position);
         return new Vector2Int(cell.x, cell.y);
     }
+
 
     private Vector2Int GetCellOf(Vector3 worldPos)
     {
@@ -105,7 +128,6 @@ public class TraceTest : MonoBehaviour
         return new Vector2Int(cell.x, cell.y);
     }
 
-    //TODO: 아군 및 적 공용 함수로 바꾸기
     private Transform FindNearestTarget()
     {
         GameObject[] targets = GameObject.FindGameObjectsWithTag(targetTag);
@@ -127,14 +149,6 @@ public class TraceTest : MonoBehaviour
 
         return nearest;
     }
-
-    //private int HexDistance(Vector2Int a, Vector2Int b)
-    //{
-    //    int dx = a.x - b.x;
-    //    int dy = a.y - b.y;
-    //    int dz = -dx - dy;
-    //    return (Mathf.Abs(dx) + Mathf.Abs(dy) + Mathf.Abs(dz)) / 2;
-    //}
 
     int HexDistance(Vector2Int a, Vector2Int b)
     {
@@ -214,6 +228,4 @@ public class TraceTest : MonoBehaviour
 
         return false;
     }
-
-    //TODO: DIE 메서드에서 StopCoroutine
 }
