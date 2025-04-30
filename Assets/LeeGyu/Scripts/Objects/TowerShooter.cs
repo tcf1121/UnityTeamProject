@@ -1,3 +1,4 @@
+using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,8 +10,9 @@ public class TowerShooter : MonoBehaviour
 
     [Header("Property")]
     [SerializeField] Transform muzzle;
-    [SerializeField] BaseBullets baseBulletPrefab;
-    [SerializeField] Bullets skillBulletPrefab;
+    [Header("AttackMethod")]
+    [SerializeField] BaseAM basePrefab;
+    [SerializeField] SkillAM skillPrefab;
 
     [Header("Components")]
     [SerializeField] int Mp;
@@ -21,9 +23,9 @@ public class TowerShooter : MonoBehaviour
         FireActing();
     }
 
-    private void Fire(Bullets bullets)
+    private void Fire(ParentsAM bullets)
     {
-        Bullets instance = Instantiate(bullets, muzzle.position, muzzle.rotation);
+        ParentsAM instance = Instantiate(bullets, muzzle.position, muzzle.rotation);
         instance.Shot();
     }
 
@@ -31,19 +33,19 @@ public class TowerShooter : MonoBehaviour
     {    
         if (Mp <= 100)
         {
-            Fire(baseBulletPrefab);
-            StopCoroutine(baseBulletPrefab.shotCorutine);
-            baseBulletPrefab.shotCorutine = null;
+            Fire(basePrefab);
+            StopCoroutine(basePrefab.shotCorutine);
+            basePrefab.shotCorutine = null;
         }
         else if (Mp > 100)
         {
-            Fire(skillBulletPrefab);
+            Fire(skillPrefab);
             Mp = 0;
         }
         else if (gameObject == null)
         {
-            StopCoroutine(baseBulletPrefab.shotCorutine);
-            baseBulletPrefab.shotCorutine = null;
+            StopCoroutine(basePrefab.shotCorutine);
+            basePrefab.shotCorutine = null;
         }
     }
 }

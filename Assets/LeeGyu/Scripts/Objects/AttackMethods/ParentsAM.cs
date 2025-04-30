@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public abstract class Bullets : MonoBehaviour
+public abstract class ParentsAM : MonoBehaviour
 {
     [Header("Range and Tageting")]
     [SerializeField] private Transform rangeOrigin;

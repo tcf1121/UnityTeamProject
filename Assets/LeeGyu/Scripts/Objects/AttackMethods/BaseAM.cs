@@ -5,7 +5,7 @@ using UnityEditor.VersionControl;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class BaseBullets : Bullets
+public class BaseAM : ParentsAM
 {
     [Header("Speed")]
     [SerializeField] float moveSpeed;

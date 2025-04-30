@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SkillBullet : Bullets
+public class SkillAM : ParentsAM
 {
     [Header("Speed")]
     [SerializeField] float moveSpeed;
