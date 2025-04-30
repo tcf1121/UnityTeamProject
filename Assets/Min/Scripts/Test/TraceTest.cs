@@ -15,6 +15,7 @@ public class TraceTest : MonoBehaviour
     [SerializeField] private int attackRange = 3; // 감지 범위, 공격 사거리랑 다름
 
     private bool isMoving = false;
+    private Coroutine unitCoroutine;
 
     private void Start()
     {
@@ -25,7 +26,7 @@ public class TraceTest : MonoBehaviour
         // TODO: Player 클래스에서 
         // TODO: battle 중인지 아닌지 - NonBattleHero 태그로 추가해주심
         if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
-            StartCoroutine(UnitRoutine());
+            unitCoroutine = StartCoroutine(UnitRoutine());
 
         // TODO: 게임이 끝났을 때, TileReservation.Clear();
 
@@ -36,13 +37,13 @@ public class TraceTest : MonoBehaviour
     private void StartCoroutine()
     {
         if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
-            StartCoroutine(UnitRoutine());
+            unitCoroutine = StartCoroutine(UnitRoutine());
     }
 
 
     private void OnDestroy()
     {
-        StopAllCoroutines();
+        StopCoroutine(unitCoroutine);
     }
 
     private IEnumerator UnitRoutine()
