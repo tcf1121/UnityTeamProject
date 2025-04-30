@@ -14,7 +14,6 @@ public class BaseAM : ParentsAM
     public override void MoveMethod(Zombie target)
     {
         transform.position = Vector3.MoveTowards
-            (transform.position, target.transform.position, moveSpeed * Time.deltaTime);
-        
+            (transform.position, target.transform.position, moveSpeed * Time.deltaTime);  
     }
 }

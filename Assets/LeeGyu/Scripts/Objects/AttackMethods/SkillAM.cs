@@ -12,10 +12,7 @@ public class SkillAM : ParentsAM
 
     public override void MoveMethod(Zombie target)
     {
-        
         transform.position = Vector3.Lerp(transform.position, target.transform.position, moveSpeed);
-
         transform.Rotate(Vector3.forward, rotatespeed * Time.deltaTime);
-        
     }
 }

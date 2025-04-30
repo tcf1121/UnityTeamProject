@@ -8,7 +8,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class HeroShooter : MonoBehaviour
 {
-
     [Header("Range and Tageting")]
     [SerializeField] protected float attackRange;
     [SerializeField] private string tagName;
@@ -27,7 +26,7 @@ public class HeroShooter : MonoBehaviour
 
 
     [Header("Components")]
-    private int Mp;
+    [SerializeField] private int Mp;
     [SerializeField] int upSetMp;
 
 
@@ -42,12 +41,24 @@ public class HeroShooter : MonoBehaviour
         WaitForSeconds delay = new(delayTime);
         while (true)
         {
-            Fire(basePrefab);
-            Debug.Log("기본평타!");
-            SetMp(upSetMp);
-            yield return delay;
+            if (Mp <= 100)
+            {
+                Fire(basePrefab);
+                Debug.Log("기본평타!");
+                SetMp(upSetMp);
+                yield return delay;
+            }
+            if (Mp > 100)
+            {
+                Fire(skillPrefab);
+                Debug.Log("스킬!");
+                Mp = 0;
+                yield return delay;
+            }
+
         }
     }
+
     private void SetMp(int mp)
     {
         Mp += mp;
@@ -83,12 +94,10 @@ public class HeroShooter : MonoBehaviour
 
     private void FireActing()
     {
-        if (target != null && Mp <= 100)
+        if (target != null)
         {
             if (FireCorotine == null)
                 FireCorotine = StartCoroutine(FireRoutine());
-
-            
         }
         else
         {
@@ -99,18 +108,5 @@ public class HeroShooter : MonoBehaviour
             }
         }
 
-        if (target != null && Mp > 100)
-        {
-            if (FireCorotine != null)
-            {
-                StopCoroutine(FireCorotine);
-                FireCorotine = null;
-                
-            }
-
-            Fire(skillPrefab);
-            Debug.Log("기본스킬");
-            Mp = 0;
-        }
     }
 }

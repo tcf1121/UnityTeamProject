@@ -8,33 +8,26 @@ using static UnityEngine.GraphicsBuffer;
 public abstract class ParentsAM : MonoBehaviour
 {
 
-    [Header("Components")]
-    [SerializeField] private float returnTime;
-    
     [Header("Property")]
-    [SerializeField] private float attackPower;
+    [SerializeField] private int attackPower;
     [SerializeField] private string tagName;
 
     private Zombie target;
 
-    public float AttackPower
+    public int AttackPower
     { get { return attackPower; } set { attackPower = value; } }
 
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag(tagName))
+        if (other.gameObject.CompareTag(tagName))
         {
-            IDamgable damgable = collision.gameObject.GetComponent<IDamgable>();
-            if (damgable != null)
-            {
-                Attack(damgable);
-            }
-            
+            Zombie zombie = other.gameObject.GetComponent<Zombie>();
+            TakeDamge(zombie);
             Debug.Log("¸Â¾Ò´Ù!");
             Destroy(gameObject);
         }
     }
+
     private void Update()
     {
         MoveMethod(target);
@@ -46,9 +39,9 @@ public abstract class ParentsAM : MonoBehaviour
     
     public abstract void MoveMethod(Zombie target);
 
-    public void Attack(IDamgable damgable)
+    public void TakeDamge(Zombie target)
     {
-        damgable.TakeDamage(gameObject, attackPower);
+        target.TakeDamage(attackPower);
     }
 
 }
