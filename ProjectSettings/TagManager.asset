@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Monster
   - Turret
+  - Enemy
   layers:
   - Default
   - TransparentFX
