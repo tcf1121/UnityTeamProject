@@ -18,4 +18,9 @@ public class NormalZombie : Zombie
     protected override int DropExp { get; set; } = 1;
     protected override float AttackRange { get; set; } = 1f;
 
+
+
+
+
+
 }
