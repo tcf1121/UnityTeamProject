@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public static class TileReservation
@@ -25,6 +26,7 @@ public static class TileReservation
             reservations.Remove(pos);
     }
 
+    // TODO: 라운드 클리어 및 패배 시 Clear 호출용 이벤트 구독
     public static void Clear()
     {
         reservations.Clear();
