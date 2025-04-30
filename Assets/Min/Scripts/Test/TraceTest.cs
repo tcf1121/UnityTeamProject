@@ -21,6 +21,7 @@ public class TraceTest : MonoBehaviour
         
         // TODO: 게임 시작 버튼이 눌렸을 때, StartCoroutine -> 이벤트 구독
         StartCoroutine(EnemyRoutine());
+        // TODO: 게임이 끝났을 때, TileReservation.Clear();
     }
 
     //TODO: 이름 바꾸기
@@ -37,6 +38,9 @@ public class TraceTest : MonoBehaviour
                     Vector2Int targetXY = GetCellOf(target.position);
                     int dist = HexDistance(myXY, targetXY);
 
+                    Debug.Log($"{name} 위치: {myXY} / 타겟 위치: {targetXY} / 거리: {dist} / 사거리: {attackRange}");
+
+
                     if (dist <= attackRange)
                     {
                         Debug.Log($"{gameObject.name}공격, {target.name}피격");
@@ -45,19 +49,30 @@ public class TraceTest : MonoBehaviour
                     else
                     {
                         Vector2Int direction = GetStepToward(myXY, targetXY);
+                        Debug.Log($"{name} 선택된 방향: {direction}");
+
+
                         Vector2Int nextXY = myXY + direction;
                         int nextDist = HexDistance(nextXY, targetXY);
+                        Debug.Log($"{name} nextDist: {nextDist}, 현재 dist: {dist}");
 
-
-                        if (nextDist < dist)
+                        if (direction != Vector2Int.zero) //nextDist < dist && 
                         {
-                            Vector3 targetPos = tilemap.GetCellCenterWorld(new Vector3Int(nextXY.x, nextXY.y, 0));
-                            targetPos.y = 2f; // 임의 고정
-                            StartCoroutine(MoveTo(targetPos));
+                            if (TileReservation.Reserve(nextXY, gameObject))
+                            {
+                                Vector3 targetPos = tilemap.GetCellCenterWorld(new Vector3Int(nextXY.x, nextXY.y, 0));
+                                targetPos.y = 2f; // 임의 고정
+                                StartCoroutine(MoveTo(targetPos));
+                            }
+
+                            else
+                            {
+                                Debug.Log($"{gameObject.name}대기");
+                            }
                         }
                         else
                         {
-                            Debug.Log($"{gameObject.name}공격, {target.name}피격");
+                            Debug.Log($"{gameObject.name}대기2");
                             // TODO: 데미지
                         }
                     }
@@ -83,6 +98,11 @@ public class TraceTest : MonoBehaviour
         }
 
         transform.position = targetPos;
+
+        Vector3Int cellPos = tilemap.WorldToCell(transform.position);
+
+        TileReservation.RemoveReserve(new Vector2Int(cellPos.x, cellPos.y));
+
         isMoving = false;
     }
 
@@ -150,12 +170,16 @@ public class TraceTest : MonoBehaviour
         {
             Vector2Int candidate = from + dir;
 
-            if (IsCellOccupied(candidate)) 
+            if (IsCellOccupied(candidate) || TileReservation.IsReserved(candidate))
+            {
+                Debug.Log($"{name} 후보 {candidate} 는 점유 중");
                 continue;
+            }
 
             int dist = HexDistance(candidate, to);
+            Debug.Log($"{name} 후보 {candidate} 거리: {dist}");
 
-            if (dist < minDist)
+            if (dist <= minDist)
             {
                 minDist = dist;
                 best = dir;
