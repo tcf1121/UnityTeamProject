@@ -138,3 +138,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 7c11a274f2098184c8b761a395b9a0f3, type: 3}
   name: Captain
   cost: 2
+  star: 1
+  battle: 0
+  heroObject: {fileID: 3035317811231607971}
+  unit: {fileID: 3844917950459228022}

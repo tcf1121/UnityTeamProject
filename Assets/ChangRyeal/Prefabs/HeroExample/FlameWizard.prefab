@@ -138,3 +138,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 1b732c6f6b4ee0d489f374ca0217317d, type: 3}
   name: FlameWizard
   cost: 1
+  star: 1
+  battle: 0
+  heroObject: {fileID: 1672197403470837918}
+  unit: {fileID: 474634501862037719}

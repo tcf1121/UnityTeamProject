@@ -14,9 +14,15 @@ public class ShopHeroController : MonoBehaviour
         for (int i = 0; i < 5; i++)
             CostHero[i] = new List<Hero>();
         InputHero();
+        GameManager.Instance.player.OnLevelChanged += SetLevel;
     }
 
     private void OnEnable()
+    {
+        level = GameManager.Instance.player.Level;
+    }
+
+    private void SetLevel()
     {
         level = GameManager.Instance.player.Level;
     }

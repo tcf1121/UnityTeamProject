@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] GameObject info;
+
     private readonly int[] ExpRequired = new int[] { 0, 0, 2, 6, 10, 20, 36, 56, 80, 100 };
     [SerializeField] private int health;
     [SerializeField] private int maxHealth;
@@ -17,7 +19,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int maxExp;
     [SerializeField] private int level;
     [SerializeField] private int stage;
-
+    [SerializeField] public PlayerHero playerHero;
+    [SerializeField] public TileMapManager tileMap;
     // 보관함
     // 전장
 
@@ -29,13 +32,17 @@ public class Player : MonoBehaviour
     public event Action OnExpChanged;
     public int Level { get { return level; } set { level = value; OnLevelChanged?.Invoke(); } }
     public event Action OnLevelChanged;
-    public int Stage { get { return stage; } }
+    public int Stage { get { return stage; } set { stage = value; OnStageChanged?.Invoke(); } }
+    public event Action OnStageChanged;
     public int MaxHealth { get { return maxHealth; } }
     public int MaxExp { get { return maxExp; } set { maxExp = value; OnLevelChanged?.Invoke(); } }
 
     private void OnEnable()
     {
         setPlayer();
+
+        //테스트 용으로만 추가
+        info.SetActive(true);
     }
 
     public void setPlayer()
@@ -53,31 +60,43 @@ public class Player : MonoBehaviour
     {
         Exp -= maxExp;
         Level++;
-        MaxExp = ExpRequired[level];
+        if(Level == 10)
+        {
+            Exp = 0;
+            MaxExp = 0;
+        }
+        else
+            MaxExp = ExpRequired[level];
     }
 
     // 경험치를 사는 행위를 했을 때 사용될 함수
     public void BuyExp()
     {
-        Exp += 4;
         if (level < 10)
+        {
+            Exp += 4;
             if (exp >= maxExp)
                 LevelUp();
+        }
     }
     public void Expplus()
     {
-        Exp++;
         if (level < 10)
+        {
+            Exp++;
             if (exp >= maxExp)
                 LevelUp();
+        }
     }
     // 다음 스테이지로 넘어갔을 때 사용될 함수
     public void NextStage()
     {
-        Exp += 2;
         if (level < 10)
+        {
+            Exp += 2;
             if (exp >= maxExp)
                 LevelUp();
+        }
     }
 
     // 살 수 있는지 여부를 반환 시켜주는 함수
@@ -87,20 +106,22 @@ public class Player : MonoBehaviour
     }
 
     // 아군 기물을 샀을 때 함수
-    public void BuyHero(int cost)
+    public void BuyHero(Hero hero,int cost)
     {
         Gold -= cost;
+        playerHero.NewHero(hero);
         // 보관함에 아군 기물 추가
     }
 
     // 아군 기물을 판매 했을 때 함수
-    public void SellHero(/*기물*/)
+    public void SellHero(GameObject heroObj)
     {
-        /*
-         * if(기물 코스트 == 1)
-         *      gold += 기물 코스트 * 기물 단계;
-         * else
-         *      gold += (기물 코스트 * 기물 단계) - 1;
-         */
+        Hero hero = heroObj.GetComponent<Hero>();
+        playerHero.SellHero(heroObj);
+        
+        if (hero.cost == 1)
+            Gold += hero.cost * hero.star;
+        else
+            Gold += hero.cost * hero.star - 1;
     }
 }

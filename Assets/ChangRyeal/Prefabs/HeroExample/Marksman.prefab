@@ -138,3 +138,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: ba1157567c737b747a99bb44abd9426d, type: 3}
   name: Marksman
   cost: 4
+  star: 1
+  battle: 0
+  heroObject: {fileID: 7698312199403851240}
+  unit: {fileID: 3191233972098835300}

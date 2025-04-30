@@ -138,3 +138,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: d0b7e773ebcd0bd4ba1bebf320e20cde, type: 3}
   name: SoulMaster
   cost: 5
+  star: 1
+  battle: 0
+  heroObject: {fileID: 5311530296098553038}
+  unit: {fileID: 7706086273029410716}

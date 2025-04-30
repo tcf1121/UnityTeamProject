@@ -138,3 +138,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: c6e08c51c36230543b1599157dd5a97f, type: 3}
   name: WindBreaker
   cost: 3
+  star: 1
+  battle: 0
+  heroObject: {fileID: 4716892728470062922}
+  unit: {fileID: 183443649538032761}

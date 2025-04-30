@@ -138,3 +138,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 202418eaedb64f8408b826226477f0df, type: 3}
   name: Bishop
   cost: 3
+  star: 1
+  battle: 0
+  heroObject: {fileID: 7909266963211317997}
+  unit: {fileID: 1095746230295115924}
