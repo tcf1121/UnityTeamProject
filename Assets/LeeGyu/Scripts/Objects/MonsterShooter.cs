@@ -1,16 +1,19 @@
 using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using HiroRelated;
+using UnityEngine.UI;
+using MonsterRelated;
+using YongSeok;
 
-public class HeroShooter : MonoBehaviour
+public class MonsterShooter : MonoBehaviour
 {
     [Header("Range and Tageting")]
     [SerializeField] protected float attackRange;
     [SerializeField] private string tagName;
 
-    public Zombie target
+    public HeroBase target
     {  get; private set; }
 
     [Header("Property")]
@@ -53,7 +56,6 @@ public class HeroShooter : MonoBehaviour
                 Mp = 0;
                 yield return delay;
             }
-
         }
     }
 
@@ -67,12 +69,12 @@ public class HeroShooter : MonoBehaviour
         Collider[] hits = Physics.OverlapSphere(transform.position, attackRange);
 
         float minDist = float.MaxValue;
-        Zombie closest = null;
+        HeroBase closest = null;
         foreach (var hit in hits)
         {
             if (hit.CompareTag(tagName))
             { 
-                Zombie tagName = hit.GetComponent<Zombie>();
+                HeroBase tagName = hit.GetComponent<HeroBase>();
                 float dist = Vector3.Distance(transform.position, tagName.transform.position);
                 if (dist < minDist)
                 {
