@@ -13,7 +13,7 @@ public class MouseController : MonoBehaviour
     private Vector3 prePos = Vector3.zero;
 
     private Vector3 beforePosition;
-    private Vector3 offSet = new Vector3(0.0f, 1.0f, 0.0f);
+    private Vector3 offSet = new Vector3(0.0f, 0.0f, 0.0f);
     [SerializeField] private TileMapManager tile;
     [SerializeField] private PlayerHero playerHero;
     [SerializeField] private GameObject moveAbleObject;
