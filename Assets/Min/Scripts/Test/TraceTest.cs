@@ -189,7 +189,9 @@ public class TraceTest : MonoBehaviour
         {
             Vector2Int candidate = from + dir;
 
-            if (IsCellOccupied(candidate) || TileReservation.IsReserved(candidate))
+            if (IsCellOccupied(candidate) 
+                || TileReservation.IsReserved(candidate) 
+                || BlockedCellManager.IsBlocked(candidate))
             {
                 Debug.Log($"{name} 후보 {candidate} 는 점유 중");
                 continue;
