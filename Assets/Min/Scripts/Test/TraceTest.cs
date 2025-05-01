@@ -171,51 +171,6 @@ public class TraceTest : MonoBehaviour
         return new Vector3Int(x, y, z);
     }
 
-    // 한 칸 검사
-
-    //private Vector2Int GetStepToward(Vector2Int from, Vector2Int to)
-    //{
-    //    Vector2Int[] directionsEven = {
-    //        new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 1),
-    //        new Vector2Int(-1, 0), new Vector2Int(-1, -1), new Vector2Int(0, -1)
-    //    };
-
-    //    Vector2Int[] directionsOdd = {
-    //        new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(0, 1),
-    //        new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(1, -1)
-    //    };
-
-    //    Vector2Int[] directions = (from.y % 2 == 0) ? directionsEven : directionsOdd;
-
-    //    Vector2Int best = Vector2Int.zero;
-    //    int minDist = int.MaxValue;
-
-    //    foreach (Vector2Int dir in directions)
-    //    {
-    //        Vector2Int candidate = from + dir;
-
-    //        if (IsCellOccupied(candidate)
-    //            || TileReservation.IsReserved(candidate)
-    //            || BlockedCellManager.IsBlocked(candidate))
-    //        {
-    //            Debug.Log($"{name} 후보 {candidate} 는 점유 중");
-    //            continue;
-    //        }
-
-    //        int dist = HexDistance(candidate, to);
-    //        Debug.Log($"{name} 후보 {candidate} 거리: {dist}");
-
-    //        if (dist <= minDist)
-    //        {
-    //            minDist = dist;
-    //            best = dir;
-    //        }
-    //    }
-
-    //    return best;
-    //}
-
-
     // BFS
 
     private Vector2Int GetStepToward(Vector2Int from, Vector2Int to)
@@ -230,8 +185,8 @@ public class TraceTest : MonoBehaviour
         new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(1, -1)
     };
 
-        Queue<Vector2Int> queue = new();
-        Dictionary<Vector2Int, Vector2Int> cameFrom = new();
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        Dictionary<Vector2Int, Vector2Int> cameFrom = new Dictionary<Vector2Int, Vector2Int>();
 
         queue.Enqueue(from);
         cameFrom[from] = from;
