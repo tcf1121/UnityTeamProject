@@ -14,8 +14,11 @@ public class TraceTest : MonoBehaviour
     [SerializeField] private float moveDuration = 0.25f; // 이동 시간
     [SerializeField] private int attackRange = 3; // 감지 범위, 공격 사거리랑 다름
 
+    [SerializeField] private float ObjYPos = 1.5f;
+
     private bool isMoving = false;
     private Coroutine unitCoroutine;
+
 
     private void Start()
     {
@@ -85,7 +88,7 @@ public class TraceTest : MonoBehaviour
                 }
 
                 Vector3 targetPos = tilemap.GetCellCenterWorld(new Vector3Int(nextXY.x, nextXY.y, 0));
-                targetPos.y = 2f;
+                targetPos.y = ObjYPos;
                 StartCoroutine(MoveTo(targetPos));
             }
 
@@ -189,8 +192,8 @@ public class TraceTest : MonoBehaviour
         {
             Vector2Int candidate = from + dir;
 
-            if (IsCellOccupied(candidate) 
-                || TileReservation.IsReserved(candidate) 
+            if (IsCellOccupied(candidate)
+                || TileReservation.IsReserved(candidate)
                 || BlockedCellManager.IsBlocked(candidate))
             {
                 Debug.Log($"{name} 후보 {candidate} 는 점유 중");
