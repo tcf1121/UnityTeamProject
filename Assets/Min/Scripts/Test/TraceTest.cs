@@ -171,46 +171,116 @@ public class TraceTest : MonoBehaviour
         return new Vector3Int(x, y, z);
     }
 
+    // 한 칸 검사
+
+    //private Vector2Int GetStepToward(Vector2Int from, Vector2Int to)
+    //{
+    //    Vector2Int[] directionsEven = {
+    //        new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 1),
+    //        new Vector2Int(-1, 0), new Vector2Int(-1, -1), new Vector2Int(0, -1)
+    //    };
+
+    //    Vector2Int[] directionsOdd = {
+    //        new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(0, 1),
+    //        new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(1, -1)
+    //    };
+
+    //    Vector2Int[] directions = (from.y % 2 == 0) ? directionsEven : directionsOdd;
+
+    //    Vector2Int best = Vector2Int.zero;
+    //    int minDist = int.MaxValue;
+
+    //    foreach (Vector2Int dir in directions)
+    //    {
+    //        Vector2Int candidate = from + dir;
+
+    //        if (IsCellOccupied(candidate)
+    //            || TileReservation.IsReserved(candidate)
+    //            || BlockedCellManager.IsBlocked(candidate))
+    //        {
+    //            Debug.Log($"{name} 후보 {candidate} 는 점유 중");
+    //            continue;
+    //        }
+
+    //        int dist = HexDistance(candidate, to);
+    //        Debug.Log($"{name} 후보 {candidate} 거리: {dist}");
+
+    //        if (dist <= minDist)
+    //        {
+    //            minDist = dist;
+    //            best = dir;
+    //        }
+    //    }
+
+    //    return best;
+    //}
+
+
+    // BFS
+
     private Vector2Int GetStepToward(Vector2Int from, Vector2Int to)
     {
         Vector2Int[] directionsEven = {
-            new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 1),
-            new Vector2Int(-1, 0), new Vector2Int(-1, -1), new Vector2Int(0, -1)
-        };
+        new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 1),
+        new Vector2Int(-1, 0), new Vector2Int(-1, -1), new Vector2Int(0, -1)
+    };
 
         Vector2Int[] directionsOdd = {
-            new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(0, 1),
-            new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(1, -1)
-        };
+        new Vector2Int(1, 0), new Vector2Int(1, 1), new Vector2Int(0, 1),
+        new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(1, -1)
+    };
 
-        Vector2Int[] directions = (from.y % 2 == 0) ? directionsEven : directionsOdd;
+        Queue<Vector2Int> queue = new();
+        Dictionary<Vector2Int, Vector2Int> cameFrom = new();
 
-        Vector2Int best = Vector2Int.zero;
-        int minDist = int.MaxValue;
+        queue.Enqueue(from);
+        cameFrom[from] = from;
 
-        foreach (Vector2Int dir in directions)
+        Vector2Int reached = from;
+
+        while (queue.Count > 0)
         {
-            Vector2Int candidate = from + dir;
+            Vector2Int current = queue.Dequeue();
 
-            if (IsCellOccupied(candidate)
-                || TileReservation.IsReserved(candidate)
-                || BlockedCellManager.IsBlocked(candidate))
+            // 목표 위치에 인접하면 그 셀까지 도달한 것으로 간주
+            if (HexDistance(current, to) <= 1)
             {
-                Debug.Log($"{name} 후보 {candidate} 는 점유 중");
-                continue;
+                reached = current;
+                break;
             }
 
-            int dist = HexDistance(candidate, to);
-            Debug.Log($"{name} 후보 {candidate} 거리: {dist}");
+            Vector2Int[] directions = (current.y % 2 == 0) ? directionsEven : directionsOdd;
 
-            if (dist <= minDist)
+            foreach (Vector2Int dir in directions)
             {
-                minDist = dist;
-                best = dir;
+                Vector2Int neighbor = current + dir;
+
+                if (cameFrom.ContainsKey(neighbor))
+                    continue;
+
+                if (IsCellOccupied(neighbor)
+                    || TileReservation.IsReserved(neighbor)
+                    || BlockedCellManager.IsBlocked(neighbor))
+                    continue;
+
+                queue.Enqueue(neighbor);
+                cameFrom[neighbor] = current;
             }
         }
 
-        return best;
+        if (!cameFrom.ContainsKey(reached) || reached == from)
+        {
+            return Vector2Int.zero;
+        }
+
+        Vector2Int step = reached;
+        while (cameFrom[step] != from)
+        {
+            step = cameFrom[step];
+        }
+
+        Vector2Int direction = step - from;
+        return direction;
     }
 
     private bool IsCellOccupied(Vector2Int cellPos)
@@ -228,7 +298,7 @@ public class TraceTest : MonoBehaviour
         {
             Vector2Int unitPos = GetCellOf(unit.transform.position);
 
-            if (unitPos == cellPos)
+            if (unit != gameObject && unitPos == cellPos)
                 return true;
         }
 
