@@ -33,7 +33,6 @@ public class HealerZombie : Zombie
         {
             HealNearbyZombies();
             lastHealTime = Time.time;
-            Debug.Log($"{healAmount} 힐을 진행합니다! 다음 힐까지 {healCooldown}초");
         }
       
     }
