@@ -167,11 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5e5139994ef6ea41b8fcea0e7b97226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
-  level: 0
+  shopManager: {fileID: 0}
   lockHero: 0
   sHctrl: {fileID: 6757366}
   shopPanel: {fileID: 784674207}
+  readyBtn: {fileID: 0}
   heroImage:
   - {fileID: 661145531}
   - {fileID: 1656553489}
