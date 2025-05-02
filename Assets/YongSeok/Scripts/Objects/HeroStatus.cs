@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeroStatus : MonoBehaviour
+public class HeroStatus
 {
 
     [Header("Status")]
@@ -19,6 +19,7 @@ public class HeroStatus : MonoBehaviour
     [Header("Etc")]
     public string job;                     // 직업 (전사, 마법사 등)
     public string heroId;                  // 전사1, 마법사2 등
+    public string prefabName;  // 예: "Aran", "Hero", "Mercedes"
     public string championName;           // 모티브 챔피언 이름
     public float attackSpeed;             // 공격 속도
     public float attackRange;             // 공격 사거리
