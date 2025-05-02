@@ -13,30 +13,6 @@ public class BattleManager : MonoBehaviour
     private int heroCounts;
     private int monsterCounts;
 
-    private void Awake()
-    {
-        SetSingleton();
-
-        // 이벤트 구독
-        // 라운드 시작 시 발생하는 이벤트 GetHeroNumbers 구독
-        // 스폰 매니저에서 스폰될 때 GetMonsterNumbers 호출
-        // 오브젝트가 죽었을 때 발생하는 이벤트 CheckVictory 구독
-    }
-
-    // 각자 싱글톤 or 게임매니저에서 본 클래스 사용?
-    private void SetSingleton()
-    {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
-
     // 라운드 시작 시 호출
     public void GetHeroNumbers()
     {
@@ -45,6 +21,7 @@ public class BattleManager : MonoBehaviour
     }
 
     // 스폰 매니저에서 스폰될 때마다 호출
+    // 한 번에 값 전부
     public void GetMonsterNumbers(int numbers)
     {
         monsterCounts += numbers;
@@ -61,7 +38,8 @@ public class BattleManager : MonoBehaviour
 
             //GameManager.Instance.player.Gold -= GameManager.Instance.player.Gold / 10;
 
-            shopPanel.SetActive(true);
+            // 샵 매니저로 - 롤체는 계속 켜져있기 때문에
+            //shopPanel.SetActive(true);
         }
 
         // 승리
@@ -69,7 +47,7 @@ public class BattleManager : MonoBehaviour
         {
             GameManager.Instance.player.Stage++;
 
-            shopPanel.SetActive(true);
+            //shopPanel.SetActive(true);
         }
     }
 }
