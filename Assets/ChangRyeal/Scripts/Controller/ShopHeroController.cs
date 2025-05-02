@@ -45,16 +45,18 @@ public class ShopHeroController : MonoBehaviour
         {
             if (hero[i] != null)
                 CostHero[hero[i].cost - 1].Add(hero[i]);
+
         }
     }
 
     // 게임을 맨 처음 시작할 때 영웅 기물 2개 지급
     public Hero[] StartDrawHero()
     {
-        Hero[] hero = new Hero[2];
+        Hero[] hero = new Hero[5];
         for(int i = 0; i< 2; i++)
         {
             RandomHero(ref hero[i], 0);
+            Debug.Log(hero[i].name);
         }
 
         return hero;
