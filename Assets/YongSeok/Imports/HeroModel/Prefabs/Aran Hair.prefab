@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8266009531042449917
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2846878308251529743}
+  m_Layer: 0
+  m_Name: Aran Hair
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2846878308251529743
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266009531042449917}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4800726058120129640}
+  - {fileID: 7772173129582388779}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7266204982915524341
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2846878308251529743}
+    m_Modifications:
+    - target: {fileID: 2758775850800995301, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_Name
+      value: Aran Hair 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071069
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.000000029802333
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.000000029802312
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+--- !u!4 &4800726058120129640 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2758775850801056413, guid: da12596fe3f1c864bb047d040dfc8e98, type: 3}
+  m_PrefabInstance: {fileID: 7266204982915524341}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7841237985988951171
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2846878308251529743}
+    m_Modifications:
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.29999998
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.04100001
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.0000000035380978
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0000000035380836
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 508311024650623976, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+      propertyPath: m_Name
+      value: Aran Hair 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+--- !u!4 &7772173129582388779 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 508311024650394280, guid: 06173802c3a3d6b46ad4bac9bc37e87b, type: 3}
+  m_PrefabInstance: {fileID: 7841237985988951171}
+  m_PrefabAsset: {fileID: 0}
