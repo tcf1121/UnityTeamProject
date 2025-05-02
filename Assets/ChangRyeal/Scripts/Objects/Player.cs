@@ -10,6 +10,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] GameObject info;
+    [SerializeField] GameObject shop;
 
     private readonly int[] ExpRequired = new int[] { 0, 0, 2, 6, 10, 20, 36, 56, 80, 100 };
     [SerializeField] private int health;
@@ -19,11 +20,17 @@ public class Player : MonoBehaviour
     [SerializeField] private int maxExp;
     [SerializeField] private int level;
     [SerializeField] private int stage;
+    [SerializeField] private bool battling;
     [SerializeField] public PlayerHero playerHero;
     [SerializeField] public TileMapManager tileMap;
+
     // 보관함
     // 전장
 
+    // 배틀 진행 중 확인 변수
+    
+    public bool Battling { get { return battling; } set { battling = value; OnBattlingChanged?.Invoke(); } }
+    public event Action OnBattlingChanged;
     public int Health { get { return health; } set { health = value; OnHelthChanged?.Invoke(); } }
     public event Action OnHelthChanged;
     public int Gold { get { return gold; } set { gold = value; OnGoldChanged?.Invoke(); } }
@@ -42,7 +49,9 @@ public class Player : MonoBehaviour
         setPlayer();
 
         //테스트 용으로만 추가
+        playerHero.SetPlayerHero();
         info.SetActive(true);
+        shop.SetActive(true);
     }
 
     public void setPlayer()

@@ -12,6 +12,19 @@ public class Hero : MonoBehaviour
     [SerializeField] public GameObject heroObject;
     [SerializeField] private Unit unit;
 
+    [Header("Propertis")]
+    [SerializeField] GameObject TwoStarEffet;
+    [SerializeField] GameObject ThreeStarEffet;
+
+    private void OnEnable()
+    {
+        name = heroname;
+        GetComponent<Animator>().enabled = true;
+        if (star == 2)
+            TwoStarEffet.SetActive(true);
+        else if(star == 3)
+            ThreeStarEffet.SetActive(true);
+    }
     public void SetBattle()
     {
         if (unit.startPoint.y == 3)
@@ -27,5 +40,4 @@ public class Hero : MonoBehaviour
         }
             
     }
-
 }
