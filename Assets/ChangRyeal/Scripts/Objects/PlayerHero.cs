@@ -21,7 +21,7 @@ public class PlayerHero : MonoBehaviour
     {
         for (int x = -8; x <= 0; x++)
         {
-            for (int y = 4; y <= 11; y++)
+            for (int y = 4; y <= 7; y++)
             {
                 HeroOnBattle.Add(new Vector3Int(x, y, 0), null);
             }
@@ -87,6 +87,8 @@ public class PlayerHero : MonoBehaviour
         return AllHeroNum() == GameManager.Instance.player.Level + 9 ? true : false;
     }
 
+
+    // 플레이어 영웅 기물 추가
     public void NewHero(Hero hero)
     {
         // 비어 있는 공간 확인
@@ -118,7 +120,7 @@ public class PlayerHero : MonoBehaviour
         
         // 오브젝트로 만들어 추가
         hero.GetComponent<Unit>().startPoint = heroGrid;
-        Vector3 heroPos = new Vector3(tileMap.CellToWorld(heroGrid).x, 1, tileMap.CellToWorld(heroGrid).z);
+        Vector3 heroPos = new Vector3(tileMap.CellToWorld(heroGrid).x, 0, tileMap.CellToWorld(heroGrid).z);
         GameObject getHero = Instantiate(hero.heroObject, heroPos, Quaternion.identity);
         
         allHero.Add(getHero.GetComponent<Hero>());

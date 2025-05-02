@@ -8,12 +8,12 @@ using UnityEngine.UI;
 using Random = System.Random;
 public class Shop : MonoBehaviour
 {
-    [SerializeField] GameObject Player;
-    [SerializeField] private int level;
+    [SerializeField] GameObject shopManager;
     [SerializeField] private bool lockHero = false;
     [SerializeField] private ShopHeroController sHctrl;
     [Header("UI")]
     [SerializeField] private GameObject shopPanel;
+    [SerializeField] private GameObject readyBtn;
     [SerializeField] private Image[] heroImage;
     [SerializeField] private TMP_Text[] costTxt;
     [SerializeField] private TMP_Text[] nameTxt;
@@ -26,14 +26,28 @@ public class Shop : MonoBehaviour
 
     private void OnEnable()
     {
-        shopPanel.SetActive(true);
-        if (!lockHero)
+        readyBtn.SetActive(true);
+        if (GameManager.Instance.player.Stage == 1)
         {
-            DrawShopHero();
+            Hero[] firstHero = sHctrl.StartDrawHero();
+            for (int i = 0; i < 2; i++)
+            {
+                if(i < 2)
+                    GameManager.Instance.player.BuyHero(firstHero[i], 0);
+            }
+        }
+        else
+        {
+            shopPanel.SetActive(true);
+            if (!lockHero)
+            {
+                DrawShopHero();
+            }
         }
     }
     private void OnDisable()
     {
+        readyBtn.SetActive(false);
         shopPanel.SetActive(false);
         if (!lockHero)
         {
@@ -134,12 +148,8 @@ public class Shop : MonoBehaviour
     #endregion
 
     public void Ready()
-    {
-        if (!lockHero)
-        {
-            sHctrl.RevertHero(hero);
-        }
-        shopPanel.SetActive(false);
+    {        
+        shopManager.SetActive(false);
     }
 
     public void LockShop()
