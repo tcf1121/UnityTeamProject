@@ -15,7 +15,7 @@ public abstract class Zombie : MonoBehaviour
     protected abstract string Name { get; set; }
 
     protected abstract int CurrentHealth { get; set; }
-
+    public int currentHealth => CurrentHealth;
     protected abstract int MaxHealth { get; set; }
 
     protected abstract int Power { get; set; }
