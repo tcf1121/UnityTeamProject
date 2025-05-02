@@ -37,14 +37,18 @@ public abstract class Zombie : MonoBehaviour
     public int DropGold => dropGold;
 
 
-    // 좀비가 죽은 후에 이벤트
-    public static event Action<int> OnZombieDied; // 좀비가 죽을 경우에 이벤트 발생
     public int goldReward = 1;
     [SerializeField] GameObject goldDropEffectPrefab;
 
     protected virtual void Awake()
     {
   
+    }
+
+
+    private void Start()
+    {
+        GetComponent<HP>().OnDied += EnemyDie;
     }
 
 
@@ -60,20 +64,11 @@ public abstract class Zombie : MonoBehaviour
         transform.Translate(Vector3.left * MoveSpeed * Time.deltaTime);
     }
 
-    public virtual void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        Debug.Log($"현재 체력: {CurrentHealth}");
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
 
-    public virtual void Die()
+    public virtual void EnemyDie()
     {
-        OnZombieDied?.Invoke(goldReward);
-        // Instantiate(goldDropEffectPrefab, transform.position, Quaternion.identity);
+        DropManager.instance.AddGold(goldReward);
+       // Instantiate(goldDropEffectPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 
