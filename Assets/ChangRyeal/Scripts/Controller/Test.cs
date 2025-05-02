@@ -12,6 +12,11 @@ public class Test : MonoBehaviour
             GameManager.Instance.player.Gold++;
         if (Input.GetKeyDown(KeyCode.E))
             GameManager.Instance.player.Expplus();
+        if (Input.GetKeyDown(KeyCode.R))
+            GameManager.Instance.player.Stage++;
+        if (Input.GetKeyDown(KeyCode.A))
+            GameManager.Instance.player.Battling = !GameManager.Instance.player.Battling;
+
         //if (Input.GetKeyDown(KeyCode.R))
         //    GameManager.Instance.player.Health--;
         //if (Input.GetKeyDown(KeyCode.Q))
