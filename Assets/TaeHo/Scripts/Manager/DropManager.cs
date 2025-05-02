@@ -10,12 +10,12 @@ public class DropManager : MonoBehaviour
 
     public void OnEnable()
     {
-        NormalZombie1.OnZombieDied += AddGold;
+        Zombie.OnZombieDied += AddGold;
     }
 
     public void OnDisable()
     {
-        NormalZombie1.OnZombieDied -= AddGold;
+        Zombie.OnZombieDied -= AddGold;
     }
 
     public void AddGold(int goldAmount)
