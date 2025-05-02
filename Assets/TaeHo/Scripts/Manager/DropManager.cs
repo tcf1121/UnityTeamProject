@@ -6,16 +6,21 @@ public class DropManager : MonoBehaviour
 {
     // ¸ó½ºÅÍ°¡ Á×¾úÀ» ¶§ °ñµå¸¦ ¶³¾î¶ß¸®´Â Manager »ý¼º
 
+    public static DropManager instance { get; private set; }
+
     public int currentGold = 0; // ÇöÀç °ñµå
 
-    public void OnEnable()
+    private void Awake()
     {
-        Zombie.OnZombieDied += AddGold;
-    }
+        if  (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
-    public void OnDisable()
-    {
-        Zombie.OnZombieDied -= AddGold;
     }
 
     public void AddGold(int goldAmount)
