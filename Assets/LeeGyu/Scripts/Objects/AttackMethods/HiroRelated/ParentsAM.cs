@@ -22,7 +22,7 @@ namespace HiroRelated
             if (other.gameObject.CompareTag(tagName))
             {
                 Zombie zombie = other.gameObject.GetComponent<Zombie>();
-                TakeDamge(zombie);
+                // TakeDamge(zombie);
                 Debug.Log("¸Â¾Ò´Ù!");
                 Destroy(gameObject);
             }
@@ -39,10 +39,10 @@ namespace HiroRelated
     
         public abstract void MoveMethod(Zombie target);
 
-        public void TakeDamge(Zombie target)
-        {
-            target.TakeDamage(attackPower);
-        }
+        //public void TakeDamge(Zombie target)
+        //{
+        //    target.TakeDamage(attackPower);
+        //}
 
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -12,111 +13,75 @@ public abstract class Zombie : MonoBehaviour
     // 바꿔야될 클래스
     //private TestPlant targetPlant;
 
-    protected abstract string Name { get; set; }
-
-    protected abstract int CurrentHealth { get; set; }
-
-    protected abstract int MaxHealth { get; set; }
-
-    protected abstract int Power { get; set; }
-
-    protected abstract float AttackSpeed { get; set; }
-
-    protected abstract float MoveSpeed { get; set; }
-
-    protected abstract int Level { get; set; }
-
-    protected abstract int DropGold { get; set; }
-
-    protected abstract int DropExp { get; set; }
-
-    protected abstract float AttackRange { get; set; }
+    [SerializeField] protected int currentHealth;
+    public int CurrentHealth => currentHealth;
 
 
-    private void Update()
+    [SerializeField] protected int maxHealth;
+    public int MaxHealth => maxHealth;
+
+    [SerializeField] protected int power;
+    public int Power => power;
+
+    [SerializeField] protected float attackSpeed;
+    public float AttackSpeed => attackSpeed;
+
+    [SerializeField] protected float moveSpeed;
+    public float MoveSpeed => moveSpeed;
+
+
+    [SerializeField] protected int level;
+    public int Level => level;
+    
+    [SerializeField] protected int dropGold;
+    public int DropGold => dropGold;
+
+
+    public int goldReward = 1;
+    [SerializeField] GameObject goldDropEffectPrefab;
+
+    protected virtual void Awake()
+    {
+  
+    }
+
+
+    private void Start()
+    {
+        GetComponent<HP>().OnDied += EnemyDie;
+    }
+
+
+    protected virtual void Update()
     {
         if (!isAttacking)
             Move();
     }
 
 
-    public virtual void SpawnPoint()
-    {
-        // 몬스터가 스폰하는 함수 구현
-    }
-
     public virtual void Move()
     {
-        // 추후 수정할 로직
         transform.Translate(Vector3.left * MoveSpeed * Time.deltaTime);
     }
 
-    public virtual void TakeDamage(int damage)
-    {
-        CurrentHealth -= damage;
-        Debug.Log($"현재 체력: {CurrentHealth}");
-        if (CurrentHealth <= 0)
-        {
-            Die();
-        }
-    }
 
-    public virtual void Die()
+    public virtual void EnemyDie()
     {
+        DropManager.instance.AddGold(goldReward);
+       // Instantiate(goldDropEffectPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
-        // 죽었을 때 이벤트 발생
-        // OnZombieDied?.Invoke();
-
-        // 아니면 게임 매니저 호출하여 돈 및 경험치 올리기
-        // GameManager.Instance.Gold += DropGold;
-        // GameManager.Instance.Exp += DropExp;
     }
 
-    private void ArrivedEnd()
+    
+    public virtual void Heal(int healAmount)
     {
-        // GameManger.Instance.HP--;
-        // Destroy(gameObject);
+        currentHealth = Mathf.Min(currentHealth + healAmount, maxHealth);  // 힐을 할 경우 MaxHealth 보다 많이 힐 되면 곤란함
+    }
+
+    public virtual bool IsAlive()  // 살아 있는 경우 판단
+    {
+        return currentHealth > 0;  
     }
 
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.CompareTag("Turret"))
-    //    {
-    //        targetPlant = other.GetComponent<TestPlant>();
-    //        if (targetPlant != null)
-    //        {
-    //            isAttacking = true;
-    //            AttackCoroutine = StartCoroutine(AttackRoutine());
-    //        }
-    //    }
-    //}
-
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.gameObject.CompareTag("Turret"))
-    //    {
-    //        if (targetPlant == other.GetComponent<TestPlant>())
-    //        {
-    //            isAttacking = false;
-    //            StopCoroutine(AttackCoroutine);
-    //        }
-    //    }
-    //}
-
-
-    //IEnumerator AttackRoutine()
-    //{
-    //    while (true)
-    //    {
-    //        if (targetPlant == null)
-    //        {
-    //            isAttacking = false;
-    //            yield break;
-    //        }
-
-    //        targetPlant.TakeDamage(Power);
-    //        yield return new WaitForSeconds(AttackSpeed);
-    //    }
-    //}
 }
