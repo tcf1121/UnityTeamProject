@@ -13,21 +13,29 @@ public abstract class Zombie : MonoBehaviour
     // 바꿔야될 클래스
     //private TestPlant targetPlant;
 
-    protected abstract string Name { get; set; }
+    [SerializeField] protected int currentHealth { get; set; }
+    public int CurrentHealth => currentHealth;
 
-    protected abstract int CurrentHealth { get; set; }
-    public int currentHealth => CurrentHealth;
-    protected abstract int MaxHealth { get; set; }
 
-    protected abstract int Power { get; set; }
+    [SerializeField] protected int maxHealth { get; set; }
+    public int MaxHealth => maxHealth;
 
-    protected abstract float AttackSpeed { get; set; }
+    [SerializeField] protected  int power { get; set; }
+    public int Power => power;
 
-    protected abstract float MoveSpeed { get; set; }
+    [SerializeField] protected float attackSpeed { get; set; }
+    public float AttackSpeed => attackSpeed;    
 
-    protected abstract int Level { get; set; }
+    [SerializeField] protected float moveSpeed { get; set; }
+    public float MoveSpeed => moveSpeed;
 
-    protected abstract int DropGold { get; set; }
+
+    [SerializeField] protected int level { get; set; }
+    public int Level => level;
+    
+    [SerializeField] protected int dropGold { get; set; }
+    public int DropGold => dropGold;
+
 
     // 좀비가 죽은 후에 이벤트
     public static event Action<int> OnZombieDied; // 좀비가 죽을 경우에 이벤트 발생
@@ -35,29 +43,23 @@ public abstract class Zombie : MonoBehaviour
     [SerializeField] GameObject goldDropEffectPrefab;
 
 
-    private void Update()
+    protected virtual void Update()
     {
         if (!isAttacking)
             Move();
     }
 
 
-    public virtual void SpawnPoint()
-    {
-        // 몬스터가 스폰하는 함수 구현
-    }
-
     public virtual void Move()
     {
-        // 추후 수정할 로직
         transform.Translate(Vector3.left * MoveSpeed * Time.deltaTime);
     }
 
     public virtual void TakeDamage(int damage)
     {
-        CurrentHealth -= damage;
+        currentHealth -= damage;
         Debug.Log($"현재 체력: {CurrentHealth}");
-        if (CurrentHealth <= 0)
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -71,4 +73,15 @@ public abstract class Zombie : MonoBehaviour
     }
 
     
+    public virtual void Heal(int healAmount)
+    {
+        currentHealth = Mathf.Min(currentHealth + healAmount, maxHealth);  // 힐을 할 경우 MaxHealth 보다 많이 힐 되면 곤란함
+    }
+
+    public virtual bool IsAlive()  // 살아 있는 경우 판단
+    {
+        return currentHealth > 0;  
+    }
+
+
 }
