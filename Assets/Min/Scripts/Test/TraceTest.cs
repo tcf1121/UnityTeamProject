@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -25,22 +26,28 @@ public class TraceTest : MonoBehaviour
         if (tilemap == null)
             tilemap = FindObjectOfType<Tilemap>();
 
-        // TODO: 게임 시작 버튼이 눌렸을 때, StartCoroutine -> 이벤트 구독
-        // TODO: Player 클래스에서 
-        // TODO: battle 중인지 아닌지 - NonBattleHero 태그로 추가해주심
+
+        // TODO: 이벤트 구독 시 아래 코드 2줄 삭제
         if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
             unitCoroutine = StartCoroutine(UnitRoutine());
 
         // TODO: 게임이 끝났을 때, TileReservation.Clear();
 
-        // 이벤트이름.AddListener(StartCoroutine);
+        // 클래스이름.OnBattlingChanged += BattleOnOff;
     }
 
     // 구독용 함수
-    private void StartCoroutine()
+    private void BattleOnOff()
     {
-        if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
-            unitCoroutine = StartCoroutine(UnitRoutine());
+        //if (클래스이름.battling) // 클래스가 static이 아니면, 필드에 클래스 추가
+        //{
+        //    if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
+        //        unitCoroutine = StartCoroutine(UnitRoutine());
+        //}
+        //else
+        //{
+        //    StopCoroutine(unitCoroutine);
+        //}
     }
 
 
@@ -71,8 +78,11 @@ public class TraceTest : MonoBehaviour
 
                 if (dist <= attackRange)
                 {
+                    // TODO: 이동 방향 부드럽게 바라보기
+                    transform.LookAt(target.position);
+
                     Debug.Log($"{gameObject.name}공격, {target.name}피격");
-                    // TODO: 데미지
+                    // TODO: 데미지             
                     yield return new WaitForSeconds(moveInterval);
                     // 공격 속도용 변수 추가 moveInterval 대신 넣어서 구현 가능
                     continue;
@@ -100,6 +110,9 @@ public class TraceTest : MonoBehaviour
     private IEnumerator MoveTo(Vector3 targetPos)
     {
         isMoving = true;
+
+        // TODO: 이동 방향 부드럽게 바라보기
+        transform.LookAt(targetPos);
 
         Vector3 start = transform.position;
         float t = 0f;
