@@ -19,6 +19,15 @@ public class HeroDataLoader : MonoBehaviour
         {
             status = CloneStatus(original);
             Debug.Log($"[HeroDataLoader] '{status.heroId}' 데이터 성공적으로 로드됨 (복제본)");
+            
+            status = CloneStatus(original);
+            Debug.Log($"[HeroDataLoader] {status.heroId} 데이터 로드 완료");
+            Debug.Log($"[HeroDataLoader] - prefabName: {status.prefabName}");
+            Debug.Log($"[HeroDataLoader] - job: {status.job}");
+            Debug.Log($"[HeroDataLoader] - cost: {status.cost}");
+            Debug.Log($"[HeroDataLoader] - HP: {string.Join(", ", status.hp)}");
+            Debug.Log($"[HeroDataLoader] - ATK: {string.Join(", ", status.attack)}");
+            Debug.Log($"[HeroDataLoader] - DPS: {string.Join(", ", status.dps)}");
         }
     }
 

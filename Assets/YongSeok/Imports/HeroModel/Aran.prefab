@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 1190033075304269702}
   - component: {fileID: 8991000105045738339}
   - component: {fileID: 2846049779682906532}
+  - component: {fileID: 784028504504045207}
   m_Layer: 0
   m_Name: Aran
   m_TagString: Hero
@@ -234,7 +235,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f1b64841fbdad45ae466e49cdab6ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  status: {fileID: 0}
+--- !u!114 &784028504504045207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e38b9514511e8d4f8adc67c35f7768a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 0
+  tagName: 
+  muzzlePoint: {fileID: 0}
+  basePrefab: {fileID: 0}
+  skillPrefab: {fileID: 0}
+  delayTime: 0
+  Mp: 0
+  upSetMp: 0
+  star: 1
 --- !u!1 &116134
 GameObject:
   m_ObjectHideFlags: 0

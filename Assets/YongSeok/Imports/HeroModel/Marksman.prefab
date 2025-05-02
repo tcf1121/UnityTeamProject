@@ -627,6 +627,9 @@ GameObject:
   - component: {fileID: -7038442356544060564}
   - component: {fileID: 3327270322358409047}
   - component: {fileID: -8696094714880576831}
+  - component: {fileID: 1895151409576159258}
+  - component: {fileID: 6598066617582309279}
+  - component: {fileID: 957045659902741741}
   m_Layer: 0
   m_Name: Marksman
   m_TagString: Hero
@@ -740,6 +743,46 @@ MonoBehaviour:
   battle: 0
   heroObject: {fileID: 145904}
   unit: {fileID: 3327270322358409047}
+--- !u!114 &1895151409576159258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53f1b64841fbdad45ae466e49cdab6ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6598066617582309279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2111d77a52fd7f46b4d7b6dc13b89b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ySShooter: {fileID: 6016563700139419484}
+  delay: 0.5
+  bulletSpeed: 10
+--- !u!114 &957045659902741741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6ad445b88df7e944882236eb2a40e27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  star: 2
 --- !u!1 &146950
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,6 +887,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 415474}
+  - component: {fileID: 6016563700139419484}
   m_Layer: 0
   m_Name: Dummy Prop Left
   m_TagString: Untagged
@@ -867,6 +911,21 @@ Transform:
   - {fileID: 6434963790247059888}
   m_Father: {fileID: 438178}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6016563700139419484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89058c38228d90e47b0df78afefe4a98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 7051569665692254088, guid: 110421e7e61397047bb9869ec4bc5e5e, type: 3}
+  muzzlePoint: {fileID: 415474}
+  bulletSpeed: 30
 --- !u!1 &149776
 GameObject:
   m_ObjectHideFlags: 0

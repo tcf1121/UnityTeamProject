@@ -935,6 +935,7 @@ GameObject:
   - component: {fileID: -678720465370270981}
   - component: {fileID: -950285615042514714}
   - component: {fileID: 3720295036519808288}
+  - component: {fileID: -4479788941997432245}
   m_Layer: 0
   m_Name: FlameWizard
   m_TagString: Hero
@@ -1048,6 +1049,18 @@ MonoBehaviour:
   battle: 0
   heroObject: {fileID: 1769314998133970}
   unit: {fileID: -950285615042514714}
+--- !u!114 &-4479788941997432245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769314998133970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53f1b64841fbdad45ae466e49cdab6ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1826937075140474
 GameObject:
   m_ObjectHideFlags: 0
