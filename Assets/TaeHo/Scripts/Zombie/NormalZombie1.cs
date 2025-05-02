@@ -14,13 +14,6 @@ public class NormalZombie1 : Zombie
     protected override float MoveSpeed { get; set; } = 1f; // 이동속도
     protected override int Level { get; set; } = 1; // 레벨
     protected override int DropGold { get; set; } 
-    protected override int DropExp { get; set; }
-    protected override float AttackRange { get; set; } // 공격범위
-
-    // 좀비가 죽은 후에 이벤트
-    public static event Action<int> OnZombieDied; // 좀비가 죽을 경우에 이벤트 발생
-    public int goldReward = 1;
-    [SerializeField] GameObject goldDropEffectPrefab; 
 
 
     private void Start()
@@ -46,9 +39,7 @@ public class NormalZombie1 : Zombie
 
     public override void Die()
     {
-        OnZombieDied?.Invoke(goldReward);
-        // Instantiate(goldDropEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+       base.Die();
     }
 
 }

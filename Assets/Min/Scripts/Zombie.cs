@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -28,9 +29,10 @@ public abstract class Zombie : MonoBehaviour
 
     protected abstract int DropGold { get; set; }
 
-    protected abstract int DropExp { get; set; }
-
-    protected abstract float AttackRange { get; set; }
+    // 좀비가 죽은 후에 이벤트
+    public static event Action<int> OnZombieDied; // 좀비가 죽을 경우에 이벤트 발생
+    public int goldReward = 1;
+    [SerializeField] GameObject goldDropEffectPrefab;
 
 
     private void Update()
@@ -63,60 +65,10 @@ public abstract class Zombie : MonoBehaviour
 
     public virtual void Die()
     {
+        OnZombieDied?.Invoke(goldReward);
+        // Instantiate(goldDropEffectPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
-        // 죽었을 때 이벤트 발생
-        // OnZombieDied?.Invoke();
-
-        // 아니면 게임 매니저 호출하여 돈 및 경험치 올리기
-        // GameManager.Instance.Gold += DropGold;
-        // GameManager.Instance.Exp += DropExp;
     }
 
-    private void ArrivedEnd()
-    {
-        // GameManger.Instance.HP--;
-        // Destroy(gameObject);
-    }
-
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.CompareTag("Turret"))
-    //    {
-    //        targetPlant = other.GetComponent<TestPlant>();
-    //        if (targetPlant != null)
-    //        {
-    //            isAttacking = true;
-    //            AttackCoroutine = StartCoroutine(AttackRoutine());
-    //        }
-    //    }
-    //}
-
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.gameObject.CompareTag("Turret"))
-    //    {
-    //        if (targetPlant == other.GetComponent<TestPlant>())
-    //        {
-    //            isAttacking = false;
-    //            StopCoroutine(AttackCoroutine);
-    //        }
-    //    }
-    //}
-
-
-    //IEnumerator AttackRoutine()
-    //{
-    //    while (true)
-    //    {
-    //        if (targetPlant == null)
-    //        {
-    //            isAttacking = false;
-    //            yield break;
-    //        }
-
-    //        targetPlant.TakeDamage(Power);
-    //        yield return new WaitForSeconds(AttackSpeed);
-    //    }
-    //}
+    
 }

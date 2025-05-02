@@ -12,7 +12,6 @@ public class TankerZombie : Zombie
     protected override float MoveSpeed { get; set; } = 0.5f;
     protected override int Level { get; set; } = 1;
     protected override int DropGold { get; set; } = 1;
-    protected override int DropExp { get; set; } = 1;
-    protected override float AttackRange { get; set; } = 1f;
+  
 
 }
