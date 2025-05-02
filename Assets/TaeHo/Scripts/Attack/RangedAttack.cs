@@ -20,6 +20,7 @@ public class RangedAttack : AttackBase
 
     protected override void Attack()
     {
+        Debug.Log("°ø°Ý ½ÇÇàµÊ!");
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
         projectile.GetComponent<Projectile>().Initialize(damage, gameObject);
 
