@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeroStatus : MonoBehaviour
+public class HeroStatus_ : MonoBehaviour
 {
 
     [Header("Status")]
