@@ -1,3 +1,4 @@
+using EPOOutline;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -5,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class MouseController : MonoBehaviour
 {
@@ -20,30 +22,41 @@ public class MouseController : MonoBehaviour
 
     private const string moveAbleTag1 = "Hero";
     private const string moveAbleTag2 = "Storage";
-
-    
+    private GraphicRaycaster g_raycater;
+    private HeroUnitAnimator heroAnimator;
+    private Outlinable heroOutline;
     [Header("UI")]
     [SerializeField] private GameObject heroInfo;
-   
+    [SerializeField] private Canvas canvas;
 
     private void Update()
     {
+        
         lastTouchPos = currentTouchPos;
         currentTouchPos = Input.mousePosition;
-
-        if (Input.GetMouseButtonDown(0))
+        if (!GameManager.Instance.player.Battling)
         {
-            TouchBeganEvent();
-            prePos = Input.mousePosition;
+            if (Input.GetMouseButtonDown(0))
+            {
+                TouchBeganEvent();
+                prePos = Input.mousePosition;
+            }
+            if (Input.GetMouseButton(0))
+            {
+                if (Input.mousePosition != prePos) { TouchMovedEvent(); }
+                else { TouchStayEvent(); }
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                TouchEndedEvent();
+            }
         }
-        if (Input.GetMouseButton(0))
+        else
         {
-            if (Input.mousePosition != prePos) { TouchMovedEvent(); }
-            else { TouchStayEvent(); }
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            TouchEndedEvent();
+            if (Input.GetMouseButtonDown(0))
+            {
+                HeroInfoEvent();
+            }
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -58,6 +71,11 @@ public class MouseController : MonoBehaviour
         moveAbleObject = OnClickObjUsingTag(moveAbleTag1, moveAbleTag2);
         if (moveAbleObject != null)
         {
+            heroOutline = moveAbleObject.GetComponent<Outlinable>();
+            heroOutline.enabled = true;
+            heroAnimator = moveAbleObject.GetComponent<HeroUnitAnimator>();
+            heroAnimator.Wait(false);
+            heroAnimator.Pick(true);
             beforePosition = moveAbleObject.transform.position;
 
         }
@@ -84,25 +102,18 @@ public class MouseController : MonoBehaviour
     // 드래그 이벤트
     private void TouchMovedEvent()
     {
-        int layerMask = 1 << LayerMask.NameToLayer("Ground");
+        int layerMask = 1 << LayerMask.NameToLayer("Plane");
+        int GridMask = 2 << LayerMask.NameToLayer("Ground");
+        
         if (moveAbleObject != null)
         {
+            heroOutline.enabled = true;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hitInfo;
             Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask);
+            moveAbleObject.transform.position = new Vector3(hitInfo.point.x, 1, hitInfo.point.z);
 
-
-
-            if (hitInfo.collider != null)
-            {
-                moveAbleObject.transform.position = new Vector3(hitInfo.collider.gameObject.transform.position.x,
-                    2, hitInfo.collider.gameObject.transform.position.z);
-            }
-            else
-            {
-                moveAbleObject.transform.position = beforePosition;
-            }
         }
     }
 
@@ -114,15 +125,37 @@ public class MouseController : MonoBehaviour
     private void TouchEndedEvent()
     {
         int layerMask = 1 << LayerMask.NameToLayer("Ground");
+        
         if (moveAbleObject != null)
         {
+            heroOutline.enabled = false;
+            heroAnimator.Pick(false);
+            heroAnimator.Wait(true);
+            // 판매 UI에 끌어당기면 판매가 되게
+            //if (EventSystem.current.IsPointerOverGameObject())
+            //{
+            //    g_raycater = canvas.GetComponent<GraphicRaycaster>();
+            //    PointerEventData pointerEventData = new PointerEventData(null);
+            //    pointerEventData.position = currentTouchPos;
+            //    List<RaycastResult> results = new List<RaycastResult>();
+            //    Debug.Log("UI 감지");
+            //    if (results.Count > 0)
+            //    {
+            //        Debug.Log("레이케스트 중");
+            //        foreach (RaycastResult result in results)
+            //            Debug.Log(result.gameObject.tag);
+            //    }
+
+            //}
+            // 그게 아니라 그냥 위치를 이동하는거면 해당 위치로 이동
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hitInfo;
             Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask);
 
             if (hitInfo.collider != null)
-            {   if((tile.tileMap.WorldToCell(hitInfo.transform.position).y < 8 &&
+            {
+                if ((tile.tileMap.WorldToCell(hitInfo.transform.position).y < 8 &&
                     tile.tileMap.WorldToCell(hitInfo.transform.position).y > 2) &&
                     (tile.tileMap.WorldToCell(hitInfo.transform.position).x < 1 &&
                     tile.tileMap.WorldToCell(hitInfo.transform.position).x > -9))
@@ -130,6 +163,7 @@ public class MouseController : MonoBehaviour
                     if (playerHero.CanMove(tile.tileMap.WorldToCell(hitInfo.transform.position)))
                     {
                         moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
+                        Debug.Log(moveAbleObject.transform.position);
                         moveAbleObject.transform.position += offSet;
                         playerHero.MoveHero(moveAbleObject.GetComponent<Unit>().startPoint,
                             tile.tileMap.WorldToCell(hitInfo.transform.position),
@@ -139,7 +173,6 @@ public class MouseController : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("다른 사람 차 있음");
                         moveAbleObject.transform.position = beforePosition;
                     }
                 }

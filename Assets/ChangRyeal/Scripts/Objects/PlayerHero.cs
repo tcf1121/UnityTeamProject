@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.PackageManager;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -17,7 +18,9 @@ public class PlayerHero : MonoBehaviour
     [SerializeField] public Dictionary<Vector3Int, Hero> HeroInStorage = new Dictionary<Vector3Int, Hero>();
 
 
-    private void Start()
+    [Header("Propertis")]
+    [SerializeField] GameObject RankUpEffetPrefab;
+    public void SetPlayerHero()
     {
         for (int x = -8; x <= 0; x++)
         {
@@ -34,33 +37,32 @@ public class PlayerHero : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
+        //if (Input.GetMouseButtonDown(0))
+        //{
 
-            int layerMask = 1 << LayerMask.NameToLayer("Ground");
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //    int layerMask = 1 << LayerMask.NameToLayer("Ground");
+        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            RaycastHit hitInfo;
-            Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask);
+        //    RaycastHit hitInfo;
+        //    Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask);
 
-            if (hitInfo.collider != null)
-            {
-                Debug.Log(tileMap.WorldToCell(hitInfo.transform.position));
+        //    if (hitInfo.collider != null)
+        //    {
 
                 
-                if ((tileMap.WorldToCell(hitInfo.transform.position).x >= -8 &&
-                    tileMap.WorldToCell(hitInfo.transform.position).x <= 0))
-                {
-                    if ((tileMap.WorldToCell(hitInfo.transform.position).y >= 4 &&
-                    tileMap.WorldToCell(hitInfo.transform.position).y <= 11))
-                        Debug.Log(HeroOnBattle[tileMap.WorldToCell(hitInfo.transform.position)]);
-                    else if (tileMap.WorldToCell(hitInfo.transform.position).y == 3)
-                        Debug.Log(HeroInStorage[tileMap.WorldToCell(hitInfo.transform.position)]);
-                }
+        //        if ((tileMap.WorldToCell(hitInfo.transform.position).x >= -8 &&
+        //            tileMap.WorldToCell(hitInfo.transform.position).x <= 0))
+        //        {
+        //            if ((tileMap.WorldToCell(hitInfo.transform.position).y >= 4 &&
+        //            tileMap.WorldToCell(hitInfo.transform.position).y <= 11))
+        //                Debug.Log(HeroOnBattle[tileMap.WorldToCell(hitInfo.transform.position)]);
+        //            else if (tileMap.WorldToCell(hitInfo.transform.position).y == 3)
+        //                Debug.Log(HeroInStorage[tileMap.WorldToCell(hitInfo.transform.position)]);
+        //        }
 
 
-            }
-        }
+        //    }
+        //}
     }
     // 모든 영웅 개수 확인 (최대 값 : 플레이어 레벨 + 9(보관함))
     public int AllHeroNum()
@@ -80,6 +82,25 @@ public class PlayerHero : MonoBehaviour
         return battleHero.Count;
     }
 
+    // 특정 영웅 개수 확인
+    public int SpecificHeroNum(Hero hero)
+    {
+        var matchingHeroes = allHero.Where(h => h.name == hero.name && h.star == hero.star).ToList();
+        return matchingHeroes.Count;
+    }
+
+    public List<Hero> SpecificHero(Hero hero)
+    {
+        var matchingHeroes = allHero.Where(h => h.name == hero.name && h.star == hero.star).ToList();
+        return matchingHeroes;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        GameObject obj;
+        
+    }
+
     // 영웅 다 차있는 지 확인
     public bool FullHero()
     {
@@ -88,14 +109,14 @@ public class PlayerHero : MonoBehaviour
     }
 
 
+
     // 플레이어 영웅 기물 추가
-    public void NewHero(Hero hero)
+    public void NewHero(Hero hero, bool rankUp = false)
     {
-        // 비어 있는 공간 확인
+        // 그리드 내의 비어 있는 공간 확인
         Vector3Int heroGrid = new Vector3Int(0, 0, 0);
         if (StorageHeroNum() < 9)
         {
-            
             foreach (var storage in HeroInStorage)
             {
                 if (storage.Value == null)
@@ -121,28 +142,52 @@ public class PlayerHero : MonoBehaviour
         // 오브젝트로 만들어 추가
         hero.GetComponent<Unit>().startPoint = heroGrid;
         Vector3 heroPos = new Vector3(tileMap.CellToWorld(heroGrid).x, 0, tileMap.CellToWorld(heroGrid).z);
-        GameObject getHero = Instantiate(hero.heroObject, heroPos, Quaternion.identity);
-        
-        allHero.Add(getHero.GetComponent<Hero>());
+        GameObject heroObj = Instantiate(hero.heroObject, heroPos, Quaternion.Euler(new Vector3(0, 180, 0)));
+        heroObj.GetComponent<HeroUnitAnimator>().Wait(true);
+        if (rankUp)
+        {
+            Vector3 effctPos = new Vector3(heroPos.x, 1, heroPos.z);
+            Instantiate(RankUpEffetPrefab, effctPos, Quaternion.Euler(new Vector3(0, 180, 0)));
+        }
+            
+        Hero getHero = heroObj.GetComponent<Hero>();
+        allHero.Add(getHero);
         // 보관함이 꽉 차지 않았다면 보관함에 추가
         if (StorageHeroNum() < 9)
         {
-            getHero.GetComponent<Hero>().SetBattle();
-            storageHero.Add(getHero.GetComponent<Hero>());
-            HeroInStorage[heroGrid] = getHero.GetComponent<Hero>();
+            getHero.SetBattle();
+            storageHero.Add(getHero);
+            HeroInStorage[heroGrid] = getHero;
         }
 
         // 보관함이 꽉 찼다면 전장에 추가
         else
         {
-            battleHero.Add(getHero.GetComponent<Hero>());
-            HeroOnBattle[heroGrid] = getHero.GetComponent<Hero>();
+            battleHero.Add(getHero);
+            HeroOnBattle[heroGrid] = getHero;
         }
         
         //같은 기물이 3개면
-        //다 버리고 2성 기물을 추가
+        if(SpecificHeroNum(getHero) == 3)
+        {
+            List<Hero> specitcHeroList = SpecificHero(getHero);
+            foreach(Hero specitcHero in specitcHeroList)
+            {
+                SellHero(specitcHero.heroObject);
+            }
+            NewHero(UpgradeHero(getHero), true);
+            
+        }
     }
 
+    private Hero UpgradeHero(Hero hero)
+    {
+        hero.star++;
+        hero.enabled = true;
+        return hero;
+    }
+
+    // 플레이어 영웅 기물 판매 (삭제)
     public void SellHero(GameObject hero)
     {
         Destroy(hero);
@@ -160,6 +205,7 @@ public class PlayerHero : MonoBehaviour
             
     }
 
+    // 움직일려는 칸에 영웅이 있는지 없는지 확인
     public bool CanMove(Vector3Int pos)
     {
         if (pos.y == 3)
@@ -168,6 +214,7 @@ public class PlayerHero : MonoBehaviour
             return HeroOnBattle[pos] == null ? true : false;
     }
 
+    // 영웅 움직이는 함수
     public void MoveHero(Vector3Int before, Vector3Int after, Hero hero)
     {
         // 전에 있던 위치 삭제
@@ -176,6 +223,7 @@ public class PlayerHero : MonoBehaviour
         AfterHero(after, hero);
     }
 
+    // 이동 전에 있는 위치 확인 후 해당 칸에 삭제
     private void BeforeHero(Vector3Int before, Hero hero)
     {
         if (before.y ==3)
@@ -190,6 +238,7 @@ public class PlayerHero : MonoBehaviour
         }
     }
 
+    // 이동 후에 있는 위치 확인 후 해당 칸에 추가
     private void AfterHero(Vector3Int after, Hero hero)
     {
         if (after.y == 3)

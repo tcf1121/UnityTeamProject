@@ -24,38 +24,49 @@ public class Shop : MonoBehaviour
     
     
 
+    // 스테이지가 넘어갈때로 변경
     private void OnEnable()
     {
+        shopPanel.SetActive(true);
         readyBtn.SetActive(true);
-        if (GameManager.Instance.player.Stage == 1)
+        Hero[] firstHero = sHctrl.StartDrawHero();
+        for (int i = 0; i < 2; i++)
         {
-            Hero[] firstHero = sHctrl.StartDrawHero();
-            for (int i = 0; i < 2; i++)
-            {
-                if(i < 2)
-                    GameManager.Instance.player.BuyHero(firstHero[i], 0);
-            }
+            if (i < 2)
+                GameManager.Instance.player.BuyHero(firstHero[i], 0);
         }
-        else
-        {
-            shopPanel.SetActive(true);
-            if (!lockHero)
-            {
-                DrawShopHero();
-            }
-        }
+        GameManager.Instance.player.OnBattlingChanged += EndBattle;
+
+        DrawShopHero();
     }
+
+    // 필요 없을듯
     private void OnDisable()
     {
         readyBtn.SetActive(false);
         shopPanel.SetActive(false);
         if (!lockHero)
         {
-            sHctrl.RevertHero(hero);
+            
         }
     }
+
+    public void EndBattle()
+    {
+        if (!GameManager.Instance.player.Battling)
+        {
+            readyBtn.SetActive(true);
+            if (!lockHero)
+            {
+                DrawShopHero();
+            }
+        }
+
+    }
+
     public void DrawShopHero()
     {
+        sHctrl.RevertHero(hero);
         hero = sHctrl.DrawHero();
         SetHeroBtn();
     }
@@ -148,8 +159,9 @@ public class Shop : MonoBehaviour
     #endregion
 
     public void Ready()
-    {        
-        shopManager.SetActive(false);
+    {
+        readyBtn.SetActive(false);
+        GameManager.Instance.player.Battling = true;
     }
 
     public void LockShop()

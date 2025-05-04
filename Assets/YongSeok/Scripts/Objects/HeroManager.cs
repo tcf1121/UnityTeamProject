@@ -62,6 +62,7 @@ namespace YongSeok
             }
 
             GameObject newHeroObj = Instantiate(baseHero.HeroObject, spawnPosition, Quaternion.identity);
+            Instantiate(newHeroObj);
             HeroBase newHero = newHeroObj.GetComponent<HeroBase>();
 
             // 새 히어로 세팅
@@ -90,10 +91,20 @@ namespace YongSeok
         public HeroBase SpawnHero(GameObject heroPrefab, Vector3 spawnPos)
         {
             GameObject heroObj = Instantiate(heroPrefab, spawnPos, Quaternion.identity);
+            Instantiate(heroObj);
             HeroBase hero = heroObj.GetComponent<HeroBase>();
             RegisterHero(hero);
             return hero;
         }
 
+        public GameObject Instantiate(GameObject prefab, Transform parent = null)
+        {
+            GameObject go = Object.Instantiate(prefab, parent);
+            int index = go.name.IndexOf("(Clone)");
+            if (index > 0)
+                go.name = go.name.Substring(0, index);
+
+            return go;
+        }
     }
 }
