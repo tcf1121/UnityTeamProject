@@ -39,8 +39,6 @@ public class MeleeAttack : AttackBase
                 target.TakeDamage(damage);
                 ManaRecovery(gameObject);
                 Debug.Log($"{gameObject.name}이 {hit.collider.name}에게 {damage} 근거리 피해를 줌");
-                
-
             }
         }
     }
