@@ -34,8 +34,8 @@ public class ShopHeroController : MonoBehaviour
         {
             for (int i = 0; i < 9; i++)
                 CostHero[hero.cost - 1].Add(hero);
-
         }
+        Debug.Log(CostHero[0].Count);
     }
 
     // 상점에서 구매하지 않은 영웅 기물은 다시 리스트에 돌려놓음
@@ -47,6 +47,16 @@ public class ShopHeroController : MonoBehaviour
                 CostHero[hero[i].cost - 1].Add(hero[i]);
 
         }
+        Debug.Log(CostHero[0].Count);
+    }
+
+    // 영웅 판매 
+    public void SellHero(Hero hero)
+    {
+        int heroNum = (int)Mathf.Pow(3f, (float)(hero.star - 1));
+        hero.star = 1;
+        for (int i = 0; i < heroNum; i++)
+            CostHero[hero.cost - 1].Add(hero);
     }
 
     // 게임을 맨 처음 시작할 때 영웅 기물 2개 지급
@@ -56,9 +66,7 @@ public class ShopHeroController : MonoBehaviour
         for(int i = 0; i< 2; i++)
         {
             RandomHero(ref hero[i], 0);
-            Debug.Log(hero[i].name);
         }
-
         return hero;
     }
 

@@ -85,13 +85,14 @@ public class PlayerHero : MonoBehaviour
     // 특정 영웅 개수 확인
     public int SpecificHeroNum(Hero hero)
     {
-        var matchingHeroes = allHero.Where(h => h.name == hero.name && h.star == hero.star).ToList();
+        List<Hero> matchingHeroes = allHero.Where(h => h.name == hero.name && h.star == hero.star).ToList();
+        
         return matchingHeroes.Count;
     }
 
     public List<Hero> SpecificHero(Hero hero)
     {
-        var matchingHeroes = allHero.Where(h => h.name == hero.name && h.star == hero.star).ToList();
+        List<Hero> matchingHeroes = allHero.Where(h => h.name == hero.name && h.star == hero.star).ToList();
         return matchingHeroes;
     }
 
@@ -173,7 +174,7 @@ public class PlayerHero : MonoBehaviour
             List<Hero> specitcHeroList = SpecificHero(getHero);
             foreach(Hero specitcHero in specitcHeroList)
             {
-                SellHero(specitcHero.heroObject);
+                DeleteHero(specitcHero.heroObject);
             }
             NewHero(UpgradeHero(getHero), true);
             
@@ -186,9 +187,8 @@ public class PlayerHero : MonoBehaviour
         hero.enabled = true;
         return hero;
     }
-
-    // 플레이어 영웅 기물 판매 (삭제)
-    public void SellHero(GameObject hero)
+    // 플레이어 영웅 기물 삭제
+    public void DeleteHero(GameObject hero)
     {
         Destroy(hero);
         allHero.Remove(hero.GetComponent<Hero>());
@@ -202,7 +202,26 @@ public class PlayerHero : MonoBehaviour
             storageHero.Remove(hero.GetComponent<Hero>());
             HeroInStorage[hero.GetComponent<Unit>().startPoint] = null;
         }
-            
+
+    }
+
+    // 플레이어 영웅 기물 판매 (삭제)
+    public void SellHero(GameObject hero)
+    {
+        // 판매한 히어로 상점에 추가
+        GameManager.Instance.player.shop.GetComponent<ShopHeroController>().SellHero(hero.GetComponent<Hero>());
+        allHero.Remove(hero.GetComponent<Hero>());
+        if (hero.GetComponent<Hero>().battle)
+        {
+            battleHero.Remove(hero.GetComponent<Hero>());
+            HeroOnBattle[hero.GetComponent<Unit>().startPoint] = null;
+        }
+        else
+        {
+            storageHero.Remove(hero.GetComponent<Hero>());
+            HeroInStorage[hero.GetComponent<Unit>().startPoint] = null;
+        }
+        Destroy(hero);
     }
 
     // 움직일려는 칸에 영웅이 있는지 없는지 확인

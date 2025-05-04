@@ -20,7 +20,7 @@ public class Shop : MonoBehaviour
     [SerializeField] private Button[] heroBtn;
     [SerializeField] private GameObject[] sellPanel;
 
-    private Hero[] hero = new Hero[5];
+    [SerializeField] private Hero[] hero = new Hero[5];
     
     
 
@@ -91,24 +91,28 @@ public class Shop : MonoBehaviour
     #region 상점 기물 구매
     public void BuyHero(int index)
     {
-        if (!GameManager.Instance.player.playerHero.FullHero())
+        if (hero[index] != null)
         {
-            if (GameManager.Instance.player.CanBuy(hero[index].cost))
+            if (!GameManager.Instance.player.playerHero.FullHero())
             {
-                GameManager.Instance.player.BuyHero(hero[index], hero[index].cost);
-                sellPanel[index].SetActive(true);
-                heroBtn[index].interactable = false;
-                hero[index] = null;
+                if (GameManager.Instance.player.CanBuy(hero[index].cost))
+                {
+                    GameManager.Instance.player.BuyHero(hero[index], hero[index].cost);
+                    sellPanel[index].SetActive(true);
+                    heroBtn[index].interactable = false;
+                    hero[index] = null;
+                }
+                else
+                {
+                    Debug.Log("돈 부족");
+                }
             }
             else
             {
-                Debug.Log("돈 부족");
+                Debug.Log("자리 부족");
             }
         }
-        else
-        {
-            Debug.Log("자리 부족");
-        }
+
         // 
         //if(GameManager.Instance.player.CanBuy(Hero[index].cost))
     }
@@ -124,7 +128,6 @@ public class Shop : MonoBehaviour
             {
                 GameManager.Instance.player.Gold -= 2;
                 Debug.Log("리롤");
-                sHctrl.RevertHero(hero);
                 DrawShopHero();
             }
             else

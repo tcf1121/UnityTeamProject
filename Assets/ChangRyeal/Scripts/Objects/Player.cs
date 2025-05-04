@@ -10,7 +10,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] GameObject info;
-    [SerializeField] GameObject shop;
+    [SerializeField] public GameObject shop;
 
     private readonly int[] ExpRequired = new int[] { 0, 0, 2, 6, 10, 20, 36, 56, 80, 100 };
     [SerializeField] private int health;
@@ -126,11 +126,11 @@ public class Player : MonoBehaviour
     public void SellHero(GameObject heroObj)
     {
         Hero hero = heroObj.GetComponent<Hero>();
-        playerHero.SellHero(heroObj);
-        
+        int heroNum = (int)Mathf.Pow(3f, (float)(hero.star - 1));
         if (hero.cost == 1)
-            Gold += hero.cost * hero.star;
+            Gold += hero.cost * heroNum;
         else
-            Gold += hero.cost * hero.star - 1;
+            Gold += hero.cost * heroNum - 1;
+        playerHero.SellHero(heroObj);
     }
 }
