@@ -7,7 +7,7 @@ public class Projectile : MonoBehaviour
     // 투사체
     public float projectileSpeed = 1f; // 투사체 속도
 
-    public int projectileDamage;  // 투사체 데미지
+    private int projectileDamage = 0;  // 투사체 데미지
 
     private GameObject shooter;  // 쏘는 캐릭터 붙이면 됨
 
