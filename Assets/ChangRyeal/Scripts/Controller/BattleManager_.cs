@@ -11,26 +11,16 @@ public class BattleManager_ : MonoBehaviour
 
     private void OnEnable()
     {
+
+    }
+
+    public void OnBattle()
+    {
         SetBattle();
         SetHero(GameManager.Instance.player.playerHero.HeroOnBattle);
-        Test();
     }
 
     // √ ±‚»≠
-
-    public void Test()
-    {
-        for (int x = -8; x <= 0; x++)
-        {
-            for (int y = 4; y <= 11; y++)
-            {
-                if (BattleObject[new Vector3Int(x, y, 0)] != null)
-                {
-
-                }
-            }
-        }
-    }
     public void SetBattle()
     {
         BattleObject.Clear();

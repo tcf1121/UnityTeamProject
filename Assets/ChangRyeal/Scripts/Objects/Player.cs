@@ -64,8 +64,8 @@ public class Player : MonoBehaviour
         readyBtn.onClick.AddListener(playerHero.SetBattle);
         info.SetActive(false);
         shop.SetActive(false);
-        
 
+        playerHero.battleManager = GameObject.Find("BattleManager");
         playerHero.SetPlayerHero();
         info.SetActive(true);
         shop.SetActive(true);

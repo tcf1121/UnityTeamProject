@@ -29,6 +29,10 @@ public class MouseController : MonoBehaviour
     [SerializeField] private GameObject heroInfo;
     [SerializeField] private Canvas canvas;
 
+    private void Awake()
+    {
+        playerHero = GameManager.Instance.player.playerHero;
+    }
     private void Update()
     {
         

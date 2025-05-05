@@ -15,8 +15,7 @@ public class Synergy : MonoBehaviour
     public int hero;
     public int cygnus;
 
-
-    private void OnEnable()
+    public void OnBattle()
     {
         ResetSynergy();
         SetSynergy();
