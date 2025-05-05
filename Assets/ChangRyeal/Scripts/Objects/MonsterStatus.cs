@@ -22,6 +22,7 @@ public class MonsterStatus : MonoBehaviour
 
     [Header("Battle Status")]
     [SerializeField] public Status battleStatus;  // ½ºÅÝ
+    public int CurHp;
 
     [Header("Look")]
     [SerializeField] public GameObject[] prefab;    // ¿ÜÇü
@@ -56,6 +57,7 @@ public class MonsterStatus : MonoBehaviour
                 battleStatus.damage = status.damage * 3;
         }
         battleStatus.maxHp = (int)(status.maxHp * stage);
+        CurHp = battleStatus.maxHp;
         battleStatus.attack = (int)(status.attack * stage);
         battleStatus.defense = status.defense;
         battleStatus.magicResist = status.magicResist;

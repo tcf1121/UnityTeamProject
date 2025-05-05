@@ -30,11 +30,15 @@ public class HeroStatus_ : MonoBehaviour
 
     [Header("Battle Status")]
     [SerializeField] public Status b_Status;
+    public int CurHp;
+    public int CurMana;
 
 
     // 현재 시너지 상태에 따라 
     public void SetSynergy(Synergy synergy)
     {
+        s_Status.maxHp = new int[1];
+        s_Status.attack = new int[1];
         s_Status.maxHp[0] = 0;
         s_Status.attack[0] = 0;
         s_Status.defense = 0;
@@ -119,8 +123,10 @@ public class HeroStatus_ : MonoBehaviour
     }
     public void SetBattleStatus()
     {
-        b_Status.maxHp[0] = status.maxHp[GetComponent<Hero>().star] + s_Status.maxHp[0];
-        b_Status.attack[0] = status.attack[GetComponent<Hero>().star] + s_Status.attack[0];
+        b_Status.maxHp = new int[1];
+        b_Status.attack = new int[1];
+        b_Status.maxHp[0] = status.maxHp[GetComponent<Hero>().star-1] + s_Status.maxHp[0];
+        b_Status.attack[0] = status.attack[GetComponent<Hero>().star-1] + s_Status.attack[0];
         b_Status.defense = status.defense + s_Status.defense;
         b_Status.magicResist = status.magicResist + s_Status.magicResist;
         b_Status.range = status.range + s_Status.range;
@@ -129,5 +135,18 @@ public class HeroStatus_ : MonoBehaviour
         b_Status.addMana = status.addMana + s_Status.addMana;
         b_Status.critical = status.critical + s_Status.critical;
         b_Status.criticalDamage = status.criticalDamage + s_Status.criticalDamage;
+        CurHp = b_Status.maxHp[0];
+        CurMana = 0;
+    }
+
+    public void addMana()
+    {
+        CurMana += b_Status.addMana;
+        if(CurMana > b_Status.maxMp)
+        {
+            // 스킬을 쓴다
+            // mana 0으로
+        }
+
     }
 }
