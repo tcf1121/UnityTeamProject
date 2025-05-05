@@ -6,20 +6,31 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TraceTest : MonoBehaviour
+public class Trace : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private string targetTag;
 
     [SerializeField] private float moveInterval = 1.0f; // 행동 결정 시간
-    [SerializeField] private float moveDuration = 0.25f; // 이동 시간
+    [SerializeField] private float moveDuration = 1.0f; // 이동 시간
     [SerializeField] private int attackRange = 3; // 감지 범위, 공격 사거리랑 다름
+    [SerializeField] private float attackSpeed = 1.0f;
 
     [SerializeField] private float ObjYPos = 1.5f;
 
+    private HeroUnitAnimator animator;
+
     private bool isMoving = false;
     private Coroutine unitCoroutine;
+    private Coroutine attackCoroutine;
 
+    private Transform target;
+    public Transform Target { get; set; }
+
+    private void Awake()
+    {
+        animator = GetComponent<HeroUnitAnimator>();
+    }
 
     private void Start()
     {
@@ -58,7 +69,8 @@ public class TraceTest : MonoBehaviour
 
     private IEnumerator UnitRoutine()
     {
-        Transform target = FindNearestTarget();
+        target = FindNearestTarget(); // 도발 스킬 위해 필드로 올림
+
         while (true)
         {
             if (!isMoving)
@@ -76,14 +88,20 @@ public class TraceTest : MonoBehaviour
 
                 Debug.Log($"{name} 위치: {myXY} / 타겟 위치: {targetXY} / 거리: {dist} / 사거리: {attackRange}");
 
+
+                // while (dist <= attackRange) 일 때, TryAttack 호출
+                // 공격 속도 및 moveInterval 삭제
                 if (dist <= attackRange)
                 {
                     // TODO: 이동 방향 부드럽게 바라보기
                     transform.LookAt(target.position);
 
                     Debug.Log($"{gameObject.name}공격, {target.name}피격");
-                    // TODO: 데미지             
-                    yield return new WaitForSeconds(moveInterval);
+                    // TODO: 데미지
+
+                    PlayAttackAnimation(attackSpeed);
+
+                    yield return new WaitForSeconds(attackSpeed);
                     // 공격 속도용 변수 추가 moveInterval 대신 넣어서 구현 가능
                     continue;
                 }
@@ -114,15 +132,22 @@ public class TraceTest : MonoBehaviour
         // TODO: 이동 방향 부드럽게 바라보기
         transform.LookAt(targetPos);
 
+        animator.Move(true);
+
         Vector3 start = transform.position;
         float t = 0f;
 
         while (t < 1f)
         {
+
             t += Time.deltaTime / moveDuration;
             transform.position = Vector3.Lerp(start, targetPos, t);
+
+
             yield return null;
         }
+
+        animator.Move(false);
 
         transform.position = targetPos;
         Vector3Int cellPos = tilemap.WorldToCell(transform.position);
@@ -271,5 +296,20 @@ public class TraceTest : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void PlayAttackAnimation(float dur)
+    {
+        attackCoroutine = StartCoroutine(AttackRoutine(dur));
+    }
+
+    private IEnumerator AttackRoutine(float dur)
+    {
+        animator.Attack();
+
+        yield return new WaitForSeconds(dur);
+
+        //foreach (Animator ani in animators)
+        //    ani.SetBool("Run", false);
     }
 }
