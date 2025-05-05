@@ -11,11 +11,11 @@ public class Skills : MonoBehaviour
     [SerializeField] Tilemap tilemap;
 
     private string targetTag;
-
+    private string tag;
     private void Awake()
     {
         // animator = GetComponent<HeroUnitAnimator>();
-        string tag = gameObject.tag;
+        tag = gameObject.tag;
 
         if (tag == "Hero")
         {
@@ -100,13 +100,13 @@ public class Skills : MonoBehaviour
                     {
                         if (tag == "Hero")
                         {
-                            MonsterStatus mon = GetComponent<MonsterStatus>();
+                            MonsterStatus mon = enemy.GetComponent<MonsterStatus>();
                             mon.battleStatus.maxHp -= 100; // 데미지 만큼 깎기
                         }
 
                         else if (tag == "Monster")
                         {
-                            HeroStatus_ hero = GetComponent<HeroStatus_>();
+                            HeroStatus_ hero = enemy.GetComponent<HeroStatus_>();
                             hero.b_Status.maxMp -= 100; // 데미지 만큼 깎기
                         }
                     }
@@ -125,7 +125,7 @@ public class Skills : MonoBehaviour
 
                     if (dist <= range)
                     {
-                        Trace enemyTrace = GetComponent<Trace>();
+                        Trace enemyTrace = enemy.GetComponent<Trace>();
                         enemyTrace.Target = gameObject.transform;
                     }
                 }
