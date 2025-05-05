@@ -6,30 +6,46 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Trace : MonoBehaviour
+public class TraceS : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
-    [SerializeField] private string targetTag;
+    [SerializeField] public string targetTag;
 
     [SerializeField] private float moveInterval = 1.0f; // ?âÎèô Í≤∞Ï†ï ?úÍ∞Ñ
     [SerializeField] private float moveDuration = 1.0f; // ?¥Îèô ?úÍ∞Ñ
     [SerializeField] private int attackRange = 3; // Í∞êÏ? Î≤îÏúÑ, Í≥µÍ≤© ?¨Í±∞Î¶¨Îûë ?§Î¶Ñ
     [SerializeField] private float attackSpeed = 1.0f;
 
-    [SerializeField] private float ObjYPos = 1.5f;
+    [SerializeField] private float ObjYPos = 0f;
 
     //private HeroUnitAnimator animator;
 
     private bool isMoving = false;
     private Coroutine unitCoroutine;
     private Coroutine attackCoroutine;
-
+    private AttackBase_s attackBase;
     private Transform target;
-    public Transform Target { get; set; }
+    public Transform Target { get { return target; } set {target = value; } }
 
     private void Awake()
     {
         //animator = GetComponent<HeroUnitAnimator>();
+    }
+
+    public void SetAttck()
+    {
+        attackBase = GetComponent<AttackBase_s>();
+        attackBase.SetDamage();
+        if (gameObject.GetComponent<HeroStatus_>() != null)
+        {
+            attackRange = gameObject.GetComponent<HeroStatus_>().b_Status.range;
+            attackSpeed = 1f / gameObject.GetComponent<HeroStatus_>().b_Status.attackSpeed;
+        }
+        else
+        {
+            attackRange = gameObject.GetComponent<MonsterStatus>().battleStatus.range;
+            attackSpeed = 1f / gameObject.GetComponent<MonsterStatus>().battleStatus.attackSpeed;
+        }
     }
 
     private void Start()
@@ -45,6 +61,17 @@ public class Trace : MonoBehaviour
         // TODO: Í≤åÏûÑ???ùÎÇ¨???? TileReservation.Clear();
 
         // ?¥Îûò?§Ïù¥Î¶?OnBattlingChanged += BattleOnOff;
+    }
+
+    public void Battling()
+    {
+        if (tilemap == null)
+            tilemap = FindObjectOfType<Tilemap>();
+
+
+        // TODO: ?¥Î≤§??Íµ¨ÎèÖ ???ÑÎûò ÏΩîÎìú 2Ï§???†ú
+        if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
+            unitCoroutine = StartCoroutine(UnitRoutine());
     }
 
     // Íµ¨ÎèÖ???®Ïàò
@@ -86,19 +113,19 @@ public class Trace : MonoBehaviour
                 Vector2Int targetXY = GetCellOf(target.position);
                 int dist = HexDistance(myXY, targetXY);
 
-                Debug.Log($"{name} ?ÑÏπò: {myXY} / ?ÄÍ≤??ÑÏπò: {targetXY} / Í±∞Î¶¨: {dist} / ?¨Í±∞Î¶? {attackRange}");
+                //Debug.Log($"{name} ?ÑÏπò: {myXY} / ?ÄÍ≤??ÑÏπò: {targetXY} / Í±∞Î¶¨: {dist} / ?¨Í±∞Î¶? {attackRange}");
 
 
                 // while (dist <= attackRange) ???? TryAttack ?∏Ï∂ú
-                // Í≥µÍ≤© ?çÎèÑ Î∞?moveInterval ??†ú
+                // ∞¯∞›«œ¥¬∞≈
                 if (dist <= attackRange)
                 {
                     // TODO: ?¥Îèô Î∞©Ìñ• Î∂Ä?úÎüΩÍ≤?Î∞îÎùºÎ≥¥Í∏∞
                     transform.LookAt(target.position);
 
-                    Debug.Log($"{gameObject.name}Í≥µÍ≤©, {target.name}?ºÍ≤©");
+                    //Debug.Log($"{gameObject.name}Í≥µÍ≤©, {target.name}?ºÍ≤©");
                     // TODO: ?∞Î?ÏßÄ
-
+                    attackBase.TryAttack();
                     //PlayAttackAnimation(attackSpeed);
 
                     yield return new WaitForSeconds(attackSpeed);
@@ -151,6 +178,8 @@ public class Trace : MonoBehaviour
 
         transform.position = targetPos;
         Vector3Int cellPos = tilemap.WorldToCell(transform.position);
+        GameManager.Instance.player.playerHero.battleManager.GetComponent<BattleManager_>()
+            .Move(gameObject, tilemap.WorldToCell(start), cellPos);
         TileReservation.RemoveReserve(new Vector2Int(cellPos.x, cellPos.y));
 
         isMoving = false;

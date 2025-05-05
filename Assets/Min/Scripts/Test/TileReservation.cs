@@ -11,8 +11,11 @@ public static class TileReservation
     
     public static bool IsReserved(Vector2Int pos)
     {
+        if(reservations == null)
+        {
+            reservations = new();
+        }
         return reservations.ContainsKey(pos);
-        
     }
     //public void hero()
     //{
