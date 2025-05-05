@@ -18,7 +18,7 @@ public class Trace : MonoBehaviour
 
     [SerializeField] private float ObjYPos = 1.5f;
 
-    private HeroUnitAnimator animator;
+    //private HeroUnitAnimator animator;
 
     private bool isMoving = false;
     private Coroutine unitCoroutine;
@@ -29,7 +29,7 @@ public class Trace : MonoBehaviour
 
     private void Awake()
     {
-        animator = GetComponent<HeroUnitAnimator>();
+        //animator = GetComponent<HeroUnitAnimator>();
     }
 
     private void Start()
@@ -99,7 +99,7 @@ public class Trace : MonoBehaviour
                     Debug.Log($"{gameObject.name}공격, {target.name}피격");
                     // TODO: 데미지
 
-                    PlayAttackAnimation(attackSpeed);
+                    //PlayAttackAnimation(attackSpeed);
 
                     yield return new WaitForSeconds(attackSpeed);
                     // 공격 속도용 변수 추가 moveInterval 대신 넣어서 구현 가능
@@ -132,7 +132,7 @@ public class Trace : MonoBehaviour
         // TODO: 이동 방향 부드럽게 바라보기
         transform.LookAt(targetPos);
 
-        animator.Move(true);
+        //animator.Move(true);
 
         Vector3 start = transform.position;
         float t = 0f;
@@ -147,7 +147,7 @@ public class Trace : MonoBehaviour
             yield return null;
         }
 
-        animator.Move(false);
+        //animator.Move(false);
 
         transform.position = targetPos;
         Vector3Int cellPos = tilemap.WorldToCell(transform.position);
@@ -298,18 +298,18 @@ public class Trace : MonoBehaviour
         return false;
     }
 
-    private void PlayAttackAnimation(float dur)
-    {
-        attackCoroutine = StartCoroutine(AttackRoutine(dur));
-    }
+    //private void PlayAttackAnimation(float dur)
+    //{
+    //    attackCoroutine = StartCoroutine(AttackRoutine(dur));
+    //}
 
-    private IEnumerator AttackRoutine(float dur)
-    {
-        animator.Attack();
+    //private IEnumerator AttackRoutine(float dur)
+    //{
+    //    //animator.Attack();
 
-        yield return new WaitForSeconds(dur);
+    //    yield return new WaitForSeconds(dur);
 
-        //foreach (Animator ani in animators)
-        //    ani.SetBool("Run", false);
-    }
+    //    //foreach (Animator ani in animators)
+    //    //    ani.SetBool("Run", false);
+    //}
 }
