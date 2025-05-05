@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
+    private Coroutine startcor;
 
     [Header("UI")]
     [SerializeField] private GameObject startPanel;
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour
     {
         SetSingleton();
         // 테스트용 추가
-        testGameStart();
+        //testGameStart();
     }
     private void SetSingleton()
     {
@@ -51,10 +52,20 @@ public class GameManager : MonoBehaviour
     {
         //플레이어 활성화
         //player.setPlayer();
-        
-        SceneManager.LoadScene(1);
+        startcor = StartCoroutine(ChangeScene(1));
+
+
     }
 
+    private IEnumerator ChangeScene(int index)
+    {
+        SceneManager.LoadScene(index);
+        yield return null;  // 씬 동기 로딩 후 한프레임 건너 뛰기
+
+        player.GameStart();
+        if (startcor != null)
+            StopCoroutine(startcor);
+    }
 
     private void testGameStart()
     {

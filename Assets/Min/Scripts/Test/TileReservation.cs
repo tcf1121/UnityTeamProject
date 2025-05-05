@@ -1,16 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
 public static class TileReservation
 {
-    private static Dictionary<Vector2Int, GameObject> reservations = new();
+    private static Dictionary<Vector2Int, GameObject> reservations;// = new();
 
+    
     public static bool IsReserved(Vector2Int pos)
     {
         return reservations.ContainsKey(pos);
+        
     }
+    //public void hero()
+    //{
+    //    // 해당 좌표에 위치하게
+    //}
+
+    //public void monspwan()
+    //{
+    //    // 해당 좌표에 위치하게
+    //}
+
+    //public void move()
+    //{
+    //    // 해당 좌표에 위치하게
+    //}
+
 
     public static bool Reserve(Vector2Int pos, GameObject reserver)
     {
