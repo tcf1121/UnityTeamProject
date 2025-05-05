@@ -36,6 +36,21 @@ public class Spawner : MonoBehaviour
         monster.GetComponent<MonsterStatus>().SetStatus(Monsters[monNum].GetComponent<MonsterStatus>());
         monster.GetComponent<MonsterStatus>().SetBattleStatus();
         GetComponentInParent<SpawnManager_>().battleManager.SetMonster(spawnPos, monster);
+        monster.AddComponent<TraceS>();
+        if(monster.GetComponent<MonsterStatus>().battleStatus.range == 1)
+        {
+            Debug.Log("몬스터 사거리 1");
+            monster.AddComponent<MeleeAttack_s>();
+        }
+
+        else
+        {
+            Debug.Log("몬스터 사거리 1보다 큼");
+            monster.AddComponent<RangedAttack_s>();
+        }
+        monster.GetComponent<TraceS>().targetTag = "Hero";
+        monster.GetComponent<TraceS>().SetAttck();
+
         monster.name = Monsters[monNum].name;
     }
 }

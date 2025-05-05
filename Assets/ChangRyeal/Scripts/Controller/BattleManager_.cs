@@ -42,7 +42,8 @@ public class BattleManager_ : MonoBehaviour
                 BattleObject[hero.Key] = hero.Value.gameObject;
                 hero.Value.gameObject.GetComponent<HeroStatus_>().SetSynergy(synergy);
                 hero.Value.gameObject.GetComponent<HeroStatus_>().SetBattleStatus();
-                
+                hero.Value.gameObject.GetComponent<TraceS>().SetAttck();
+                hero.Value.gameObject.GetComponent<TraceS>().Battling();
             }
                 
         }

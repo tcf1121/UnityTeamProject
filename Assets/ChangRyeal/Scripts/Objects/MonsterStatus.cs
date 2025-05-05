@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,8 @@ public class MonsterStatus : MonoBehaviour
     [SerializeField] public Status battleStatus;  // ½ºÅÝ
     public int CurHp;
 
+    public event Action OnDie;
+
     [Header("Look")]
     [SerializeField] public GameObject[] prefab;    // ¿ÜÇü
     public void SetStatus(MonsterStatus ms)
@@ -36,6 +39,7 @@ public class MonsterStatus : MonoBehaviour
         status.range = ms.status.range;
         status.attackSpeed = ms.status.attackSpeed;
         status.damage = ms.status.damage;
+        OnDie += Die;
     }
 
     public void SetBattleStatus()
@@ -64,5 +68,18 @@ public class MonsterStatus : MonoBehaviour
         battleStatus.range = status.range;
         battleStatus.attackSpeed = status.attackSpeed;
 
+    }
+
+    public void TakeDamage(int damage)
+    {
+        CurHp -= damage;
+        if (CurHp < 0)
+            OnDie?.Invoke();
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+        GameManager.Instance.player.Gold += battleStatus.damage;
     }
 }

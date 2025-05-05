@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,7 @@ public class HeroStatus_ : MonoBehaviour
     public int CurHp;
     public int CurMana;
 
+    public event Action OnDie;
 
     // 현재 시너지 상태에 따라 
     public void SetSynergy(Synergy synergy)
@@ -137,6 +139,7 @@ public class HeroStatus_ : MonoBehaviour
         b_Status.criticalDamage = status.criticalDamage + s_Status.criticalDamage;
         CurHp = b_Status.maxHp[0];
         CurMana = 0;
+        OnDie += Die;
     }
 
     public void addMana()
@@ -147,6 +150,17 @@ public class HeroStatus_ : MonoBehaviour
             // 스킬을 쓴다
             // mana 0으로
         }
+    }
 
+    public void TakeDamage(int damage)
+    {
+        CurHp -= damage;
+        if (CurHp < 0)
+            OnDie?.Invoke();
+    }
+
+    public void Die()
+    {
+        gameObject.SetActive(false);
     }
 }
