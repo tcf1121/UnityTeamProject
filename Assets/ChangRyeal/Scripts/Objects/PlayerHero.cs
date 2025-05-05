@@ -5,12 +5,14 @@ using UnityEditor.PackageManager;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 
 public class PlayerHero : MonoBehaviour
 {
     [SerializeField] private List<Hero> allHero;
     [SerializeField] private List<Hero> storageHero;
     [SerializeField] private List<Hero> battleHero;
+     public List<Hero> BattleHero { get { return battleHero; } }
     [SerializeField] private Tilemap tileMap;
 
     // 영웅이 타일 위 어디에 있는가에 대한 정보
@@ -33,6 +35,7 @@ public class PlayerHero : MonoBehaviour
         {
             HeroInStorage.Add(new Vector3Int(x, 3, 0), null);
         }
+        tileMap = GameManager.Instance.player.tileMap.tileMap;
     }
 
     private void Update()
@@ -181,6 +184,7 @@ public class PlayerHero : MonoBehaviour
         }
     }
 
+    // 플레이어 영웅 업그레이드
     private Hero UpgradeHero(Hero hero)
     {
         hero.star++;
@@ -205,7 +209,7 @@ public class PlayerHero : MonoBehaviour
 
     }
 
-    // 플레이어 영웅 기물 판매 (삭제)
+    // 플레이어 영웅 기물 판매
     public void SellHero(GameObject hero)
     {
         // 판매한 히어로 상점에 추가
@@ -270,5 +274,39 @@ public class PlayerHero : MonoBehaviour
             battleHero.Add(hero);
             HeroOnBattle[after] = hero;
         }
+    }
+
+    public void SetBattle()
+    {
+        Vector3Int heroGrid = new();
+        GameObject moveHero;
+        if (AllHeroNum() != 0 &&
+            BattleHeroNum() < GameManager.Instance.player.Level &&
+            StorageHeroNum() != 0)
+        {
+            while(storageHero.Count > 0)
+            {
+                if (storageHero[0] != null)
+                {
+                    Debug.Log("배틀 칸 빔");
+                    moveHero = storageHero[0].gameObject;
+                    foreach (var storage in HeroOnBattle)
+                    {
+                        if (storage.Value == null)
+                        {
+                            heroGrid = storage.Key;
+                            break;
+                        }
+                    }
+                    MoveHero(moveHero.GetComponent<Unit>().startPoint, heroGrid, storageHero[0]);
+                    moveHero.GetComponent<Unit>().startPoint = heroGrid;
+                    moveHero.transform.position = tileMap.CellToWorld(heroGrid);
+                    moveHero.GetComponent<Hero>().SetBattle();
+                }
+                if (BattleHeroNum() == GameManager.Instance.player.Level)
+                    break;
+            }
+        }
+        
     }
 }

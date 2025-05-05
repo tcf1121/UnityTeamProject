@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 
 
@@ -23,12 +25,13 @@ public class Player : MonoBehaviour
     [SerializeField] private bool battling;
     [SerializeField] public PlayerHero playerHero;
     [SerializeField] public TileMapManager tileMap;
+    [SerializeField] private Button readyBtn;
 
     // 보관함
     // 전장
 
     // 배틀 진행 중 확인 변수
-    
+
     public bool Battling { get { return battling; } set { battling = value; OnBattlingChanged?.Invoke(); } }
     public event Action OnBattlingChanged;
     public int Health { get { return health; } set { health = value; OnHelthChanged?.Invoke(); } }
@@ -46,13 +49,28 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        setPlayer();
-
         //테스트 용으로만 추가
+        //StartGame();
+    }
+
+    public void GameStart()
+    {
+        setPlayer();
+        shop = GameObject.Find("ShopManager");
+        Debug.Log(shop.name);
+        info = GameObject.Find("PlayerInfo");
+        tileMap = GameObject.Find("TileMapManager").GetComponent<TileMapManager>();
+        readyBtn = GameObject.Find("ReadyBtn").GetComponent<Button>();
+        readyBtn.onClick.AddListener(playerHero.SetBattle);
+        info.SetActive(false);
+        shop.SetActive(false);
+        
+
         playerHero.SetPlayerHero();
         info.SetActive(true);
         shop.SetActive(true);
     }
+
 
     public void setPlayer()
     {
