@@ -6,20 +6,31 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TraceTest : MonoBehaviour
+public class Trace : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private string targetTag;
 
-    [SerializeField] private float moveInterval = 1.0f; // Çàµ¿ °áÁ¤ ½Ã°£
-    [SerializeField] private float moveDuration = 0.25f; // ÀÌµ¿ ½Ã°£
-    [SerializeField] private int attackRange = 3; // °¨Áö ¹üÀ§, °ø°İ »ç°Å¸®¶û ´Ù¸§
+    [SerializeField] private float moveInterval = 1.0f; // í–‰ë™ ê²°ì • ì‹œê°„
+    [SerializeField] private float moveDuration = 1.0f; // ì´ë™ ì‹œê°„
+    [SerializeField] private int attackRange = 3; // ê°ì§€ ë²”ìœ„, ê³µê²© ì‚¬ê±°ë¦¬ë‘ ë‹¤ë¦„
+    [SerializeField] private float attackSpeed = 1.0f;
 
     [SerializeField] private float ObjYPos = 1.5f;
 
+    //private HeroUnitAnimator animator;
+
     private bool isMoving = false;
     private Coroutine unitCoroutine;
+    private Coroutine attackCoroutine;
 
+    private Transform target;
+    public Transform Target { get; set; }
+
+    private void Awake()
+    {
+        //animator = GetComponent<HeroUnitAnimator>();
+    }
 
     private void Start()
     {
@@ -27,19 +38,19 @@ public class TraceTest : MonoBehaviour
             tilemap = FindObjectOfType<Tilemap>();
 
 
-        // TODO: ÀÌº¥Æ® ±¸µ¶ ½Ã ¾Æ·¡ ÄÚµå 2ÁÙ »èÁ¦
+        // TODO: ì´ë²¤íŠ¸ êµ¬ë… ì‹œ ì•„ë˜ ì½”ë“œ 2ì¤„ ì‚­ì œ
         if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
             unitCoroutine = StartCoroutine(UnitRoutine());
 
-        // TODO: °ÔÀÓÀÌ ³¡³µÀ» ¶§, TileReservation.Clear();
+        // TODO: ê²Œì„ì´ ëë‚¬ì„ ë•Œ, TileReservation.Clear();
 
-        // Å¬·¡½ºÀÌ¸§.OnBattlingChanged += BattleOnOff;
+        // í´ë˜ìŠ¤ì´ë¦„.OnBattlingChanged += BattleOnOff;
     }
 
-    // ±¸µ¶¿ë ÇÔ¼ö
+    // êµ¬ë…ìš© í•¨ìˆ˜
     private void BattleOnOff()
     {
-        //if (Å¬·¡½ºÀÌ¸§.battling) // Å¬·¡½º°¡ staticÀÌ ¾Æ´Ï¸é, ÇÊµå¿¡ Å¬·¡½º Ãß°¡
+        //if (í´ë˜ìŠ¤ì´ë¦„.battling) // í´ë˜ìŠ¤ê°€ staticì´ ì•„ë‹ˆë©´, í•„ë“œì— í´ë˜ìŠ¤ ì¶”ê°€
         //{
         //    if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
         //        unitCoroutine = StartCoroutine(UnitRoutine());
@@ -58,7 +69,8 @@ public class TraceTest : MonoBehaviour
 
     private IEnumerator UnitRoutine()
     {
-        Transform target = FindNearestTarget();
+        target = FindNearestTarget(); // ë„ë°œ ìŠ¤í‚¬ ìœ„í•´ í•„ë“œë¡œ ì˜¬ë¦¼
+
         while (true)
         {
             if (!isMoving)
@@ -74,17 +86,23 @@ public class TraceTest : MonoBehaviour
                 Vector2Int targetXY = GetCellOf(target.position);
                 int dist = HexDistance(myXY, targetXY);
 
-                Debug.Log($"{name} À§Ä¡: {myXY} / Å¸°Ù À§Ä¡: {targetXY} / °Å¸®: {dist} / »ç°Å¸®: {attackRange}");
+                Debug.Log($"{name} ìœ„ì¹˜: {myXY} / íƒ€ê²Ÿ ìœ„ì¹˜: {targetXY} / ê±°ë¦¬: {dist} / ì‚¬ê±°ë¦¬: {attackRange}");
 
+
+                // while (dist <= attackRange) ì¼ ë•Œ, TryAttack í˜¸ì¶œ
+                // ê³µê²© ì†ë„ ë° moveInterval ì‚­ì œ
                 if (dist <= attackRange)
                 {
-                    // TODO: ÀÌµ¿ ¹æÇâ ºÎµå·´°Ô ¹Ù¶óº¸±â
+                    // TODO: ì´ë™ ë°©í–¥ ë¶€ë“œëŸ½ê²Œ ë°”ë¼ë³´ê¸°
                     transform.LookAt(target.position);
 
-                    Debug.Log($"{gameObject.name}°ø°İ, {target.name}ÇÇ°İ");
-                    // TODO: µ¥¹ÌÁö             
-                    yield return new WaitForSeconds(moveInterval);
-                    // °ø°İ ¼Óµµ¿ë º¯¼ö Ãß°¡ moveInterval ´ë½Å ³Ö¾î¼­ ±¸Çö °¡´É
+                    Debug.Log($"{gameObject.name}ê³µê²©, {target.name}í”¼ê²©");
+                    // TODO: ë°ë¯¸ì§€
+
+                    //PlayAttackAnimation(attackSpeed);
+
+                    yield return new WaitForSeconds(attackSpeed);
+                    // ê³µê²© ì†ë„ìš© ë³€ìˆ˜ ì¶”ê°€ moveInterval ëŒ€ì‹  ë„£ì–´ì„œ êµ¬í˜„ ê°€ëŠ¥
                     continue;
                 }
 
@@ -111,18 +129,25 @@ public class TraceTest : MonoBehaviour
     {
         isMoving = true;
 
-        // TODO: ÀÌµ¿ ¹æÇâ ºÎµå·´°Ô ¹Ù¶óº¸±â
+        // TODO: ì´ë™ ë°©í–¥ ë¶€ë“œëŸ½ê²Œ ë°”ë¼ë³´ê¸°
         transform.LookAt(targetPos);
+
+        //animator.Move(true);
 
         Vector3 start = transform.position;
         float t = 0f;
 
         while (t < 1f)
         {
+
             t += Time.deltaTime / moveDuration;
             transform.position = Vector3.Lerp(start, targetPos, t);
+
+
             yield return null;
         }
+
+        //animator.Move(false);
 
         transform.position = targetPos;
         Vector3Int cellPos = tilemap.WorldToCell(transform.position);
@@ -210,7 +235,7 @@ public class TraceTest : MonoBehaviour
         {
             Vector2Int current = queue.Dequeue();
 
-            // ¸ñÇ¥ À§Ä¡¿¡ ÀÎÁ¢ÇÏ¸é ±× ¼¿±îÁö µµ´ŞÇÑ °ÍÀ¸·Î °£ÁÖ
+            // ëª©í‘œ ìœ„ì¹˜ì— ì¸ì ‘í•˜ë©´ ê·¸ ì…€ê¹Œì§€ ë„ë‹¬í•œ ê²ƒìœ¼ë¡œ ê°„ì£¼
             if (HexDistance(current, to) <= 1)
             {
                 reached = current;
@@ -253,7 +278,7 @@ public class TraceTest : MonoBehaviour
 
     private bool IsCellOccupied(Vector2Int cellPos)
     {
-        // °³¼±ÇÒ Á¡: ¿ÜºÎ¿¡¼­ List·Î µû·Î °ü¸®
+        // ê°œì„ í•  ì : ì™¸ë¶€ì—ì„œ Listë¡œ ë”°ë¡œ ê´€ë¦¬
         GameObject[] heros = GameObject.FindGameObjectsWithTag("Hero");
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Monster");
 
@@ -272,6 +297,4 @@ public class TraceTest : MonoBehaviour
 
         return false;
     }
-
-    
 }
