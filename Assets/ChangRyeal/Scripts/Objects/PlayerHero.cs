@@ -18,10 +18,12 @@ public class PlayerHero : MonoBehaviour
     // 영웅이 타일 위 어디에 있는가에 대한 정보
     [SerializeField] public Dictionary<Vector3Int, Hero> HeroOnBattle = new Dictionary<Vector3Int, Hero>(); 
     [SerializeField] public Dictionary<Vector3Int, Hero> HeroInStorage = new Dictionary<Vector3Int, Hero>();
-
+    [SerializeField] public GameObject battleManager;
 
     [Header("Propertis")]
     [SerializeField] GameObject RankUpEffetPrefab;
+
+
     public void SetPlayerHero()
     {
         for (int x = -8; x <= 0; x++)
@@ -307,6 +309,7 @@ public class PlayerHero : MonoBehaviour
                     break;
             }
         }
-        
+        battleManager.GetComponent<BattleManager_>().OnBattle();
+        battleManager.GetComponent<Synergy>().OnBattle();
     }
 }
