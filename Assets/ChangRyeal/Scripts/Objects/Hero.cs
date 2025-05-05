@@ -7,7 +7,7 @@ public class Hero : MonoBehaviour
     [SerializeField] public Sprite sprite;
     [SerializeField] public string heroname;
     [SerializeField] public int cost;
-    [SerializeField] public int star = 1;
+    [SerializeField] public int star;
     [SerializeField] public bool battle = false;
     [SerializeField] public GameObject heroObject;
     [SerializeField] private Unit unit;
@@ -22,7 +22,7 @@ public class Hero : MonoBehaviour
         GetComponent<Animator>().enabled = true;
         if (star == 2)
             TwoStarEffet.SetActive(true);
-        else if(star == 3)
+        else if (star == 3)
             ThreeStarEffet.SetActive(true);
     }
     public void SetBattle()

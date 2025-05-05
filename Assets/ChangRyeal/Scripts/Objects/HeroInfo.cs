@@ -27,7 +27,6 @@ public class HeroInfo : MonoBehaviour
     }
     private void SellHero()
     {
-        Debug.Log("ÆÇ¸Å");
         GameManager.Instance.player.SellHero(hero);
         gameObject.SetActive(false);
     }
