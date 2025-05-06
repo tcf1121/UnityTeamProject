@@ -56,16 +56,16 @@ public class Spawner : MonoBehaviour
             switch (monNum)
             {
                 case 5:
-                    monster.GetComponent < RangedAttack_s>().projectilePrefab = monsterBullets[0];
+                    monster.GetComponent<RangedAttack_s>().projectilePrefab = monsterBullets[0];
                     break;
                 case 6:
-                    monster.GetComponent < RangedAttack_s>().projectilePrefab = monsterBullets[1];
+                    monster.GetComponent<RangedAttack_s>().projectilePrefab = monsterBullets[1];
                     break;
                 case 7:
-                    monster.GetComponent < RangedAttack_s>().projectilePrefab = monsterBullets[2];
+                    monster.GetComponent<RangedAttack_s>().projectilePrefab = monsterBullets[2];
                     break;
                 case 11:
-                    monster.GetComponent < RangedAttack_s>().projectilePrefab = monsterBullets[3];
+                    monster.GetComponent<RangedAttack_s>().projectilePrefab = monsterBullets[3];
                     break;
             }
 

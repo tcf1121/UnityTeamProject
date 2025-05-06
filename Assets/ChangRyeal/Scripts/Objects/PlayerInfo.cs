@@ -57,10 +57,7 @@ public class PlayerInfo : MonoBehaviour
 
     private void SetGold()
     {
-        setstring.Clear();
-        setstring.Append(GameManager.Instance.player.Gold);
-        setstring.Append("G");
-        goldUI.text = setstring.ToString();
+        goldUI.text = GameManager.Instance.player.Gold.ToString();
     }
 
     private void SetHp()

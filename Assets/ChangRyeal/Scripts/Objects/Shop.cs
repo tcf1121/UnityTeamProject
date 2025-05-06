@@ -18,7 +18,6 @@ public class Shop : MonoBehaviour
     [SerializeField] private TMP_Text[] costTxt;
     [SerializeField] private TMP_Text[] nameTxt;
     [SerializeField] private Button[] heroBtn;
-    [SerializeField] private GameObject[] sellPanel;
 
     [SerializeField] private Hero[] hero = new Hero[5];
     
@@ -75,7 +74,6 @@ public class Shop : MonoBehaviour
     {
         for(int i = 0; i < 5; i++)
         {
-            sellPanel[i].SetActive(false);
             heroBtn[i].interactable = true;
             if (hero[i] != null)
             {
@@ -98,7 +96,6 @@ public class Shop : MonoBehaviour
                 if (GameManager.Instance.player.CanBuy(hero[index].cost))
                 {
                     GameManager.Instance.player.BuyHero(hero[index], hero[index].cost);
-                    sellPanel[index].SetActive(true);
                     heroBtn[index].interactable = false;
                     hero[index] = null;
                 }
