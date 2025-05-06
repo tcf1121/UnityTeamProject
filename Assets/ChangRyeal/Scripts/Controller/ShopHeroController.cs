@@ -35,7 +35,7 @@ public class ShopHeroController : MonoBehaviour
             for (int i = 0; i < 9; i++)
                 CostHero[hero.cost - 1].Add(hero);
         }
-        Debug.Log(CostHero[0].Count);
+        //Debug.Log(CostHero[0].Count);
     }
 
     // 상점에서 구매하지 않은 영웅 기물은 다시 리스트에 돌려놓음
@@ -47,7 +47,7 @@ public class ShopHeroController : MonoBehaviour
                 CostHero[hero[i].cost - 1].Add(hero[i]);
 
         }
-        Debug.Log(CostHero[0].Count);
+        //Debug.Log(CostHero[0].Count);
     }
 
     // 영웅 판매 

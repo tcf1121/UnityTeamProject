@@ -162,5 +162,6 @@ public class HeroStatus_ : MonoBehaviour
     public void Die()
     {
         gameObject.SetActive(false);
+        GameObject.Find("BattleManager").GetComponent<BattleManager_>().DieBattleObj(gameObject);
     }
 }

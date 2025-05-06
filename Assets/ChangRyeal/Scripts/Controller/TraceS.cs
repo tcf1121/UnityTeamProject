@@ -18,7 +18,7 @@ public class TraceS : MonoBehaviour
 
     [SerializeField] private float ObjYPos = 0f;
 
-    //private HeroUnitAnimator animator;
+    [SerializeField] public ObjectAnimator animator;
 
     private bool isMoving = false;
     private Coroutine unitCoroutine;
@@ -75,23 +75,16 @@ public class TraceS : MonoBehaviour
     }
 
     // Íµ¨ÎèÖ???®Ïàò
-    private void BattleOnOff()
+    public void EndBattling()
     {
-        //if (?¥Îûò?§Ïù¥Î¶?battling) // ?¥Îûò?§Í? static???ÑÎãàÎ©? ?ÑÎìú???¥Îûò??Ï∂îÍ?
-        //{
-        //    if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
-        //        unitCoroutine = StartCoroutine(UnitRoutine());
-        //}
-        //else
-        //{
-        //    StopCoroutine(unitCoroutine);
-        //}
+        if(unitCoroutine != null)
+            StopCoroutine(unitCoroutine);
     }
 
 
     private void OnDestroy()
     {
-        StopCoroutine(unitCoroutine);
+        EndBattling();
     }
 
     private IEnumerator UnitRoutine()
@@ -102,7 +95,7 @@ public class TraceS : MonoBehaviour
         {
             if (!isMoving)
             {
-                if (target == null)
+                if (target == null || target.gameObject.activeSelf == false)
                 {
                     target = FindNearestTarget();
                     yield return new WaitForSeconds(moveInterval);
@@ -155,11 +148,11 @@ public class TraceS : MonoBehaviour
     private IEnumerator MoveTo(Vector3 targetPos)
     {
         isMoving = true;
-
+        animator.Move(true);
         // TODO: ?¥Îèô Î∞©Ìñ• Î∂Ä?úÎüΩÍ≤?Î∞îÎùºÎ≥¥Í∏∞
         transform.LookAt(targetPos);
 
-        //animator.Move(true);
+        
 
         Vector3 start = transform.position;
         float t = 0f;
@@ -174,15 +167,16 @@ public class TraceS : MonoBehaviour
             yield return null;
         }
 
-        //animator.Move(false);
+        
 
         transform.position = targetPos;
         Vector3Int cellPos = tilemap.WorldToCell(transform.position);
         GameManager.Instance.player.playerHero.battleManager.GetComponent<BattleManager_>()
             .Move(gameObject, tilemap.WorldToCell(start), cellPos);
         TileReservation.RemoveReserve(new Vector2Int(cellPos.x, cellPos.y));
-
+        
         isMoving = false;
+        animator.Move(false);
     }
 
 

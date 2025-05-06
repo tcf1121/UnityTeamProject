@@ -81,5 +81,6 @@ public class MonsterStatus : MonoBehaviour
     {
         Destroy(gameObject);
         GameManager.Instance.player.Gold += battleStatus.damage;
+        GameObject.Find("BattleManager").GetComponent<BattleManager_>().DieBattleObj(gameObject);
     }
 }
