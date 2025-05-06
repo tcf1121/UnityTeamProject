@@ -101,12 +101,6 @@ public class PlayerHero : MonoBehaviour
         return matchingHeroes;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        GameObject obj;
-        
-    }
-
     // ¿µ¿õ ´Ù Â÷ÀÖ´Â Áö È®ÀÎ
     public bool FullHero()
     {
@@ -149,7 +143,7 @@ public class PlayerHero : MonoBehaviour
         hero.GetComponent<Unit>().startPoint = heroGrid;
         Vector3 heroPos = new Vector3(tileMap.CellToWorld(heroGrid).x, 0, tileMap.CellToWorld(heroGrid).z);
         GameObject heroObj = Instantiate(hero.heroObject, heroPos, Quaternion.Euler(new Vector3(0, 180, 0)));
-        heroObj.GetComponent<HeroUnitAnimator>().Wait(true);
+        heroObj.GetComponent<HeroAnimator>().Wait(true);
         if (rankUp)
         {
             Vector3 effctPos = new Vector3(heroPos.x, 1, heroPos.z);
@@ -290,7 +284,7 @@ public class PlayerHero : MonoBehaviour
             {
                 if (storageHero[0] != null)
                 {
-                    Debug.Log("¹èÆ² Ä­ ºö");
+                    //Debug.Log("¹èÆ² Ä­ ºö");
                     moveHero = storageHero[0].gameObject;
                     foreach (var storage in HeroOnBattle)
                     {
@@ -309,7 +303,7 @@ public class PlayerHero : MonoBehaviour
                     break;
             }
         }
-        battleManager.GetComponent<BattleManager_>().OnBattle();
         battleManager.GetComponent<Synergy>().OnBattle();
+        battleManager.GetComponent<BattleManager_>().OnBattle();
     }
 }

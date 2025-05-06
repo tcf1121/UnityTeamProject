@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     {
         setPlayer();
         shop = GameObject.Find("ShopManager");
-        Debug.Log(shop.name);
+        //Debug.Log(shop.name);
         info = GameObject.Find("PlayerInfo");
         tileMap = GameObject.Find("TileMapManager").GetComponent<TileMapManager>();
         readyBtn = GameObject.Find("ReadyBtn").GetComponent<Button>();

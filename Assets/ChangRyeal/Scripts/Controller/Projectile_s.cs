@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Projectile_s : MonoBehaviour
 {
     // 투사체
-    public float projectileSpeed = 1f; // 투사체 속도
+    public float projectileSpeed = 2f; // 투사체 속도
 
     private int projectileDamage = 0;  // 투사체 데미지
 
@@ -21,12 +23,22 @@ public class Projectile_s : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(Vector3.forward * projectileSpeed * Time.deltaTime);
+        if(target == null || target.activeSelf == false)
+            Destroy(gameObject);
+        else
+        {
+            Vector3 targetVec = new Vector3(target.transform.position.x, transform.position.y,
+   target.transform.position.z);
+            transform.LookAt(targetVec);
+            transform.position = Vector3.MoveTowards(transform.position, targetVec
+                , projectileSpeed * Time.deltaTime);
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("투사체 테스트1");
+        //Debug.Log("투사체 테스트1");
         if (other.gameObject == target.gameObject)
         {
             

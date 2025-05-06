@@ -23,7 +23,7 @@ public class MouseController : MonoBehaviour
     private const string moveAbleTag1 = "Hero";
     private const string moveAbleTag2 = "Storage";
     private GraphicRaycaster g_raycater;
-    private HeroUnitAnimator heroAnimator;
+    private HeroAnimator heroAnimator;
     private Outlinable heroOutline;
     [Header("UI")]
     [SerializeField] private GameObject heroInfo;
@@ -80,7 +80,7 @@ public class MouseController : MonoBehaviour
             sellobject.SetActive(true);
             heroOutline = moveAbleObject.GetComponent<Outlinable>();
             heroOutline.enabled = true;
-            heroAnimator = moveAbleObject.GetComponent<HeroUnitAnimator>();
+            heroAnimator = moveAbleObject.GetComponent<HeroAnimator>();
             heroAnimator.Wait(false);
             heroAnimator.Pick(true);
             beforePosition = moveAbleObject.transform.position;

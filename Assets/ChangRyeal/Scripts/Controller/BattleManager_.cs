@@ -50,6 +50,7 @@ public class BattleManager_ : MonoBehaviour
             if (hero.Value != null)
             {
                 BattleObject[hero.Key] = hero.Value.gameObject;
+                hero.Value.gameObject.GetComponent<HeroAnimator>().Wait(false);
                 hero.Value.gameObject.GetComponent<HeroStatus_>().SetSynergy(synergy);
                 hero.Value.gameObject.GetComponent<HeroStatus_>().SetBattleStatus();
                 hero.Value.gameObject.GetComponent<TraceS>().SetAttck();
@@ -134,8 +135,9 @@ public class BattleManager_ : MonoBehaviour
         {
             if (hero.Value != null)
             {
-                Debug.Log(hero.Key);
+                //Debug.Log(hero.Key);
                 hero.Value.gameObject.transform.position = tilemap.CellToWorld(hero.Key);
+                hero.Value.gameObject.GetComponent<HeroAnimator>().Wait(true);
                 hero.Value.gameObject.GetComponent<TraceS>().EndBattling();
                 if (hero.Value.gameObject.activeSelf == false)
                     hero.Value.gameObject.SetActive(true);

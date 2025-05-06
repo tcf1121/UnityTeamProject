@@ -18,7 +18,7 @@ public class TraceS : MonoBehaviour
 
     [SerializeField] private float ObjYPos = 0f;
 
-    //private HeroUnitAnimator animator;
+    [SerializeField] public ObjectAnimator animator;
 
     private bool isMoving = false;
     private Coroutine unitCoroutine;
@@ -148,11 +148,11 @@ public class TraceS : MonoBehaviour
     private IEnumerator MoveTo(Vector3 targetPos)
     {
         isMoving = true;
-
+        animator.Move(true);
         // TODO: ?�동 방향 부?�럽�?바라보기
         transform.LookAt(targetPos);
 
-        //animator.Move(true);
+        
 
         Vector3 start = transform.position;
         float t = 0f;
@@ -167,15 +167,16 @@ public class TraceS : MonoBehaviour
             yield return null;
         }
 
-        //animator.Move(false);
+        
 
         transform.position = targetPos;
         Vector3Int cellPos = tilemap.WorldToCell(transform.position);
         GameManager.Instance.player.playerHero.battleManager.GetComponent<BattleManager_>()
             .Move(gameObject, tilemap.WorldToCell(start), cellPos);
         TileReservation.RemoveReserve(new Vector2Int(cellPos.x, cellPos.y));
-
+        
         isMoving = false;
+        animator.Move(false);
     }
 
 
