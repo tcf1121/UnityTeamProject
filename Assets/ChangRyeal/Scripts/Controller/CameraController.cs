@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] new Camera camera = new();
-    [SerializeField] new Camera overUIcamera = new();
+    [SerializeField] new Camera overUIcamera;
     void Start()
     {
         camera.transform.position = new Vector3(-6, 10, -1);

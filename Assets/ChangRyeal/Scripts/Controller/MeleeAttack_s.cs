@@ -12,7 +12,7 @@ public class MeleeAttack_s : AttackBase_s
     protected override void Attack()
     {
         TakeDamage();
-        Debug.Log($"{gameObject.name}이 {target.name}에게 {damage} 근거리 피해를 줌");
+        //Debug.Log($"{gameObject.name}이 {target.name}에게 {damage} 근거리 피해를 줌");
     }
 
     private void OnDrawGizmosSelected()

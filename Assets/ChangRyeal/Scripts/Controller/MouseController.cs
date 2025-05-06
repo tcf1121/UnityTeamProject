@@ -23,10 +23,11 @@ public class MouseController : MonoBehaviour
     private const string moveAbleTag1 = "Hero";
     private const string moveAbleTag2 = "Storage";
     private GraphicRaycaster g_raycater;
-    private HeroUnitAnimator heroAnimator;
+    private HeroAnimator heroAnimator;
     private Outlinable heroOutline;
     [Header("UI")]
     [SerializeField] private GameObject heroInfo;
+    [SerializeField] private GameObject sellobject;
     [SerializeField] private Canvas canvas;
 
     private void Awake()
@@ -73,11 +74,13 @@ public class MouseController : MonoBehaviour
     private void TouchBeganEvent()
     {
         moveAbleObject = OnClickObjUsingTag(moveAbleTag1, moveAbleTag2);
+        
         if (moveAbleObject != null)
         {
+            sellobject.SetActive(true);
             heroOutline = moveAbleObject.GetComponent<Outlinable>();
             heroOutline.enabled = true;
-            heroAnimator = moveAbleObject.GetComponent<HeroUnitAnimator>();
+            heroAnimator = moveAbleObject.GetComponent<HeroAnimator>();
             heroAnimator.Wait(false);
             heroAnimator.Pick(true);
             beforePosition = moveAbleObject.transform.position;
@@ -129,66 +132,61 @@ public class MouseController : MonoBehaviour
     private void TouchEndedEvent()
     {
         int layerMask = 1 << LayerMask.NameToLayer("Ground");
+        int sellLayer = 1 << LayerMask.NameToLayer("Sell");
         
         if (moveAbleObject != null)
         {
+            sellobject.SetActive(false);
             heroOutline.enabled = false;
             heroAnimator.Pick(false);
             heroAnimator.Wait(true);
-            // 판매 UI에 끌어당기면 판매가 되게
-            //if (EventSystem.current.IsPointerOverGameObject())
-            //{
-            //    g_raycater = canvas.GetComponent<GraphicRaycaster>();
-            //    PointerEventData pointerEventData = new PointerEventData(null);
-            //    pointerEventData.position = currentTouchPos;
-            //    List<RaycastResult> results = new List<RaycastResult>();
-            //    Debug.Log("UI 감지");
-            //    if (results.Count > 0)
-            //    {
-            //        Debug.Log("레이케스트 중");
-            //        foreach (RaycastResult result in results)
-            //            Debug.Log(result.gameObject.tag);
-            //    }
-
-            //}
-            // 그게 아니라 그냥 위치를 이동하는거면 해당 위치로 이동
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hitInfo;
             Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask);
 
-            if (hitInfo.collider != null)
+            RaycastHit hitsell;
+            Physics.Raycast(ray, out hitsell, Mathf.Infinity, sellLayer);
+            if (hitsell.collider != null)
             {
-                if ((tile.tileMap.WorldToCell(hitInfo.transform.position).y < 8 &&
-                    tile.tileMap.WorldToCell(hitInfo.transform.position).y > 2) &&
-                    (tile.tileMap.WorldToCell(hitInfo.transform.position).x < 1 &&
-                    tile.tileMap.WorldToCell(hitInfo.transform.position).x > -9))
+                GameManager.Instance.player.SellHero(moveAbleObject);
+            }
+            else
+            {
+                if (hitInfo.collider != null)
                 {
-                    if (playerHero.CanMove(tile.tileMap.WorldToCell(hitInfo.transform.position)))
+                    if ((tile.tileMap.WorldToCell(hitInfo.transform.position).y < 8 &&
+                        tile.tileMap.WorldToCell(hitInfo.transform.position).y > 2) &&
+                        (tile.tileMap.WorldToCell(hitInfo.transform.position).x < 1 &&
+                        tile.tileMap.WorldToCell(hitInfo.transform.position).x > -9))
                     {
-                        moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
-                        Debug.Log(moveAbleObject.transform.position);
-                        moveAbleObject.transform.position += offSet;
-                        playerHero.MoveHero(moveAbleObject.GetComponent<Unit>().startPoint,
-                            tile.tileMap.WorldToCell(hitInfo.transform.position),
-                            moveAbleObject.GetComponent<Hero>());
-                        moveAbleObject.GetComponent<Unit>().startPoint = tile.tileMap.WorldToCell(hitInfo.transform.position);
-                        moveAbleObject.GetComponent<Hero>().SetBattle();
+                        if (playerHero.CanMove(tile.tileMap.WorldToCell(hitInfo.transform.position)))
+                        {
+                            moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
+                            moveAbleObject.transform.position += offSet;
+                            playerHero.MoveHero(moveAbleObject.GetComponent<Unit>().startPoint,
+                                tile.tileMap.WorldToCell(hitInfo.transform.position),
+                                moveAbleObject.GetComponent<Hero>());
+                            moveAbleObject.GetComponent<Unit>().startPoint = tile.tileMap.WorldToCell(hitInfo.transform.position);
+                            moveAbleObject.GetComponent<Hero>().SetBattle();
+                        }
+                        else
+                        {
+                            moveAbleObject.transform.position = beforePosition;
+                        }
                     }
                     else
                     {
                         moveAbleObject.transform.position = beforePosition;
                     }
                 }
+
                 else
                 {
                     moveAbleObject.transform.position = beforePosition;
                 }
             }
-            else
-            {
-                moveAbleObject.transform.position = beforePosition;
-            }
+
         }
 
         //_movableObj = null;

@@ -2,54 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterAnimator : MonoBehaviour
+public class MonsterAnimator : ObjectAnimator
 {
-    [SerializeField] public GameObject[] prefab;    // ¿ÜÇü
-
-    [SerializeField] List<Animator> animators;
+    [SerializeField] public GameObject[] prefab;    // Â¿ÃœÃ‡Ã¼
+    [SerializeField] public Animator animators;
     Coroutine DieCor;
 
-    private void OnEnable()
+    public override void Move(bool value)
     {
-        int shape = 0;
-        if (gameObject.GetComponent<MonsterStatus>().boss) shape = 0;
-        else
-        {
-            if (GameManager.Instance.player.Stage < 7)
-                shape = 0;
-            else if (GameManager.Instance.player.Stage < 14)
-                shape = 1;
-            else
-                shape = 2;
-        }
-
-        GameObject monster = Instantiate(prefab[shape], new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 180, 0)));
-        monster.AddComponent<MonsterStatus>();
-        monster.GetComponent<MonsterStatus>().SetStatus(gameObject.GetComponent<MonsterStatus>());
-        monster.name = name;
-    }
-    public void Move(bool value)
-    {
-        foreach (Animator ani in animators)
-            ani.SetBool("Move", value);
+        animators.SetBool("Move", value);
     }
 
-    public void Attack()
+    public override void Attack()
     {
-        foreach (Animator ani in animators)
-            ani.SetTrigger("Attack");
+        animators.SetTrigger("Attack");
     }
 
-    public void Spawn()
+    public override void Spawn()
     {
-        foreach (Animator ani in animators)
-            ani.SetTrigger("Spawn");
+
+        animators.SetTrigger("Spawn");
     }
 
-    public void Die()
+    public override void Die()
     {
-        foreach (Animator ani in animators)
-            ani.SetTrigger("Die");
+        animators.SetTrigger("Die");
         DieCor = StartCoroutine(DieRoutine());
     }
 
@@ -58,5 +35,21 @@ public class MonsterAnimator : MonoBehaviour
         yield return new WaitForSeconds(1.333f);
         if (DieCor != null)
             StopCoroutine(DieCor);
+    }
+
+    public override void CriticalAttack()
+    {
+    }
+
+    public override void Skill()
+    {
+    }
+
+    public override void Wait(bool value)
+    {
+    }
+
+    public override void Pick(bool value)
+    {
     }
 }

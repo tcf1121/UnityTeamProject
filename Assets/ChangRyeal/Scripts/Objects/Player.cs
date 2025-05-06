@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     {
         setPlayer();
         shop = GameObject.Find("ShopManager");
-        Debug.Log(shop.name);
+        //Debug.Log(shop.name);
         info = GameObject.Find("PlayerInfo");
         tileMap = GameObject.Find("TileMapManager").GetComponent<TileMapManager>();
         readyBtn = GameObject.Find("ReadyBtn").GetComponent<Button>();
@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
     {
         if (level < 10)
         {
-            Exp++;
+            Exp += 2;
             if (exp >= maxExp)
                 LevelUp();
         }
