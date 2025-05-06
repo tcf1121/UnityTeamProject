@@ -6,6 +6,9 @@ public class MonsterAnimator : MonoBehaviour
 {
     [SerializeField] public GameObject[] prefab;    // ¿ÜÇü
 
+    [SerializeField] List<Animator> animators;
+    Coroutine DieCor;
+
     private void OnEnable()
     {
         int shape = 0;
@@ -24,5 +27,36 @@ public class MonsterAnimator : MonoBehaviour
         monster.AddComponent<MonsterStatus>();
         monster.GetComponent<MonsterStatus>().SetStatus(gameObject.GetComponent<MonsterStatus>());
         monster.name = name;
+    }
+    public void Move(bool value)
+    {
+        foreach (Animator ani in animators)
+            ani.SetBool("Move", value);
+    }
+
+    public void Attack()
+    {
+        foreach (Animator ani in animators)
+            ani.SetTrigger("Attack");
+    }
+
+    public void Spawn()
+    {
+        foreach (Animator ani in animators)
+            ani.SetTrigger("Spawn");
+    }
+
+    public void Die()
+    {
+        foreach (Animator ani in animators)
+            ani.SetTrigger("Die");
+        DieCor = StartCoroutine(DieRoutine());
+    }
+
+    IEnumerator DieRoutine()
+    {
+        yield return new WaitForSeconds(1.333f);
+        if (DieCor != null)
+            StopCoroutine(DieCor);
     }
 }
