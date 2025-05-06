@@ -7,7 +7,6 @@ using UnityEngine.Tilemaps;
 public class Skills : MonoBehaviour
 {
     // private MonsterUnitAnimator animator;
-    [SerializeField] Trace trace;
     [SerializeField] Tilemap tilemap;
 
     private string targetTag;
@@ -18,39 +17,35 @@ public class Skills : MonoBehaviour
         tag = gameObject.tag;
 
         if (tag == "Hero")
-        {
             targetTag = "Monster";
-        }
+
         else if (tag == "Monster")
-        {
             targetTag = "Hero";
-        }
+
     }
 
-    public void Skill(string skillName, int range)
+    public void Skill(string skillName, int range, int attack, float coef, Transform target)
     {
         PlaySkillAnimation(skillName);
-
-        Transform target = trace.Target;
 
         switch (skillName)
         {
             // 투사체 생성도 필요할 듯
-            case ("타겟팅"):
+            case ("Targeting"):
                 if (tag == "Hero")
                 {
                     MonsterStatus ms = target.GetComponent<MonsterStatus>();
-                    ms.battleStatus.maxHp -= 100; // curHp로 변경해야됨
+                    ms.CurHp -= (int)(attack * coef);
                 }
                 else if (tag == "Monster")
                 {
                     HeroStatus_ hs = target.GetComponent<HeroStatus_>();
-                    hs.b_Status.maxMp -= 100;
+                    hs.CurHp -= (int)(attack * coef);
                 }
 
                 break;
 
-            case ("힐"):
+            case ("Heal"):
                 Vector2Int myCell = GetCellOf(transform.position);
                 GameObject[] allies = GameObject.FindGameObjectsWithTag(tag);
 
@@ -64,31 +59,27 @@ public class Skills : MonoBehaviour
                         if (tag == "Hero")
                         {
                             HeroStatus_ hero = ally.GetComponent<HeroStatus_>();
-                            //hero.battleStatus.curHp += 10;
+                            hero.CurHp += (int)(attack * coef);
 
-                            //if (hero.battleStatus.curHp >= hero.battleStatus.maxHp)
-                            //{
-                            //    hero.battleStatus.curHp = hero.battleStatus.maxHp;
-                            //}
+                            if (hero.CurHp >= hero.b_Status.maxHp[0])
+                                hero.CurHp = hero.b_Status.maxHp[0];
                         }
 
                         else if (tag == "Monster")
                         {
                             MonsterStatus mon = ally.GetComponent<MonsterStatus>();
-                            //mon.battleStatus.curHp += 10;
+                            mon.CurHp += (int)(attack * coef);
 
-                            //if (mon.battleStatus.curHp >= mon.battleStatus.maxHp)
-                            //{
-                            //    mon.battleStatus.curHp = mon.battleStatus.maxHp;
-                            //}
+                            if (mon.CurHp >= mon.battleStatus.maxHp)
+                                mon.CurHp = mon.battleStatus.maxHp;
                         }
                     }
                 }
 
                 break;
 
-            case ("범위"):
-                Vector2Int targetCellPos = GetCellOf(trace.Target.transform.position);
+            case ("Range"):
+                Vector2Int targetCellPos = GetCellOf(target.position);
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag(targetTag);
 
                 foreach (GameObject enemy in enemies)
@@ -101,20 +92,20 @@ public class Skills : MonoBehaviour
                         if (tag == "Hero")
                         {
                             MonsterStatus mon = enemy.GetComponent<MonsterStatus>();
-                            mon.battleStatus.maxHp -= 100; // 데미지 만큼 깎기
+                            mon.CurHp -= (int)(attack * coef); // 데미지 만큼 깎기
                         }
 
                         else if (tag == "Monster")
                         {
                             HeroStatus_ hero = enemy.GetComponent<HeroStatus_>();
-                            hero.b_Status.maxMp -= 100; // 데미지 만큼 깎기
+                            hero.CurHp -= (int)(attack * coef); // 데미지 만큼 깎기
                         }
                     }
                 }
 
                 break;
 
-            case ("도발"):
+            case ("Taunt"):
                 Vector2Int myCellPos = GetCellOf(transform.position);
                 GameObject[] tauntedEnemies = GameObject.FindGameObjectsWithTag(targetTag);
 

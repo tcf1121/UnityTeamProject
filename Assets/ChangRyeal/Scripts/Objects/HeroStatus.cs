@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class HeroStatus_ : MonoBehaviour
@@ -33,6 +34,11 @@ public class HeroStatus_ : MonoBehaviour
     [SerializeField] public Status b_Status;
     public int CurHp;
     public int CurMana;
+
+    [Header("Skill")]
+    [SerializeField] public string skillType;
+    [SerializeField] public int skillRange;
+    [SerializeField] public float skillCoef;
 
     public event Action OnDie;
 
@@ -142,14 +148,53 @@ public class HeroStatus_ : MonoBehaviour
         OnDie += Die;
     }
 
+    public string GetStatus()
+    {
+        Status tmpStatus;
+
+        tmpStatus.maxHp = new int[1];
+        tmpStatus.attack = new int[1];
+        tmpStatus.maxHp[0] = status.maxHp[GetComponent<Hero>().star - 1]; // IndexOutOfRangeException
+        tmpStatus.attack[0] = status.attack[GetComponent<Hero>().star - 1];
+        tmpStatus.defense = status.defense + s_Status.defense;
+        tmpStatus.magicResist = status.magicResist + s_Status.magicResist;
+        tmpStatus.range = status.range + s_Status.range;
+        tmpStatus.attackSpeed = status.attackSpeed + s_Status.attackSpeed;
+        tmpStatus.maxMp = status.maxMp;
+        tmpStatus.addMana = status.addMana + s_Status.addMana;
+        tmpStatus.critical = status.critical + s_Status.critical;
+        tmpStatus.criticalDamage = status.criticalDamage + s_Status.criticalDamage;
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.AppendLine($"Max Hp: {tmpStatus.maxHp[0]}");
+        sb.AppendLine($"Attack Damage: {tmpStatus.attack[0]}");
+        sb.AppendLine($"Defense: {tmpStatus.defense}");
+        sb.AppendLine($"Magic Resist: {tmpStatus.magicResist}");
+        sb.AppendLine($"Range: {tmpStatus.range}");
+        sb.AppendLine($"Attack Speed: {tmpStatus.attackSpeed}");
+        sb.AppendLine($"Max MP: {tmpStatus.maxMp}");
+        sb.AppendLine($"Add Mana: {tmpStatus.addMana}");
+        sb.AppendLine($"Critical Chance: {tmpStatus.critical}");
+        sb.AppendLine($"Critical Damage: {tmpStatus.criticalDamage}");
+
+        return sb.ToString();
+    }
+
     public void addMana()
     {
         CurMana += b_Status.addMana;
-        if(CurMana > b_Status.maxMp)
+
+    }
+    public bool FullMana()
+    {
+        if (CurMana > b_Status.maxMp)
         {
-            // 스킬을 쓴다
-            // mana 0으로
+            CurMana -= b_Status.maxMp;
+            return true;
         }
+        else
+            return false;
     }
 
     public void TakeDamage(int damage)

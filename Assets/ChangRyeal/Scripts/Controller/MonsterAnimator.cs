@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MonsterAnimator : ObjectAnimator
 {
-    [SerializeField] public GameObject[] prefab;    // ¿ÜÇü
+    [SerializeField] public GameObject[] prefab;    // Â¿ÃœÃ‡Ã¼
     [SerializeField] public Animator animators;
     Coroutine DieCor;
 
