@@ -75,23 +75,16 @@ public class TraceS : MonoBehaviour
     }
 
     // êµ¬ë…???¨ìˆ˜
-    private void BattleOnOff()
+    public void EndBattling()
     {
-        //if (?´ë˜?¤ì´ë¦?battling) // ?´ë˜?¤ê? static???„ë‹ˆë©? ?„ë“œ???´ë˜??ì¶”ê?
-        //{
-        //    if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
-        //        unitCoroutine = StartCoroutine(UnitRoutine());
-        //}
-        //else
-        //{
-        //    StopCoroutine(unitCoroutine);
-        //}
+        if(unitCoroutine != null)
+            StopCoroutine(unitCoroutine);
     }
 
 
     private void OnDestroy()
     {
-        StopCoroutine(unitCoroutine);
+        EndBattling();
     }
 
     private IEnumerator UnitRoutine()
@@ -102,7 +95,7 @@ public class TraceS : MonoBehaviour
         {
             if (!isMoving)
             {
-                if (target == null)
+                if (target == null || target.gameObject.activeSelf == false)
                 {
                     target = FindNearestTarget();
                     yield return new WaitForSeconds(moveInterval);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using YongSeok;
@@ -14,6 +15,7 @@ public class HeroInfo : MonoBehaviour
     public void SetInfo()
     {
         heroImage.sprite = hero.GetComponent<Hero>().sprite;
+        
     }
 
     private void OnEnable()

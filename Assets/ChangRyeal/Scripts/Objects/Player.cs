@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
     {
         if (level < 10)
         {
-            Exp++;
+            Exp += 2;
             if (exp >= maxExp)
                 LevelUp();
         }

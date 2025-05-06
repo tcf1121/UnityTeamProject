@@ -6,6 +6,7 @@ public abstract class AttackBase_s : MonoBehaviour // 공통적인 공격
 {
     public int damage;
     protected Transform target;
+    public Skills skills;
     public virtual void TryAttack()
     {
         target = GetComponent<TraceS>().Target;
@@ -21,7 +22,14 @@ public abstract class AttackBase_s : MonoBehaviour // 공통적인 공격
     protected void ManaRecovery()
     {
         if (GetComponent<HeroStatus_>() != null)
+        {
             GetComponent<HeroStatus_>().addMana();
+            //if (GetComponent<HeroStatus_>().FullMana())
+            //{
+            //    skills.Skill(이름, 사거리, 공격력, 계수, traget);
+            //}
+        }
+            
     }
 
     protected abstract void Attack(); // 원거리, 근거리 마다 공격 모션 다르게 구성
