@@ -12,7 +12,8 @@ public class PlayerHero : MonoBehaviour
     [SerializeField] private List<Hero> allHero;
     [SerializeField] private List<Hero> storageHero;
     [SerializeField] private List<Hero> battleHero;
-     public List<Hero> BattleHero { get { return battleHero; } }
+    [SerializeField] private List<Hero> rankUpHero;
+    public List<Hero> BattleHero { get { return battleHero; } }
     [SerializeField] private Tilemap tileMap;
 
     // 영웅이 타일 위 어디에 있는가에 대한 정보
@@ -142,15 +143,38 @@ public class PlayerHero : MonoBehaviour
         //같은 기물이 3개면
         if(SpecificHeroNum(getHero) == 3)
         {
-            List<Hero> specitcHeroList = SpecificHero(getHero);
-            foreach(Hero specitcHero in specitcHeroList)
+            if (!GameManager.Instance.player.Battling)
             {
-                DeleteHero(specitcHero.heroObject);
+                List<Hero> specitcHeroList = SpecificHero(getHero);
+                DeleteHero(specitcHeroList[0].heroObject);
+                DeleteHero(specitcHeroList[1].heroObject);
+                DeleteHero(specitcHeroList[2].heroObject);
+                NewHero(UpgradeHero(getHero), true);
             }
-            NewHero(UpgradeHero(getHero), true);
+            else
+            {
+                rankUpHero.Add(getHero);
+            }
             
         }
     }
+
+    // 전투 중 업그레이드 안 된 기물 업그레이드
+    public void UpgradeBattleHero()
+    {
+        if(rankUpHero.Count > 0)
+        {
+            foreach(Hero rankUp in rankUpHero)
+            {
+                List<Hero> specitcHeroList = SpecificHero(rankUp);
+                DeleteHero(specitcHeroList[0].heroObject);
+                DeleteHero(specitcHeroList[1].heroObject);
+                DeleteHero(specitcHeroList[2].heroObject);
+                NewHero(UpgradeHero(rankUp), true);
+            }
+        }
+    }
+
 
     // 플레이어 영웅 업그레이드
     private Hero UpgradeHero(Hero hero)
