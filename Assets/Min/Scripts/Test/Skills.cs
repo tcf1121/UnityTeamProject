@@ -7,25 +7,19 @@ using UnityEngine.Tilemaps;
 public class Skills : MonoBehaviour
 {
     [SerializeField] Tilemap tilemap;
-    [SerializeField] GameObject rangedProjectilePrefab; // 범위 공격 프리팹
 
-    private string targetTag;
-    private string tag;
+
     private void Awake()
     {
-        tag = gameObject.tag;
 
-        if (tag == "Hero")
-            targetTag = "Monster";
-
-        else if (tag == "Monster")
-            targetTag = "Hero";
     }
 
-    public void Skill(string skillName, int range, int attack, float coef, Transform target, GameObject prefab)
+    public void Skill(string skillName, int range, int attack, float coef, Transform target, GameObject self, GameObject prefab)
     {
         int skillDamage = (int)(attack * coef);
-
+        string tag = self.tag;
+        string targetTag = tag == "Hero" ? "Monster" : "Hero";
+        
         switch (skillName)
         {
             // 투사체 생성도 필요할 듯
@@ -39,8 +33,8 @@ public class Skills : MonoBehaviour
                 {
                     GameObject projectile = Instantiate(
                         prefab,
-                        new Vector3(transform.position.x, 1f, transform.position.z),
-                        transform.rotation
+                        new Vector3(self.transform.position.x, 1f, self.transform.position.z),
+                        self.transform.rotation
                         );
                     projectile.GetComponent<Projectile_s>().Initialize(skillDamage, target.gameObject);
 
@@ -51,7 +45,7 @@ public class Skills : MonoBehaviour
                 break;
 
             case ("Heal"):
-                Vector2Int myCell = GetCellOf(transform.position);
+                Vector2Int myCell = GetCellOf(self.transform.position);
                 GameObject[] allies = GameObject.FindGameObjectsWithTag(tag);
 
                 foreach (GameObject ally in allies)
@@ -94,17 +88,17 @@ public class Skills : MonoBehaviour
                 
                 Vector2Int targetCellPos = GetCellOf(target.position);
                 GameObject rangedProjectile = Instantiate(prefab,
-                            new Vector3(transform.position.x, 1f, transform.position.z),
-                            transform.rotation
+                            new Vector3(self.transform.position.x, 1f, self.transform.position.z),
+                            self.transform.rotation
                             );
-                rangedProjectile.GetComponent<RangedSkillProjectiles>().Initialize(skillDamage, target.gameObject, range);
+                rangedProjectile.GetComponent<RangedSkillProjectiles>().Initialize(skillDamage, target.position, range);
 
                 Destroy(rangedProjectile, (float)((range * 0.8666) / 2f)); // 일정 범위 후 파괴
 
                 break;
 
             case ("Taunt"):
-                Vector2Int myCellPos = GetCellOf(transform.position);
+                Vector2Int myCellPos = GetCellOf(self.transform.position);
                 GameObject[] tauntedEnemies = GameObject.FindGameObjectsWithTag(targetTag);
 
                 foreach (GameObject enemy in tauntedEnemies)
@@ -114,8 +108,8 @@ public class Skills : MonoBehaviour
 
                     if (dist <= range)
                     {
-                        Trace enemyTrace = enemy.GetComponent<Trace>();
-                        enemyTrace.Target = gameObject.transform;
+                        TraceS enemyTrace = enemy.GetComponent<TraceS>();
+                        enemyTrace.Target = self.transform;
                     }
                 }
 

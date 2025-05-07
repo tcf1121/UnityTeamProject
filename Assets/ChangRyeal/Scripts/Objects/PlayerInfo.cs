@@ -12,12 +12,16 @@ public class PlayerInfo : MonoBehaviour
     [SerializeField] private TMP_Text goldUI;
     [SerializeField] private Slider hpBar;
     [SerializeField] private Slider expBar;
-    [SerializeField] private GameObject stagePanel;
     [SerializeField] private TMP_Text stage;
     private StringBuilder setstring = new StringBuilder();
 
 
     private void OnEnable()
+    {
+
+    }
+
+    public void SetInfo()
     {
         SetLevel();
         SetGold();
@@ -30,10 +34,7 @@ public class PlayerInfo : MonoBehaviour
         GameManager.Instance.player.OnHelthChanged += SetHp;
         GameManager.Instance.player.OnExpChanged += SetExp;
         GameManager.Instance.player.OnStageChanged += SetStage;
-
-        stagePanel.SetActive(true);
     }
-
     private void OnDisable()
     {
         GameManager.Instance.player.OnLevelChanged -= SetLevel;
@@ -41,8 +42,6 @@ public class PlayerInfo : MonoBehaviour
         GameManager.Instance.player.OnHelthChanged -= SetHp;
         GameManager.Instance.player.OnExpChanged -= SetExp;
         GameManager.Instance.player.OnStageChanged -= SetStage;
-
-        stagePanel.SetActive(false);
     }
 
 

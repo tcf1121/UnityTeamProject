@@ -9,13 +9,6 @@ public class ShopHeroController : MonoBehaviour
     [SerializeField] List<Hero> shopHero;
     private List<Hero>[] CostHero = new List<Hero>[5];
 
-    private void Awake()
-    {
-        for (int i = 0; i < 5; i++)
-            CostHero[i] = new List<Hero>();
-        InputHero();
-        GameManager.Instance.player.OnLevelChanged += SetLevel;
-    }
 
     private void OnEnable()
     {
@@ -26,7 +19,13 @@ public class ShopHeroController : MonoBehaviour
     {
         level = GameManager.Instance.player.Level;
     }
-
+    public void SetShop()
+    {
+        for (int i = 0; i < 5; i++)
+            CostHero[i] = new List<Hero>();
+        InputHero();
+        GameManager.Instance.player.OnLevelChanged += SetLevel;
+    }
     // 맨 처음 시작 할 때 기물을 만듦
     private void InputHero()
     {
