@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ChangRyeal/Scene/TitleScene.unity
+    path: Assets/Completed Version/TitleScene.unity
     guid: 7997fd247c4a3094b81db998301525a7
   - enabled: 1
-    path: Assets/ChangRyeal/Scene/GameScene.unity
+    path: Assets/Completed Version/GameScene.unity
     guid: 67acdefbc6037bc4088b1d7d288c7248
   m_configObjects: {}

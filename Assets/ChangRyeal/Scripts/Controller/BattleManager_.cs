@@ -24,8 +24,6 @@ public class BattleManager_ : MonoBehaviour
 
     private void OnEnable()
     {
-        OnBattleEnd += EndBattle;
-        exitPanel.SetActive(false);
     }
 
     public void OnBattle()
@@ -34,7 +32,7 @@ public class BattleManager_ : MonoBehaviour
         SetHero(GameManager.Instance.player.playerHero.HeroOnBattle);
     }
 
-    // 초기화
+    // 초기??
     public void SetBattle()
     {
         heroNum = 0;
@@ -98,13 +96,13 @@ public class BattleManager_ : MonoBehaviour
 
     private void EndBattle()
     {
-        // 졌을 때
+        // 졌을 ??
         if (heroNum == 0)
         {
             GameManager.Instance.player.Health -= MonterDamage();
             ShowExitPanel();
         }
-        // 이겼을 때
+        // ?�겼????
         else
         {
             GameManager.Instance.player.Stage++;
@@ -165,10 +163,10 @@ public class BattleManager_ : MonoBehaviour
 
     public void ExitButton()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit(); // 어플리케이션 종료
-#endif
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                                Application.Quit();
+        #endif
     }
 }
