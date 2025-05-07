@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
+//using static UnityEditor.PlayerSettings;
 
 public class BattleManager_ : MonoBehaviour
 {
@@ -26,14 +26,14 @@ public class BattleManager_ : MonoBehaviour
     {
         OnBattleEnd += EndBattle;
     }
-
+    
     public void OnBattle()
     {
         SetBattle();
         SetHero(GameManager.Instance.player.playerHero.HeroOnBattle);
     }
 
-    // 초기??
+    // ì´ˆê¸°??
     public void SetBattle()
     {
         heroNum = 0;
@@ -97,13 +97,13 @@ public class BattleManager_ : MonoBehaviour
 
     private void EndBattle()
     {
-        // 졌을 ??
+        // ì¡Œì„ ??
         if (heroNum == 0)
         {
             GameManager.Instance.player.Health -= MonterDamage();
             ShowExitPanel();
         }
-        // ?�겼????
+        // ?´ê²¼????
         else
         {
             GameManager.Instance.player.Stage++;
@@ -158,9 +158,9 @@ public class BattleManager_ : MonoBehaviour
     }
 
     [ContextMenu("ShowExitPanel")]
-    private void ShowExitPanel()
+    public void ShowExitPanel()
     {
-        exitPanel.SetActive(true);
+        exitPanel.SetActive(!exitPanel.activeSelf);
     }
 
     public void ExitButton()
