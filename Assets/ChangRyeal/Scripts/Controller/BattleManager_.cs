@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 using static UnityEditor.PlayerSettings;
 
 public class BattleManager_ : MonoBehaviour
@@ -14,12 +16,16 @@ public class BattleManager_ : MonoBehaviour
     [SerializeField] private int monsterNum;
     [SerializeField] private GameObject readyBtn;
 
+    [SerializeField] private GameObject exitPanel;
+    [SerializeField] private Button exitButton;
+
     public event Action OnBattleEnd;
     // Start is called before the first frame update
 
     private void OnEnable()
     {
         OnBattleEnd += EndBattle;
+        exitPanel.SetActive(false);
     }
 
     public void OnBattle()
@@ -45,7 +51,7 @@ public class BattleManager_ : MonoBehaviour
 
     public void SetHero(Dictionary<Vector3Int, Hero> HeroOnBattle)
     {
-        foreach(KeyValuePair<Vector3Int, Hero> hero in HeroOnBattle)
+        foreach (KeyValuePair<Vector3Int, Hero> hero in HeroOnBattle)
         {
             if (hero.Value != null)
             {
@@ -57,7 +63,7 @@ public class BattleManager_ : MonoBehaviour
                 hero.Value.gameObject.GetComponent<TraceS>().Battling();
                 heroNum++;
             }
-                
+
         }
     }
 
@@ -85,7 +91,7 @@ public class BattleManager_ : MonoBehaviour
         else
         {
             monsterNum--;
-            if(monsterNum == 0)
+            if (monsterNum == 0)
                 OnBattleEnd?.Invoke();
         }
     }
@@ -93,16 +99,20 @@ public class BattleManager_ : MonoBehaviour
     private void EndBattle()
     {
         // 졌을 때
-        if(heroNum == 0)
+        if (heroNum == 0)
         {
             GameManager.Instance.player.Health -= MonterDamage();
+            ShowExitPanel();
         }
         // 이겼을 때
         else
         {
             GameManager.Instance.player.Stage++;
             if (GameManager.Instance.player.Stage > 20)
+            {
                 GameManager.Instance.player.Stage = 20;
+                ShowExitPanel();
+            }
         }
         TileReservation.Clear();
         GameManager.Instance.player.Battling = false;
@@ -115,9 +125,9 @@ public class BattleManager_ : MonoBehaviour
     private int MonterDamage()
     {
         int damage = 0;
-        foreach(var s in BattleObject)
+        foreach (var s in BattleObject)
         {
-            if(s.Value != null)
+            if (s.Value != null)
             {
                 if (s.Value.GetComponent<MonsterStatus>() != null)
                 {
@@ -147,4 +157,18 @@ public class BattleManager_ : MonoBehaviour
         }
     }
 
+    [ContextMenu("ShowExitPanel")]
+    private void ShowExitPanel()
+    {
+        exitPanel.SetActive(true);
+    }
+
+    public void ExitButton()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit(); // 어플리케이션 종료
+#endif
+    }
 }
