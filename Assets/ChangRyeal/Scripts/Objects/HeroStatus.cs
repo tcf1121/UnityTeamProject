@@ -148,7 +148,7 @@ public class HeroStatus_ : MonoBehaviour
         OnDie += Die;
     }
 
-    public string GetStatus()
+    public Status GetStatus()
     {
         Status tmpStatus;
 
@@ -178,7 +178,7 @@ public class HeroStatus_ : MonoBehaviour
         sb.AppendLine($"Critical Chance: {tmpStatus.critical}");
         sb.AppendLine($"Critical Damage: {tmpStatus.criticalDamage}");
 
-        return sb.ToString();
+        return tmpStatus;
     }
 
     public void addMana()
