@@ -164,15 +164,19 @@ public class MouseController : MonoBehaviour
                         (tile.tileMap.WorldToCell(hitInfo.transform.position).x < 1 &&
                         tile.tileMap.WorldToCell(hitInfo.transform.position).x > -9))
                     {
-                        // 해당 칸에 영웅이 없을 경우 
+                        // 원래 칸에 드래그 할 경우
+                        if(tile.tileMap.WorldToCell(hitInfo.transform.position) == moveAbleObject.GetComponent<Unit>().startPoint)
+                            moveAbleObject.transform.position = beforePosition;
+                        // 해당 칸에 영웅이 없을 경우
+
                         if (playerHero.CanMove(tile.tileMap.WorldToCell(hitInfo.transform.position)))
                         {
                             // 해당 칸에 둔다.
-                            moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
-                            moveAbleObject.transform.position += offSet;
                             playerHero.MoveHero(moveAbleObject.GetComponent<Unit>().startPoint,
                                 tile.tileMap.WorldToCell(hitInfo.transform.position),
                                 moveAbleObject.GetComponent<Hero>());
+                            moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
+                            moveAbleObject.transform.position += offSet;
                             moveAbleObject.GetComponent<Unit>().startPoint = tile.tileMap.WorldToCell(hitInfo.transform.position);
                             moveAbleObject.GetComponent<Hero>().SetBattle();
                         }
@@ -180,8 +184,8 @@ public class MouseController : MonoBehaviour
                         else
                         {
                             // 해당 칸의 영웅과 자리를 뒤 바꾼다.
-                            //playerHero.ChangeHero(moveAbleObject.GetComponent<Hero>(), moveAbleObject.GetComponent<Unit>().startPoint,
-                            //    )
+                            playerHero.ChangeHero(moveAbleObject.GetComponent<Hero>(), moveAbleObject.GetComponent<Unit>().startPoint,
+                                tile.tileMap.WorldToCell(hitInfo.transform.position), beforePosition);
                         }
                     }
                     else

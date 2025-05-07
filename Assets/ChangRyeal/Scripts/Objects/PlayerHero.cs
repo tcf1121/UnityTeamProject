@@ -215,9 +215,10 @@ public class PlayerHero : MonoBehaviour
         battleManager.GetComponent<Synergy>().OnBattle();
     }
     
-    public void ChangeHero(Hero firstHero, Vector3Int firstHeroVec, Vector3Int secondHeroVec)
+    public void ChangeHero(Hero firstHero, Vector3Int firstHeroVec, Vector3Int secondHeroVec, Vector3 firstHeroPos)
     {
-        Hero secondHero = HeroOnBattle[secondHeroVec];
+        Hero secondHero = secondHeroVec.y > 3 ? HeroOnBattle[secondHeroVec] : HeroInStorage[secondHeroVec];
+        Vector3 secondHeroPos = secondHero.transform.position;
         // 전에 있던 위치 삭제
         BeforeHero(firstHeroVec, firstHero);
         BeforeHero(secondHeroVec, secondHero);
@@ -226,6 +227,13 @@ public class PlayerHero : MonoBehaviour
         AfterHero(secondHeroVec, firstHero);
         AfterHero(firstHeroVec, secondHero);
 
+        secondHero.transform.position = firstHeroPos;
+        firstHero.transform.position = secondHeroPos;
+
+        firstHero.gameObject.GetComponent<Unit>().startPoint = secondHeroVec;
+        firstHero.SetBattle();
+        secondHero.gameObject.GetComponent<Unit>().startPoint = firstHeroVec;
+        secondHero.SetBattle();
         battleManager.GetComponent<Synergy>().OnBattle();
     }
 
@@ -292,5 +300,5 @@ public class PlayerHero : MonoBehaviour
             }
         }
         battleManager.GetComponent<BattleManager_>().OnBattle();
-    }
+    }   
 }
