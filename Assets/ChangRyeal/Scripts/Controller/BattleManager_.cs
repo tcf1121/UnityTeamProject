@@ -24,6 +24,7 @@ public class BattleManager_ : MonoBehaviour
 
     private void OnEnable()
     {
+        OnBattleEnd += EndBattle;
     }
 
     public void OnBattle()
@@ -115,6 +116,7 @@ public class BattleManager_ : MonoBehaviour
         TileReservation.Clear();
         GameManager.Instance.player.Battling = false;
         GameManager.Instance.player.Expplus();
+        GameManager.Instance.player.playerHero.UpgradeBattleHero();
         SetEndHero(GameManager.Instance.player.playerHero.HeroOnBattle);
         readyBtn.SetActive(true);
     }
