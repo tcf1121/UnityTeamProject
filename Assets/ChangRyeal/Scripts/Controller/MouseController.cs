@@ -77,6 +77,7 @@ public class MouseController : MonoBehaviour
         
         if (moveAbleObject != null)
         {
+            ChangeLayer(moveAbleObject.transform, "OverUI");
             sellobject.SetActive(true);
             heroOutline = moveAbleObject.GetComponent<Outlinable>();
             heroOutline.enabled = true;
@@ -136,6 +137,7 @@ public class MouseController : MonoBehaviour
         
         if (moveAbleObject != null)
         {
+            ChangeLayer(moveAbleObject.transform, "Default");
             sellobject.SetActive(false);
             heroOutline.enabled = false;
             heroAnimator.Pick(false);
@@ -236,5 +238,19 @@ public class MouseController : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void ChangeLayer(Transform trans, string name)
+    {
+        ChangeLayersRecursively(trans, name);
+    }
+
+    public void ChangeLayersRecursively(Transform trans, string name)
+    {
+        trans.gameObject.layer = LayerMask.NameToLayer(name);
+        foreach (Transform child in trans)
+        {
+            ChangeLayersRecursively(child, name);
+        }
     }
 }
