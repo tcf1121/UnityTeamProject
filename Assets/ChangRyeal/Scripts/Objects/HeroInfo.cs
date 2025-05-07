@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using YongSeok;
@@ -13,35 +14,44 @@ public class HeroInfo : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private Image heroImage;
-    [SerializeField] private Button sellBtn;
-    [SerializeField] private TMP_Text statsText;
-
+    [SerializeField] private TMP_Text heroName;
+    [SerializeField] private TMP_Text maxHp;
+    [SerializeField] private TMP_Text attack;
+    [SerializeField] private TMP_Text defense;
+    [SerializeField] private TMP_Text magicResist;
+    [SerializeField] private TMP_Text range;
+    [SerializeField] private TMP_Text attackSpeed;
+    [SerializeField] private TMP_Text maxMp;
+    [SerializeField] private TMP_Text addMana;
+    [SerializeField] private TMP_Text critical;
+    [SerializeField] private TMP_Text criticalDamage;
 
     private void Awake()
     {
-        if (statsText == null)
-            statsText = transform.Find("Text (TMP)").GetComponent<TMP_Text>();
+
     }
 
     public void SetInfo()
     {
         heroImage.sprite = hero.GetComponent<Hero>().sprite;
         heroStatus = hero.GetComponent<HeroStatus_>();
-        statsText.text = heroStatus.GetStatus();
+        setStatus(heroStatus.GetStatus());
+
     }
 
-    private void OnEnable()
-    {
-        sellBtn.onClick.AddListener(SellHero);
-    }
 
-    private void OnDisable()
+    public void setStatus(HeroStatus_.Status status)
     {
-        sellBtn.onClick.RemoveListener(SellHero);
-    }
-    private void SellHero()
-    {
-        GameManager.Instance.player.SellHero(hero);
-        gameObject.SetActive(false);
+        heroName.text = heroStatus.name;
+        maxHp.text = status.maxHp[0].ToString();
+        attack.text = status.attack[0].ToString();
+        defense.text = status.defense.ToString();
+        magicResist.text = status.magicResist.ToString();
+        range.text = status.range.ToString();
+        attackSpeed.text = status.attackSpeed.ToString();
+        maxMp.text = status.maxMp.ToString();
+        addMana.text = status.addMana.ToString();
+        critical.text = status.critical.ToString();
+        criticalDamage.text = status.criticalDamage.ToString();
     }
 }
