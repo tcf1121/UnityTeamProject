@@ -15,10 +15,14 @@ public class Synergy : MonoBehaviour
     public int hero;
     public int cygnus;
 
+    [SerializeField] SynergyUI synergyUI;
+
+
     public void OnBattle()
     {
         ResetSynergy();
         SetSynergy();
+        synergyUI.UpdateSynergyText(this);
     }
 
     private void ResetSynergy()

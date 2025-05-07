@@ -196,12 +196,6 @@ MonoBehaviour:
   - {fileID: 1717429990}
   - {fileID: 883825241}
   - {fileID: 63056196}
-  sellPanel:
-  - {fileID: 1372215834}
-  - {fileID: 458562448}
-  - {fileID: 718229089}
-  - {fileID: 90211829}
-  - {fileID: 1158796538}
   hero:
   - {fileID: 0}
   - {fileID: 0}
@@ -625,11 +619,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &90211829 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1993798801206301794, guid: baee6f97abd3459479c916598232ba22, type: 3}
-  m_PrefabInstance: {fileID: 518768467}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &141316994
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1087,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   synergy: {fileID: 458287854}
+  tilemap: {fileID: 0}
+  heroNum: 0
+  monsterNum: 0
+  readyBtn: {fileID: 0}
 --- !u!4 &458287853
 Transform:
   m_ObjectHideFlags: 0
@@ -1133,11 +1126,6 @@ MonoBehaviour:
   adventurer: 0
   hero: 0
   cygnus: 0
---- !u!1 &458562448 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1993798801206301794, guid: baee6f97abd3459479c916598232ba22, type: 3}
-  m_PrefabInstance: {fileID: 1656553488}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &518768467
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1848,11 +1836,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &718229089 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1993798801206301794, guid: baee6f97abd3459479c916598232ba22, type: 3}
-  m_PrefabInstance: {fileID: 1768011728}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &746897326
 GameObject:
   m_ObjectHideFlags: 0
@@ -2383,6 +2366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hero: {fileID: 0}
+  heroStatus: {fileID: 0}
   heroImage: {fileID: 1785288480}
   sellBtn: {fileID: 1318583818}
   statsText: {fileID: 1317431638}
@@ -2829,11 +2813,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1158796538 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1993798801206301794, guid: baee6f97abd3459479c916598232ba22, type: 3}
-  m_PrefabInstance: {fileID: 1744428379}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1158915886
 GameObject:
   m_ObjectHideFlags: 0
@@ -3468,11 +3447,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1345792454}
   m_CullTransparentMesh: 1
---- !u!1 &1372215834 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1993798801206301794, guid: baee6f97abd3459479c916598232ba22, type: 3}
-  m_PrefabInstance: {fileID: 661145530}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1410711695
 GameObject:
   m_ObjectHideFlags: 0
