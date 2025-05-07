@@ -40,35 +40,6 @@ public class PlayerHero : MonoBehaviour
         tileMap = GameManager.Instance.player.tileMap.tileMap;
     }
 
-    private void Update()
-    {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-
-        //    int layerMask = 1 << LayerMask.NameToLayer("Ground");
-        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        //    RaycastHit hitInfo;
-        //    Physics.Raycast(ray, out hitInfo, Mathf.Infinity, layerMask);
-
-        //    if (hitInfo.collider != null)
-        //    {
-
-                
-        //        if ((tileMap.WorldToCell(hitInfo.transform.position).x >= -8 &&
-        //            tileMap.WorldToCell(hitInfo.transform.position).x <= 0))
-        //        {
-        //            if ((tileMap.WorldToCell(hitInfo.transform.position).y >= 4 &&
-        //            tileMap.WorldToCell(hitInfo.transform.position).y <= 11))
-        //                Debug.Log(HeroOnBattle[tileMap.WorldToCell(hitInfo.transform.position)]);
-        //            else if (tileMap.WorldToCell(hitInfo.transform.position).y == 3)
-        //                Debug.Log(HeroInStorage[tileMap.WorldToCell(hitInfo.transform.position)]);
-        //        }
-
-
-        //    }
-        //}
-    }
     // 모든 영웅 개수 확인 (최대 값 : 플레이어 레벨 + 9(보관함))
     public int AllHeroNum()
     {
@@ -165,6 +136,7 @@ public class PlayerHero : MonoBehaviour
         {
             battleHero.Add(getHero);
             HeroOnBattle[heroGrid] = getHero;
+            battleManager.GetComponent<Synergy>().OnBattle();
         }
         
         //같은 기물이 3개면
@@ -240,7 +212,23 @@ public class PlayerHero : MonoBehaviour
         BeforeHero(before, hero);
         // 새로운 위치에 추가
         AfterHero(after, hero);
+        battleManager.GetComponent<Synergy>().OnBattle();
     }
+    
+    public void ChangeHero(Hero firstHero, Vector3Int firstHeroVec, Vector3Int secondHeroVec)
+    {
+        Hero secondHero = HeroOnBattle[secondHeroVec];
+        // 전에 있던 위치 삭제
+        BeforeHero(firstHeroVec, firstHero);
+        BeforeHero(secondHeroVec, secondHero);
+
+        // 다른 영웅이 있는 위치에 추가
+        AfterHero(secondHeroVec, firstHero);
+        AfterHero(firstHeroVec, secondHero);
+
+        battleManager.GetComponent<Synergy>().OnBattle();
+    }
+
 
     // 이동 전에 있는 위치 확인 후 해당 칸에 삭제
     private void BeforeHero(Vector3Int before, Hero hero)
@@ -303,7 +291,6 @@ public class PlayerHero : MonoBehaviour
                     break;
             }
         }
-        battleManager.GetComponent<Synergy>().OnBattle();
         battleManager.GetComponent<BattleManager_>().OnBattle();
     }
 }

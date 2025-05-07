@@ -7,7 +7,6 @@ using UnityEngine.Tilemaps;
 
 public class TileMapManager : MonoBehaviour
 {
-    public Camera mainCamera;
     public Tilemap tileMap;
     public Grid grid;
 

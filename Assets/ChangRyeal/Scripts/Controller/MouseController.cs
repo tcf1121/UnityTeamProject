@@ -147,12 +147,16 @@ public class MouseController : MonoBehaviour
 
             RaycastHit hitsell;
             Physics.Raycast(ray, out hitsell, Mathf.Infinity, sellLayer);
+
+
+            // 판매 칸에 드래그 했을 경우
             if (hitsell.collider != null)
             {
                 GameManager.Instance.player.SellHero(moveAbleObject);
             }
             else
             {
+                // 땅에 드래그 했을 경우
                 if (hitInfo.collider != null)
                 {
                     if ((tile.tileMap.WorldToCell(hitInfo.transform.position).y < 8 &&
@@ -160,8 +164,10 @@ public class MouseController : MonoBehaviour
                         (tile.tileMap.WorldToCell(hitInfo.transform.position).x < 1 &&
                         tile.tileMap.WorldToCell(hitInfo.transform.position).x > -9))
                     {
+                        // 해당 칸에 영웅이 없을 경우 
                         if (playerHero.CanMove(tile.tileMap.WorldToCell(hitInfo.transform.position)))
                         {
+                            // 해당 칸에 둔다.
                             moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
                             moveAbleObject.transform.position += offSet;
                             playerHero.MoveHero(moveAbleObject.GetComponent<Unit>().startPoint,
@@ -170,9 +176,12 @@ public class MouseController : MonoBehaviour
                             moveAbleObject.GetComponent<Unit>().startPoint = tile.tileMap.WorldToCell(hitInfo.transform.position);
                             moveAbleObject.GetComponent<Hero>().SetBattle();
                         }
+                        // 해당 칸에 영웅이 있을 경우
                         else
                         {
-                            moveAbleObject.transform.position = beforePosition;
+                            // 해당 칸의 영웅과 자리를 뒤 바꾼다.
+                            //playerHero.ChangeHero(moveAbleObject.GetComponent<Hero>(), moveAbleObject.GetComponent<Unit>().startPoint,
+                            //    )
                         }
                     }
                     else

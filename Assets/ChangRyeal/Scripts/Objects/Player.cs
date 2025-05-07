@@ -55,20 +55,17 @@ public class Player : MonoBehaviour
 
     public void GameStart()
     {
-        setPlayer();
-        shop = GameObject.Find("ShopManager");
-        //Debug.Log(shop.name);
-        info = GameObject.Find("PlayerInfo");
+        setPlayer();   
         tileMap = GameObject.Find("TileMapManager").GetComponent<TileMapManager>();
-        readyBtn = GameObject.Find("ReadyBtn").GetComponent<Button>();
-        readyBtn.onClick.AddListener(playerHero.SetBattle);
-        info.SetActive(false);
-        shop.SetActive(false);
-
         playerHero.battleManager = GameObject.Find("BattleManager");
         playerHero.SetPlayerHero();
-        info.SetActive(true);
-        shop.SetActive(true);
+        shop = GameObject.Find("ShopManager");
+        shop.GetComponent<Shop>().SetShop();
+        info = GameObject.Find("PlayerInfo");
+        readyBtn = GameObject.Find("ReadyBtn").GetComponent<Button>();
+        readyBtn.onClick.AddListener(playerHero.SetBattle);
+        info.GetComponent<PlayerInfo>().SetInfo();
+        
     }
 
 

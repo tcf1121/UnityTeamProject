@@ -15,6 +15,7 @@ public class Shop : MonoBehaviour
     [SerializeField] private GameObject shopPanel;
     [SerializeField] private GameObject readyBtn;
     [SerializeField] private Image[] heroImage;
+    [SerializeField] private GameObject[] colsePanel;
     [SerializeField] private TMP_Text[] costTxt;
     [SerializeField] private TMP_Text[] nameTxt;
     [SerializeField] private Button[] heroBtn;
@@ -23,11 +24,11 @@ public class Shop : MonoBehaviour
     
     
 
-    // 스테이지가 넘어갈때로 변경
-    private void OnEnable()
+    // 상점 초기 세팅
+    public void SetShop()
     {
-        shopPanel.SetActive(true);
         readyBtn.SetActive(true);
+        sHctrl.SetShop();
         Hero[] firstHero = sHctrl.StartDrawHero();
         for (int i = 0; i < 2; i++)
         {
@@ -39,21 +40,11 @@ public class Shop : MonoBehaviour
         DrawShopHero();
     }
 
-    // 필요 없을듯
-    private void OnDisable()
-    {
-        readyBtn.SetActive(false);
-        shopPanel.SetActive(false);
-        if (!lockHero)
-        {
-            
-        }
-    }
-
     public void EndBattle()
     {
         if (!GameManager.Instance.player.Battling)
         {
+
             readyBtn.SetActive(true);
             if (!lockHero)
             {
@@ -74,6 +65,7 @@ public class Shop : MonoBehaviour
     {
         for(int i = 0; i < 5; i++)
         {
+            colsePanel[i].SetActive(false);
             heroBtn[i].interactable = true;
             if (hero[i] != null)
             {
@@ -96,6 +88,7 @@ public class Shop : MonoBehaviour
                 if (GameManager.Instance.player.CanBuy(hero[index].cost))
                 {
                     GameManager.Instance.player.BuyHero(hero[index], hero[index].cost);
+                    colsePanel[index].SetActive(true);
                     heroBtn[index].interactable = false;
                     hero[index] = null;
                 }

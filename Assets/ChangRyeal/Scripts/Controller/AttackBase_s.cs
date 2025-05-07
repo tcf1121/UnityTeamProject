@@ -14,6 +14,10 @@ public abstract class AttackBase_s : MonoBehaviour // 공통적인 공격
 
     [SerializeField] public GameObject targetSkillPrefab;
 
+    private void OnEnable()
+    {
+        skills = GameObject.Find("BattleManager").GetComponent<Skills>();
+    }
     public virtual void TryAttack()
     {
         target = GetComponent<TraceS>().Target;
@@ -38,8 +42,9 @@ public abstract class AttackBase_s : MonoBehaviour // 공통적인 공격
             herostat.addMana();
             if (herostat.FullMana())
             {
+                
                 animator.Skill();
-                skills.Skill(herostat.skillType, herostat.skillRange, herostat.b_Status.attack[0], herostat.skillCoef, target, targetSkillPrefab);
+                skills.Skill(herostat.skillType, herostat.skillRange, herostat.b_Status.attack[0], herostat.skillCoef, target, gameObject,targetSkillPrefab);
             }
         }
             

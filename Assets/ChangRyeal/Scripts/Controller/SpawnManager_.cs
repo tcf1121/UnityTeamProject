@@ -67,7 +67,7 @@ public class SpawnManager_ : MonoBehaviour
         for(int i = 0; i < 20; i++)
         {
             setMon.monster = rand.Next(5, 8);
-            setMon.num = i / 4 + 2;
+            setMon.num = i / 4 + 1;
             centerSpawnMon.Add(setMon);
         }
     }
@@ -78,7 +78,7 @@ public class SpawnManager_ : MonoBehaviour
         for (int i = 0; i < 20; i++)
         {
             setMon.monster = rand.Next(0, 5);
-            setMon.num = i / 4 + 3;
+            setMon.num = i / 4 + 2;
             elseSpawnMon.Add(setMon);
         }
     }
