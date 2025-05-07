@@ -96,6 +96,7 @@ public class BattleManager_ : MonoBehaviour
         if(heroNum == 0)
         {
             GameManager.Instance.player.Health -= MonterDamage();
+
         }
         // ¿Ã∞Â¿ª ∂ß
         else
