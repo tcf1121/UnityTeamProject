@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 //using static UnityEditor.PlayerSettings;
@@ -33,7 +31,7 @@ public class BattleManager_ : MonoBehaviour
         SetHero(GameManager.Instance.player.playerHero.HeroOnBattle);
     }
 
-    // ì´ˆê¸°??
+    // ì´?ê¸°??
     public void SetBattle()
     {
         heroNum = 0;
@@ -97,7 +95,7 @@ public class BattleManager_ : MonoBehaviour
 
     private void EndBattle()
     {
-        // ì¡Œì„ ??
+        // ì¡Œì????
         if (heroNum == 0)
         {
             GameManager.Instance.player.Health -= MonterDamage();
