@@ -12,6 +12,8 @@ public abstract class AttackBase_s : MonoBehaviour // 공통적인 공격
     private bool critical;
     private Random rand;
 
+    [SerializeField] public GameObject targetSkillPrefab;
+
     public virtual void TryAttack()
     {
         target = GetComponent<TraceS>().Target;
@@ -31,11 +33,14 @@ public abstract class AttackBase_s : MonoBehaviour // 공통적인 공격
     {
         if (GetComponent<HeroStatus_>() != null)
         {
-            GetComponent<HeroStatus_>().addMana();
-            //if (GetComponent<HeroStatus_>().FullMana())
-            //{
-            //    skills.Skill(이름, 사거리, 공격력, 계수, traget);
-            //}
+            HeroStatus_ herostat = GetComponent<HeroStatus_>();
+
+            herostat.addMana();
+            if (herostat.FullMana())
+            {
+                animator.Skill();
+                skills.Skill(herostat.skillType, herostat.skillRange, herostat.b_Status.attack[0], herostat.skillCoef, target, targetSkillPrefab);
+            }
         }
             
     }
