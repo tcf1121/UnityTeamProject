@@ -210,12 +210,7 @@ public class MouseController : MonoBehaviour
     private GameObject OnClickObjUsingTag(string tag1, string tag2)
     {
         Vector3 touchPos = new Vector3(0, 0, 0);
-
-#if UNITY_EDITOR
         touchPos = Input.mousePosition;
-#else
-            touchPos = Input.GetTouch(0).position;
-#endif
 
         Ray ray = Camera.main.ScreenPointToRay(touchPos);
         RaycastHit hitInfo;
