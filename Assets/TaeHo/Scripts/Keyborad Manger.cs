@@ -5,6 +5,7 @@ using UnityEngine;
 public class KeyboradManger : MonoBehaviour
 {
     public Shop Shop;
+    [SerializeField] private BattleManager_ battleManager_;
 
     public void Update()
     {
@@ -19,6 +20,10 @@ public class KeyboradManger : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.L)) // 리롤 잠금
         {
             Shop.LockShop();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            battleManager_.ShowExitPanel();
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
+//using static UnityEditor.PlayerSettings;
 
 public class BattleManager_ : MonoBehaviour
 {
@@ -24,6 +24,12 @@ public class BattleManager_ : MonoBehaviour
 
     private void OnEnable()
     {
+        OnBattleEnd += EndBattle;
+    }
+
+    private void OnDisable()
+    {
+        OnBattleEnd -= EndBattle;
     }
 
     public void OnBattle()
@@ -156,9 +162,9 @@ public class BattleManager_ : MonoBehaviour
     }
 
     [ContextMenu("ShowExitPanel")]
-    private void ShowExitPanel()
+    public void ShowExitPanel()
     {
-        exitPanel.SetActive(true);
+        exitPanel.SetActive(!exitPanel.activeSelf);
     }
 
     public void ExitButton()
