@@ -72,25 +72,34 @@ public class Skills : MonoBehaviour
                 break;
 
             case ("Range"):
+                //Vector2Int targetCellPos = GetCellOf(target.position);
+                //GameObject[] enemies = GameObject.FindGameObjectsWithTag(targetTag);
+
+                //foreach (GameObject enemy in enemies)
+                //{
+                //    Vector2Int enemyCell = GetCellOf(enemy.transform.position);
+                //    int dist = HexDistance(enemyCell, targetCellPos);
+
+                //    if (dist <= range)
+                //    {
+                //        GameObject rangedProjectile = Instantiate(rangedProjectilePrefab,
+                //            new Vector3(transform.position.x, 1f, transform.position.z),
+                //            transform.rotation
+                //            );
+                //        rangedProjectile.GetComponent<RangedSkillProjectiles>().Initialize(skillDamage, target.gameObject, range);
+
+                //        Destroy(rangedProjectile, (float)((range * 0.8666) / 2f)); // 일정 범위 후 파괴
+                //    }
+                //}
+                
                 Vector2Int targetCellPos = GetCellOf(target.position);
-                GameObject[] enemies = GameObject.FindGameObjectsWithTag(targetTag);
-
-                foreach (GameObject enemy in enemies)
-                {
-                    Vector2Int enemyCell = GetCellOf(enemy.transform.position);
-                    int dist = HexDistance(enemyCell, targetCellPos);
-
-                    if (dist <= range)
-                    {
-                        GameObject rangedProjectile = Instantiate(rangedProjectilePrefab,
+                GameObject rangedProjectile = Instantiate(prefab,
                             new Vector3(transform.position.x, 1f, transform.position.z),
                             transform.rotation
                             );
-                        rangedProjectile.GetComponent<RangedSkillProjectiles>().Initialize(skillDamage, target.gameObject, range);
+                rangedProjectile.GetComponent<RangedSkillProjectiles>().Initialize(skillDamage, target.gameObject, range);
 
-                        Destroy(rangedProjectile, (float)((range * 0.8666) / 2f)); // 일정 범위 후 파괴
-                    }
-                }
+                Destroy(rangedProjectile, (float)((range * 0.8666) / 2f)); // 일정 범위 후 파괴
 
                 break;
 
