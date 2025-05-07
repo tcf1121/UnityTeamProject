@@ -34,7 +34,7 @@ public class BattleManager_ : MonoBehaviour
         SetHero(GameManager.Instance.player.playerHero.HeroOnBattle);
     }
 
-    // ÃÊ±âÈ­
+    // ì´ˆê¸°í™”
     public void SetBattle()
     {
         heroNum = 0;
@@ -98,13 +98,13 @@ public class BattleManager_ : MonoBehaviour
 
     private void EndBattle()
     {
-        // Á³À» ¶§
+        // ì¡Œì„ ë•Œ
         if (heroNum == 0)
         {
             GameManager.Instance.player.Health -= MonterDamage();
             ShowExitPanel();
         }
-        // ÀÌ°åÀ» ¶§
+        // ì´ê²¼ì„ ë•Œ
         else
         {
             GameManager.Instance.player.Stage++;
@@ -168,7 +168,7 @@ public class BattleManager_ : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit(); // ¾îÇÃ¸®ÄÉÀÌ¼Ç Á¾·á
+        Application.Quit(); // ì–´í”Œë¦¬ì¼€ì´ì…˜ ì¢…ë£Œ
 #endif
     }
 }
