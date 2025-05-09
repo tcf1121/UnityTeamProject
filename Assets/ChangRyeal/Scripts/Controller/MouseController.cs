@@ -36,7 +36,7 @@ public class MouseController : MonoBehaviour
     }
     private void Update()
     {
-        
+
         lastTouchPos = currentTouchPos;
         currentTouchPos = Input.mousePosition;
         if (!GameManager.Instance.player.Battling)
@@ -68,7 +68,7 @@ public class MouseController : MonoBehaviour
         {
             if (Input.GetMouseButton(0) || moveAbleObject != null)
                 return;
-            HeroInfoEvent();
+            
         }
     }
 
@@ -87,7 +87,7 @@ public class MouseController : MonoBehaviour
             heroAnimator.Wait(false);
             heroAnimator.Pick(true);
             beforePosition = moveAbleObject.transform.position;
-
+            HeroInfoEvent();
         }
     }
 
