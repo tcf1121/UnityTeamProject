@@ -73,6 +73,12 @@ public class Shop : MonoBehaviour
                 nameTxt[i].text = hero[i].heroname;
                 costTxt[i].text = hero[i].cost.ToString();
             }
+            else
+            {
+                heroImage[i].sprite = null;
+                nameTxt[i].text = null;
+                costTxt[i].text = null;
+            }
 
         }
     }

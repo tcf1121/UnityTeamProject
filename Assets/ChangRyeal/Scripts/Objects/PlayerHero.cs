@@ -5,16 +5,16 @@ using UnityEngine.Tilemaps;
 
 public class PlayerHero : MonoBehaviour
 {
-    [SerializeField] private List<Hero> allHero;
-    [SerializeField] private List<Hero> storageHero;
-    [SerializeField] private List<Hero> battleHero;
-    [SerializeField] private List<Hero> rankUpHero;
-    public List<Hero> BattleHero { get { return battleHero; } }
+    [SerializeField] private List<GameObject> allHero;
+    [SerializeField] private List<GameObject> storageHero;
+    [SerializeField] private List<GameObject> battleHero;
+    [SerializeField] private List<GameObject> rankUpHero;
+    public List<GameObject> BattleHero { get { return battleHero; } }
     [SerializeField] private Tilemap tileMap;
 
     // 영웅이 타일 위 어디에 있는가에 대한 정보
-    [SerializeField] public Dictionary<Vector3Int, Hero> HeroOnBattle = new Dictionary<Vector3Int, Hero>(); 
-    [SerializeField] public Dictionary<Vector3Int, Hero> HeroInStorage = new Dictionary<Vector3Int, Hero>();
+    [SerializeField] public Dictionary<Vector3Int, GameObject> HeroOnBattle = new Dictionary<Vector3Int, GameObject>(); 
+    [SerializeField] public Dictionary<Vector3Int, GameObject> HeroInStorage = new Dictionary<Vector3Int, GameObject>();
     [SerializeField] public GameObject battleManager;
 
     [Header("Propertis")]
@@ -56,16 +56,18 @@ public class PlayerHero : MonoBehaviour
     }
 
     // 특정 영웅 개수 확인
-    public int SpecificHeroNum(Hero hero)
+    public int SpecificHeroNum(GameObject hero)
     {
-        List<Hero> matchingHeroes = allHero.Where(h => h.name == hero.name && h.star == hero.star).ToList();
+        List<GameObject> matchingHeroes = allHero.Where(h => h.name == hero.name &&
+        h.GetComponent<Hero>().star == hero.GetComponent<Hero>().star).ToList();
         
         return matchingHeroes.Count;
     }
 
-    public List<Hero> SpecificHero(Hero hero)
+    public List<GameObject> SpecificHero(GameObject hero)
     {
-        List<Hero> matchingHeroes = allHero.Where(h => h.name == hero.name && h.star == hero.star).ToList();
+        List<GameObject> matchingHeroes = allHero.Where(h => h.name == hero.name &&
+        h.GetComponent<Hero>().star == hero.GetComponent<Hero>().star).ToList();
         return matchingHeroes;
     }
 
@@ -112,44 +114,44 @@ public class PlayerHero : MonoBehaviour
         Vector3 heroPos = new Vector3(tileMap.CellToWorld(heroGrid).x, 0, tileMap.CellToWorld(heroGrid).z);
         GameObject heroObj = Instantiate(hero.heroObject, heroPos, Quaternion.Euler(new Vector3(0, 180, 0)));
         heroObj.GetComponent<HeroAnimator>().Wait(true);
+        heroObj.GetComponent<Hero>().SetHero();
         if (rankUp)
         {
             Vector3 effctPos = new Vector3(heroPos.x, 1, heroPos.z);
             Instantiate(RankUpEffetPrefab, effctPos, Quaternion.Euler(new Vector3(0, 180, 0)));
         }
             
-        Hero getHero = heroObj.GetComponent<Hero>();
-        allHero.Add(getHero);
+        allHero.Add(heroObj);
         // 보관함이 꽉 차지 않았다면 보관함에 추가
         if (StorageHeroNum() < 9)
         {
-            getHero.SetBattle();
-            storageHero.Add(getHero);
-            HeroInStorage[heroGrid] = getHero;
+            heroObj.GetComponent<Hero>().SetBattle();
+            storageHero.Add(heroObj);
+            HeroInStorage[heroGrid] = heroObj;
         }
 
         // 보관함이 꽉 찼다면 전장에 추가
         else
         {
-            battleHero.Add(getHero);
-            HeroOnBattle[heroGrid] = getHero;
+            battleHero.Add(heroObj);
+            HeroOnBattle[heroGrid] = heroObj;
             battleManager.GetComponent<Synergy>().OnBattle();
         }
         
         //같은 기물이 3개면
-        if(SpecificHeroNum(getHero) == 3)
+        if(SpecificHeroNum(heroObj) == 3)
         {
             if (!GameManager.Instance.player.Battling)
             {
-                List<Hero> specitcHeroList = SpecificHero(getHero);
-                DeleteHero(specitcHeroList[0].heroObject);
-                DeleteHero(specitcHeroList[1].heroObject);
-                DeleteHero(specitcHeroList[2].heroObject);
-                NewHero(UpgradeHero(getHero), true);
+                List<GameObject> specitcHeroList = SpecificHero(heroObj);
+                DeleteHero(specitcHeroList[0]);
+                DeleteHero(specitcHeroList[1]);
+                DeleteHero(specitcHeroList[2]);
+                NewHero(UpgradeHero(heroObj.GetComponent<Hero>()), true);
             }
             else
             {
-                rankUpHero.Add(getHero);
+                rankUpHero.Add(heroObj);
             }
             
         }
@@ -160,13 +162,13 @@ public class PlayerHero : MonoBehaviour
     {
         if(rankUpHero.Count > 0)
         {
-            foreach(Hero rankUp in rankUpHero)
+            foreach(GameObject rankUp in rankUpHero)
             {
-                List<Hero> specitcHeroList = SpecificHero(rankUp);
-                DeleteHero(specitcHeroList[0].heroObject);
-                DeleteHero(specitcHeroList[1].heroObject);
-                DeleteHero(specitcHeroList[2].heroObject);
-                NewHero(UpgradeHero(rankUp), true);
+                List<GameObject> specitcHeroList = SpecificHero(rankUp);
+                DeleteHero(specitcHeroList[0]);
+                DeleteHero(specitcHeroList[1]);
+                DeleteHero(specitcHeroList[2]);
+                NewHero(UpgradeHero(rankUp.GetComponent<Hero>()), true);
             }
         }
     }
@@ -182,19 +184,20 @@ public class PlayerHero : MonoBehaviour
     // 플레이어 영웅 기물 삭제
     public void DeleteHero(GameObject hero)
     {
-        Destroy(hero);
-        allHero.Remove(hero.GetComponent<Hero>());
+        
+        allHero.Remove(hero);
         if (hero.GetComponent<Hero>().battle)
         {
-            battleHero.Remove(hero.GetComponent<Hero>());
+            battleHero.Remove(hero);
             HeroOnBattle[hero.GetComponent<Unit>().startPoint] = null;
         }
         else
         {
-            storageHero.Remove(hero.GetComponent<Hero>());
+            storageHero.Remove(hero);
             HeroInStorage[hero.GetComponent<Unit>().startPoint] = null;
         }
-
+        Destroy(hero.GetComponent<UI_ObjBar>().objBar.gameObject);
+        Destroy(hero);
     }
 
     // 플레이어 영웅 기물 판매
@@ -202,17 +205,18 @@ public class PlayerHero : MonoBehaviour
     {
         // 판매한 히어로 상점에 추가
         GameManager.Instance.player.shop.GetComponent<ShopHeroController>().SellHero(hero.GetComponent<Hero>());
-        allHero.Remove(hero.GetComponent<Hero>());
+        allHero.Remove(hero);
         if (hero.GetComponent<Hero>().battle)
         {
-            battleHero.Remove(hero.GetComponent<Hero>());
+            battleHero.Remove(hero);
             HeroOnBattle[hero.GetComponent<Unit>().startPoint] = null;
         }
         else
         {
-            storageHero.Remove(hero.GetComponent<Hero>());
+            storageHero.Remove(hero);
             HeroInStorage[hero.GetComponent<Unit>().startPoint] = null;
         }
+        Destroy(hero.GetComponent<UI_ObjBar>().objBar.gameObject);
         Destroy(hero);
     }
 
@@ -222,11 +226,22 @@ public class PlayerHero : MonoBehaviour
         if (pos.y == 3)
             return HeroInStorage[pos] == null ? true : false;
         else
+        {
+
             return HeroOnBattle[pos] == null ? true : false;
+        }
+            
+    }
+
+    public bool CheckBattle(Vector3Int pos)
+    {
+        if (pos.y == 3)
+            return battleHero.Count < GameManager.Instance.player.Level ? true : false;
+        else return true;
     }
 
     // 영웅 움직이는 함수
-    public void MoveHero(Vector3Int before, Vector3Int after, Hero hero)
+    public void MoveHero(Vector3Int before, Vector3Int after, GameObject hero)
     {
         // 전에 있던 위치 삭제
         BeforeHero(before, hero);
@@ -235,9 +250,9 @@ public class PlayerHero : MonoBehaviour
         battleManager.GetComponent<Synergy>().OnBattle();
     }
     
-    public void ChangeHero(Hero firstHero, Vector3Int firstHeroVec, Vector3Int secondHeroVec, Vector3 firstHeroPos)
+    public void ChangeHero(GameObject firstHero, Vector3Int firstHeroVec, Vector3Int secondHeroVec, Vector3 firstHeroPos)
     {
-        Hero secondHero = secondHeroVec.y > 3 ? HeroOnBattle[secondHeroVec] : HeroInStorage[secondHeroVec];
+        GameObject secondHero = secondHeroVec.y > 3 ? HeroOnBattle[secondHeroVec] : HeroInStorage[secondHeroVec];
         Vector3 secondHeroPos = secondHero.transform.position;
         // 전에 있던 위치 삭제
         BeforeHero(firstHeroVec, firstHero);
@@ -251,15 +266,15 @@ public class PlayerHero : MonoBehaviour
         firstHero.transform.position = secondHeroPos;
 
         firstHero.gameObject.GetComponent<Unit>().startPoint = secondHeroVec;
-        firstHero.SetBattle();
+        firstHero.GetComponent<Hero>().SetBattle();
         secondHero.gameObject.GetComponent<Unit>().startPoint = firstHeroVec;
-        secondHero.SetBattle();
+        secondHero.GetComponent<Hero>().SetBattle();
         battleManager.GetComponent<Synergy>().OnBattle();
     }
 
 
     // 이동 전에 있는 위치 확인 후 해당 칸에 삭제
-    private void BeforeHero(Vector3Int before, Hero hero)
+    private void BeforeHero(Vector3Int before, GameObject hero)
     {
         if (before.y ==3)
         {
@@ -274,7 +289,7 @@ public class PlayerHero : MonoBehaviour
     }
 
     // 이동 후에 있는 위치 확인 후 해당 칸에 추가
-    private void AfterHero(Vector3Int after, Hero hero)
+    private void AfterHero(Vector3Int after, GameObject hero)
     {
         if (after.y == 3)
         {

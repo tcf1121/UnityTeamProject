@@ -73,14 +73,17 @@ public class MonsterStatus : MonoBehaviour
     public void TakeDamage(int damage)
     {
         CurHp -= damage;
-        if (CurHp < 0)
+        GetComponent<UI_ObjBar>().hpBar.value = (float)CurHp / battleStatus.maxHp;
+        if (CurHp <= 0)
             OnDie?.Invoke();
     }
 
     public void Die()
     {
+        Destroy(GetComponent<UI_ObjBar>().objBar.gameObject);
         Destroy(gameObject);
         GameManager.Instance.player.Gold += battleStatus.damage;
         GameObject.Find("BattleManager").GetComponent<BattleManager_>().DieBattleObj(gameObject);
+        OnDie -= Die;
     }
 }

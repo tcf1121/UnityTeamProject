@@ -66,6 +66,8 @@ public class MouseController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
+            if (Input.GetMouseButton(0) || moveAbleObject != null)
+                return;
             HeroInfoEvent();
         }
     }
@@ -166,29 +168,54 @@ public class MouseController : MonoBehaviour
                         (tile.tileMap.WorldToCell(hitInfo.transform.position).x < 1 &&
                         tile.tileMap.WorldToCell(hitInfo.transform.position).x > -9))
                     {
+
                         // ¿ø·¡ Ä­¿¡ µå·¡±× ÇÒ °æ¿ì
                         if(tile.tileMap.WorldToCell(hitInfo.transform.position) == moveAbleObject.GetComponent<Unit>().startPoint)
                             moveAbleObject.transform.position = beforePosition;
                         // ÇØ´ç Ä­¿¡ ¿µ¿õÀÌ ¾øÀ» °æ¿ì
-
-                        if (playerHero.CanMove(tile.tileMap.WorldToCell(hitInfo.transform.position)))
-                        {
-                            // ÇØ´ç Ä­¿¡ µÐ´Ù.
-                            playerHero.MoveHero(moveAbleObject.GetComponent<Unit>().startPoint,
-                                tile.tileMap.WorldToCell(hitInfo.transform.position),
-                                moveAbleObject.GetComponent<Hero>());
-                            moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
-                            moveAbleObject.transform.position += offSet;
-                            moveAbleObject.GetComponent<Unit>().startPoint = tile.tileMap.WorldToCell(hitInfo.transform.position);
-                            moveAbleObject.GetComponent<Hero>().SetBattle();
-                        }
-                        // ÇØ´ç Ä­¿¡ ¿µ¿õÀÌ ÀÖÀ» °æ¿ì
                         else
                         {
-                            // ÇØ´ç Ä­ÀÇ ¿µ¿õ°ú ÀÚ¸®¸¦ µÚ ¹Ù²Û´Ù.
-                            playerHero.ChangeHero(moveAbleObject.GetComponent<Hero>(), moveAbleObject.GetComponent<Unit>().startPoint,
-                                tile.tileMap.WorldToCell(hitInfo.transform.position), beforePosition);
+                            if (playerHero.CanMove(tile.tileMap.WorldToCell(hitInfo.transform.position)))
+                            {
+                                if (tile.tileMap.WorldToCell(hitInfo.transform.position).y > 3)
+                                {
+                                    if (playerHero.CheckBattle(tile.tileMap.WorldToCell(beforePosition)))
+                                    {
+                                        // ÇØ´ç Ä­¿¡ µÐ´Ù.
+                                        playerHero.MoveHero(moveAbleObject.GetComponent<Unit>().startPoint,
+                                            tile.tileMap.WorldToCell(hitInfo.transform.position),
+                                            moveAbleObject);
+                                        moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
+                                        moveAbleObject.transform.position += offSet;
+                                        moveAbleObject.GetComponent<Unit>().startPoint = tile.tileMap.WorldToCell(hitInfo.transform.position);
+                                        moveAbleObject.GetComponent<Hero>().SetBattle();
+                                    }
+                                    else
+                                    {
+                                        moveAbleObject.transform.position = beforePosition;
+                                    }
+                                }
+                                else
+                                {
+                                    // ÇØ´ç Ä­¿¡ µÐ´Ù.
+                                    playerHero.MoveHero(moveAbleObject.GetComponent<Unit>().startPoint,
+                                        tile.tileMap.WorldToCell(hitInfo.transform.position),
+                                        moveAbleObject);
+                                    moveAbleObject.transform.position = hitInfo.collider.gameObject.transform.position;
+                                    moveAbleObject.transform.position += offSet;
+                                    moveAbleObject.GetComponent<Unit>().startPoint = tile.tileMap.WorldToCell(hitInfo.transform.position);
+                                    moveAbleObject.GetComponent<Hero>().SetBattle();
+                                }
+                            }
+                            // ÇØ´ç Ä­¿¡ ¿µ¿õÀÌ ÀÖÀ» °æ¿ì
+                            else
+                            {
+                                // ÇØ´ç Ä­ÀÇ ¿µ¿õ°ú ÀÚ¸®¸¦ µÚ ¹Ù²Û´Ù.
+                                playerHero.ChangeHero(moveAbleObject, moveAbleObject.GetComponent<Unit>().startPoint,
+                                    tile.tileMap.WorldToCell(hitInfo.transform.position), beforePosition);
+                            }
                         }
+
                     }
                     else
                     {

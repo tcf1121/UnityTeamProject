@@ -184,13 +184,14 @@ public class HeroStatus_ : MonoBehaviour
     public void addMana()
     {
         CurMana += b_Status.addMana;
-
+        GetComponent<UI_ObjBar>().MpBar.value = (float)CurMana / b_Status.maxMp;
     }
     public bool FullMana()
     {
         if (CurMana > b_Status.maxMp)
         {
             CurMana -= b_Status.maxMp;
+            GetComponent<UI_ObjBar>().MpBar.value = (float)CurMana / b_Status.maxMp;
             return true;
         }
         else
@@ -200,13 +201,16 @@ public class HeroStatus_ : MonoBehaviour
     public void TakeDamage(int damage)
     {
         CurHp -= damage;
+        GetComponent<UI_ObjBar>().hpBar.value = (float)CurHp / b_Status.maxHp[0];
         if (CurHp < 0)
             OnDie?.Invoke();
     }
 
     public void Die()
     {
+        GetComponent<UI_ObjBar>().objBar.gameObject.SetActive(false);
         gameObject.SetActive(false);
         GameObject.Find("BattleManager").GetComponent<BattleManager_>().DieBattleObj(gameObject);
+        OnDie -= Die;
     }
 }

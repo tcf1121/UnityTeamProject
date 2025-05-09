@@ -20,17 +20,19 @@ public class TraceS : MonoBehaviour
 
     [SerializeField] public ObjectAnimator animator;
 
+    private bool isbattle = false;
     private bool isMoving = false;
     private Coroutine unitCoroutine;
     private Coroutine attackCoroutine;
+    private Coroutine moveCoroutine;
+    private Coroutine targetCoroutine;
+    private Coroutine stopCoroutine;
     private AttackBase_s attackBase;
     private Transform target;
     public Transform Target { get { return target; } set {target = value; } }
 
-    private void Awake()
-    {
-        //animator = GetComponent<HeroUnitAnimator>();
-    }
+    private Vector2Int targetXY;
+    private Vector2Int nextXY;
 
     public void SetAttck()
     {
@@ -48,43 +50,70 @@ public class TraceS : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        if (tilemap == null)
-            tilemap = FindObjectOfType<Tilemap>();
-
-
-        // TODO: ?¥Î≤§??Íµ¨ÎèÖ ???ÑÎûò ÏΩîÎìú 2Ï§???†ú
-        if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
-            unitCoroutine = StartCoroutine(UnitRoutine());
-
-        // TODO: Í≤åÏûÑ???ùÎÇ¨???? TileReservation.Clear();
-
-        // ?¥Îûò?§Ïù¥Î¶?OnBattlingChanged += BattleOnOff;
-    }
-
     public void Battling()
     {
         if (tilemap == null)
             tilemap = FindObjectOfType<Tilemap>();
+        //// TODO: ?¥Î≤§??Íµ¨ÎèÖ ???ÑÎûò ÏΩîÎìú 2Ï§???†ú
+        //if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
+        //    unitCoroutine = StartCoroutine(UnitRoutine());
 
-
-        // TODO: ?¥Î≤§??Íµ¨ÎèÖ ???ÑÎûò ÏΩîÎìú 2Ï§???†ú
-        if (gameObject.CompareTag("Monster") || gameObject.CompareTag("Hero"))
-            unitCoroutine = StartCoroutine(UnitRoutine());
+        isbattle = true;
     }
 
     // Íµ¨ÎèÖ???®Ïàò
     public void EndBattling()
     {
         if(unitCoroutine != null)
+        {
             StopCoroutine(unitCoroutine);
+            unitCoroutine = null;
+        }
+        if (moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine);
+            moveCoroutine = null;
+        }
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+        isbattle = false;
     }
 
-
-    private void OnDestroy()
+    public void Update()
     {
-        EndBattling();
+        if (isbattle)
+        {
+            if (target == null || target.gameObject.activeSelf == false)
+                target = FindNearestTarget();
+
+            Vector2Int myXY = GetCurrentCell();
+            if (targetCoroutine == null)
+                targetCoroutine = StartCoroutine(TargetXYCor());
+            int dist = HexDistance(myXY, targetXY);
+
+            if (attackCoroutine == null && moveCoroutine == null)
+            {
+                // ∞¯∞› ªÁ∞≈∏Æ ¿Ã≥ªø° ¿˚¿Ã ¿÷¿ª ∂ß
+                if (dist <= attackRange)
+                {
+                    attackCoroutine = StartCoroutine(AttackCor());
+                }
+                // æ¯¿∏∏È ¿Ãµø
+                else
+                {
+                    Vector2Int direction = GetStepToward(myXY, targetXY);
+                    nextXY = myXY + direction;
+                    Vector3 targetPos = targetPos = tilemap.GetCellCenterWorld(new Vector3Int(nextXY.x, nextXY.y, 0));
+                    if(direction == Vector2Int.zero || !TileReservation.Reserve(nextXY, gameObject))
+                        stopCoroutine = StartCoroutine(StopCor());
+                    else
+                        moveCoroutine = StartCoroutine(MoveTo(targetPos));
+                }
+            }
+        }
     }
 
     private IEnumerator UnitRoutine()
@@ -106,79 +135,93 @@ public class TraceS : MonoBehaviour
                 Vector2Int targetXY = GetCellOf(target.position);
                 int dist = HexDistance(myXY, targetXY);
 
-                //Debug.Log($"{name} ?ÑÏπò: {myXY} / ?ÄÍ≤??ÑÏπò: {targetXY} / Í±∞Î¶¨: {dist} / ?¨Í±∞Î¶? {attackRange}");
-
-
-                // while (dist <= attackRange) ???? TryAttack ?∏Ï∂ú
-                // ∞¯∞›«œ¥¬∞≈
-                if (dist <= attackRange)
+                if (attackCoroutine == null && moveCoroutine == null)
                 {
-                    // TODO: ?¥Îèô Î∞©Ìñ• Î∂Ä?úÎüΩÍ≤?Î∞îÎùºÎ≥¥Í∏∞
-                    transform.LookAt(target.position);
+                    // ∞¯∞› ªÁ∞≈∏Æ ¿Ã≥ªø° ¿˚¿Ã ¿÷¿ª ∂ß
+                    if (dist <= attackRange)
+                    {
+                        attackCoroutine = StartCoroutine(AttackCor());
+                    }
+                    // æ¯¿∏∏È ¿Ãµø
+                    else
+                    {
+                        Vector2Int direction = GetStepToward(myXY, targetXY);
+                        nextXY = myXY + direction;
+                        Vector3 targetPos = targetPos = tilemap.GetCellCenterWorld(new Vector3Int(nextXY.x, nextXY.y, 0));
 
-                    //Debug.Log($"{gameObject.name}Í≥µÍ≤©, {target.name}?ºÍ≤©");
-                    // TODO: ?∞Î?ÏßÄ
-                    attackBase.TryAttack();
-                    //PlayAttackAnimation(attackSpeed);
-
-                    yield return new WaitForSeconds(attackSpeed);
-                    // Í≥µÍ≤© ?çÎèÑ??Î≥Ä??Ï∂îÍ? moveInterval ?Ä???£Ïñ¥??Íµ¨ÌòÑ Í∞Ä??
-                    continue;
+                        moveCoroutine = StartCoroutine(MoveTo(targetPos));
+                    }
                 }
-
-                Vector2Int direction = GetStepToward(myXY, targetXY);
-                Vector2Int nextXY = myXY + direction;
-
-                if (direction == Vector2Int.zero || !TileReservation.Reserve(nextXY, gameObject))
-                {
-                    yield return new WaitForSeconds(moveInterval);
-                    continue;
-                }
-
-                Vector3 targetPos = tilemap.GetCellCenterWorld(new Vector3Int(nextXY.x, nextXY.y, 0));
-                targetPos.y = ObjYPos;
-                StartCoroutine(MoveTo(targetPos));
             }
 
             yield return new WaitForSeconds(moveInterval);
         }
     }
 
-
+    private IEnumerator StopCor()
+    {
+        yield return new WaitForSeconds(moveInterval);
+        if (stopCoroutine != null)
+        {
+            StopCoroutine(stopCoroutine);
+            stopCoroutine = null;
+        }
+    }
+    private IEnumerator AttackCor()
+    {
+        transform.LookAt(target.position);
+        attackBase.TryAttack();
+        yield return new WaitForSeconds(attackSpeed);
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+            
+    }
     private IEnumerator MoveTo(Vector3 targetPos)
     {
         isMoving = true;
         animator.Move(true);
         // TODO: ?¥Îèô Î∞©Ìñ• Î∂Ä?úÎüΩÍ≤?Î∞îÎùºÎ≥¥Í∏∞
         transform.LookAt(targetPos);
-
-        
-
         Vector3 start = transform.position;
         float t = 0f;
 
         while (t < 1f)
         {
-
             t += Time.deltaTime / moveDuration;
             transform.position = Vector3.Lerp(start, targetPos, t);
-
-
             yield return null;
         }
-
-        
-
         transform.position = targetPos;
         Vector3Int cellPos = tilemap.WorldToCell(transform.position);
         GameManager.Instance.player.playerHero.battleManager.GetComponent<BattleManager_>()
             .Move(gameObject, tilemap.WorldToCell(start), cellPos);
         TileReservation.RemoveReserve(new Vector2Int(cellPos.x, cellPos.y));
+            
         
         isMoving = false;
         animator.Move(false);
+        yield return new WaitForSeconds(moveInterval);
+        if (moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine);
+            moveCoroutine = null;
+        }
+            
     }
 
+    private IEnumerator TargetXYCor()
+    {
+        targetXY = GetCellOf(target.position);
+        yield return new WaitForSeconds(moveInterval);
+        if (targetCoroutine != null)
+        {
+            StopCoroutine(targetCoroutine);
+            targetCoroutine = null;
+        }
+    }
 
     private Vector2Int GetCurrentCell()
     {

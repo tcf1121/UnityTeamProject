@@ -121,7 +121,7 @@ public class Synergy : MonoBehaviour
     // 영웅 종류 확인
     private bool GetSynergy(string name)
     {
-        Hero findHero = GameManager.Instance.player.playerHero.BattleHero.Find(hero => hero.heroname == name);
+        GameObject findHero = GameManager.Instance.player.playerHero.BattleHero.Find(hero => hero.GetComponent<Hero>().heroname == name);
         if (findHero != null)
             return true;
         else

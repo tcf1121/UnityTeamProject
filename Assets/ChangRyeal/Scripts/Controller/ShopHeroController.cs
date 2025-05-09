@@ -7,7 +7,11 @@ public class ShopHeroController : MonoBehaviour
 {
     [SerializeField] private int level;
     [SerializeField] List<Hero> shopHero;
-    private List<Hero>[] CostHero = new List<Hero>[5];
+    [SerializeField] List<Hero> CostHeroOne;
+    [SerializeField] List<Hero> CostHeroTwo;
+    [SerializeField] List<Hero> CostHeroThree;
+    [SerializeField] List<Hero> CostHeroFour;
+    [SerializeField] List<Hero> CostHeroFive;
 
 
     private void OnEnable()
@@ -21,8 +25,6 @@ public class ShopHeroController : MonoBehaviour
     }
     public void SetShop()
     {
-        for (int i = 0; i < 5; i++)
-            CostHero[i] = new List<Hero>();
         InputHero();
         GameManager.Instance.player.OnLevelChanged += SetLevel;
     }
@@ -32,7 +34,18 @@ public class ShopHeroController : MonoBehaviour
         foreach(Hero hero in shopHero)
         {
             for (int i = 0; i < 9; i++)
-                CostHero[hero.cost - 1].Add(hero);
+            {
+                if(hero.cost == 1)
+                    CostHeroOne.Add(hero);
+                if (hero.cost == 2)
+                    CostHeroTwo.Add(hero);
+                if (hero.cost == 3)
+                    CostHeroThree.Add(hero);
+                if (hero.cost == 4)
+                    CostHeroFour.Add(hero);
+                if (hero.cost == 5)
+                    CostHeroFive.Add(hero);
+            }
         }
         //Debug.Log(CostHero[0].Count);
     }
@@ -43,7 +56,7 @@ public class ShopHeroController : MonoBehaviour
         for(int i = 0; i < 5; i++)
         {
             if (hero[i] != null)
-                CostHero[hero[i].cost - 1].Add(hero[i]);
+                AddHeroCost(hero[i]);
 
         }
         //Debug.Log(CostHero[0].Count);
@@ -55,7 +68,55 @@ public class ShopHeroController : MonoBehaviour
         int heroNum = (int)Mathf.Pow(3f, (float)(hero.star - 1));
         hero.star = 1;
         for (int i = 0; i < heroNum; i++)
-            CostHero[hero.cost - 1].Add(hero);
+        {
+            if (hero.cost == 1)
+                CostHeroOne.Add(hero);
+            if (hero.cost == 2)
+                CostHeroTwo.Add(hero);
+            if (hero.cost == 3)
+                CostHeroThree.Add(hero);
+            if (hero.cost == 4)
+                CostHeroFour.Add(hero);
+            if (hero.cost == 5)
+                CostHeroFive.Add(hero);
+        }
+    }
+
+    private int AllHero()
+    {
+        int num = CostHeroOne.Count + CostHeroTwo.Count + CostHeroThree.Count +
+            CostHeroFour.Count + CostHeroFive.Count;
+
+        return num;
+    }
+
+    private int CostHeroNum(int cost)
+    {
+        if (cost == 1)
+            return CostHeroOne.Count;
+        if (cost == 2)
+            return CostHeroTwo.Count;
+        if (cost == 3)
+            return CostHeroThree.Count;
+        if (cost == 4)
+            return CostHeroFour.Count;
+        if (cost == 5)
+            return CostHeroFive.Count;
+        return 0;
+    }
+
+    private void AddHeroCost(Hero hero)
+    {
+        if (hero.cost == 1)
+            CostHeroOne.Add(hero);
+        if (hero.cost == 2)
+            CostHeroTwo.Add(hero);
+        if (hero.cost == 3)
+            CostHeroThree.Add(hero);
+        if (hero.cost == 4)
+            CostHeroFour.Add(hero);
+        if (hero.cost == 5)
+            CostHeroFive.Add(hero);
     }
 
     // 게임을 맨 처음 시작할 때 영웅 기물 2개 지급
@@ -64,7 +125,7 @@ public class ShopHeroController : MonoBehaviour
         Hero[] hero = new Hero[5];
         for(int i = 0; i< 2; i++)
         {
-            RandomHero(ref hero[i], 0);
+            hero[i] = RandomHero(1);
         }
         return hero;
     }
@@ -77,36 +138,57 @@ public class ShopHeroController : MonoBehaviour
         int randcost;
         for (int i = 0; i < 5; i++)
         {
-            do
+            randcost = RandomCost();
+            if (AllHero() == 0)
             {
-                randcost = RandomCost();
-
-                if (CostHero[0].Count == 0 && CostHero[1].Count == 0
-                    && CostHero[2].Count == 0 && CostHero[3].Count == 0
-                    && CostHero[4].Count == 0)
-                {
-                    hero[i] = null;
-                    break;
-                }   
-                if (CostHero[randcost].Count != 0)
-                {
-                    RandomHero(ref hero[i], randcost);
-                    break;
-                }
+                hero[i] = null;
             }
-            while (CostHero[randcost].Count != 0);
+            if (CostHeroNum(randcost) != 0)
+            {
+                hero[i] = RandomHero(randcost);
+            }
         }
         return hero;
     }
 
 
     // 코스트 값에 따라 랜덤으로 기물을 가져옴
-    private void RandomHero(ref Hero hero, int cost)
+    private Hero RandomHero(int cost)
     {
         Random randHero = new Random();
-        int randNum = randHero.Next(CostHero[cost].Count);
-        hero = CostHero[cost][randNum];
-        CostHero[cost].Remove(hero);
+        int randNum = 0;
+        Hero hero = null;
+        if (cost == 1)
+        {
+            randNum = randHero.Next(CostHeroOne.Count);
+            hero = CostHeroOne[randNum];
+            CostHeroOne.Remove(hero);
+        }
+        if (cost == 2)
+        {
+            randNum = randHero.Next(CostHeroTwo.Count);
+            hero = CostHeroTwo[randNum];
+            CostHeroTwo.Remove(hero);
+        }
+        if (cost == 3)
+        {
+            randNum = randHero.Next(CostHeroThree.Count);
+            hero = CostHeroThree[randNum];
+            CostHeroThree.Remove(hero);
+        }
+        if (cost == 4)
+        {
+            randNum = randHero.Next(CostHeroFour.Count);
+            hero = CostHeroFour[randNum];
+            CostHeroFour.Remove(hero);
+        }
+        if (cost == 5)
+        {
+            randNum = randHero.Next(CostHeroFive.Count);
+            hero = CostHeroFive[randNum];
+            CostHeroFive.Remove(hero);
+        }
+        return hero;
     }
 
     // 레벨에 따른 확률에 따라 코스트를 랜덤으로 가져옴
@@ -206,7 +288,7 @@ public class ShopHeroController : MonoBehaviour
                     cost = 5;
                 break;
         }
-        return cost-1;
+        return cost;
     }
     #endregion
 }

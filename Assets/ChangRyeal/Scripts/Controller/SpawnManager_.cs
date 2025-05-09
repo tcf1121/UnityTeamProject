@@ -48,6 +48,17 @@ public class SpawnManager_ : MonoBehaviour
         Spawn(rightSpawner, rightSpawnList);
     }
 
+    public int GetSpawnNum()
+    {
+        int stage = GameManager.Instance.player.Stage - 1;
+        int num = 0;
+        num += centerSpawnMon[stage].num;
+        num += elseSpawnMon[stage].num;
+        num += elseSpawnMon[stage].num;
+        if (stage % 5 == 4)
+            num++;
+        return num;
+    }
 
     private void Spawn(GameObject spawnerObj, List<int> spawnList)
     {

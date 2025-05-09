@@ -7,6 +7,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] List<GameObject> monsterBullets;
     [SerializeField] public Vector3Int spawnPos;
     [SerializeField] private TileMapManager tile;
+    public GameObject prfObjBar;
 
     public void Start()
     {
@@ -35,6 +36,9 @@ public class Spawner : MonoBehaviour
         monster.GetComponent<MonsterStatus>().SetStatus(Monsters[monNum].GetComponent<MonsterStatus>());
         monster.GetComponent<MonsterStatus>().SetBattleStatus();
         monster.AddComponent<MonsterAnimator>();
+        monster.AddComponent<UI_ObjBar>();
+        monster.GetComponent<UI_ObjBar>().prfObjBar = prfObjBar;
+        monster.GetComponent<UI_ObjBar>().SetUI();
         monster.GetComponent<MonsterAnimator>().animators = monster.GetComponent<Animator>();
         GetComponentInParent<SpawnManager_>().battleManager.SetMonster(spawnPos, monster);
         monster.AddComponent<TraceS>();
@@ -69,6 +73,7 @@ public class Spawner : MonoBehaviour
 
         }
         monster.GetComponent<TraceS>().targetTag = "Hero";
+        monster.GetComponent<TraceS>().Battling();
         monster.GetComponent<TraceS>().SetAttck();
 
         monster.name = Monsters[monNum].name;

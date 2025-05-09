@@ -5,7 +5,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class HeroAnimator : ObjectAnimator
 {
-    [SerializeField] private List<Animator> animators;
+    [SerializeField] public List<Animator> animators;
     Coroutine dieCor;
 
     // 기본 공격

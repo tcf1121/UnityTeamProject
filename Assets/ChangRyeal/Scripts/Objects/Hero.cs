@@ -1,3 +1,4 @@
+using EPOOutline.Demo;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,12 +19,27 @@ public class Hero : MonoBehaviour
 
     private void OnEnable()
     {
-        name = heroname;
-        GetComponent<Animator>().enabled = true;
+
+
         if (star == 2)
             TwoStarEffet.SetActive(true);
         else if (star == 3)
             ThreeStarEffet.SetActive(true);
+        
+    }
+
+    public void SetHero()
+    {
+        name = heroname;
+        foreach (var ani in GetComponent<HeroAnimator>().animators)
+        {
+            ani.enabled = true;
+        }
+        GetComponent<InteractableObject>().enabled = true;
+        GetComponent<TraceS>().enabled = true;
+        GetComponent<AttackBase_s>().enabled = true;
+        GetComponent<UI_ObjBar>().enabled = true;
+        GetComponent<UI_ObjBar>().SetUI();
     }
     public void SetBattle()
     {

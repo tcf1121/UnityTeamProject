@@ -28,7 +28,8 @@ public class BattleManager_ : MonoBehaviour
     public void OnBattle()
     {
         SetBattle();
-        SetHero(GameManager.Instance.player.playerHero.HeroOnBattle);
+        monsterNum = GameObject.Find("SpawnManager").GetComponent<SpawnManager_>().GetSpawnNum();
+        SetHero(GameManager.Instance.player.playerHero.BattleHero);
     }
 
     // ì´?ê¸°??
@@ -46,28 +47,28 @@ public class BattleManager_ : MonoBehaviour
         }
     }
 
-    public void SetHero(Dictionary<Vector3Int, Hero> HeroOnBattle)
+    public void SetHero(List<GameObject> battleHero)
     {
-        foreach (KeyValuePair<Vector3Int, Hero> hero in HeroOnBattle)
+        foreach (GameObject hero in battleHero)
         {
-            if (hero.Value != null)
-            {
-                BattleObject[hero.Key] = hero.Value.gameObject;
-                hero.Value.gameObject.GetComponent<HeroAnimator>().Wait(false);
-                hero.Value.gameObject.GetComponent<HeroStatus_>().SetSynergy(synergy);
-                hero.Value.gameObject.GetComponent<HeroStatus_>().SetBattleStatus();
-                hero.Value.gameObject.GetComponent<TraceS>().SetAttck();
-                hero.Value.gameObject.GetComponent<TraceS>().Battling();
-                heroNum++;
-            }
-
+            BattleObject[hero.GetComponent<Unit>().startPoint] = hero;
+            hero.GetComponent<HeroAnimator>().Wait(false);
+            hero.GetComponent<HeroStatus_>().SetSynergy(synergy);
+            hero.GetComponent<HeroStatus_>().SetBattleStatus();
+            hero.GetComponent<TraceS>().SetAttck();
+            hero.GetComponent<TraceS>().Battling();
+            heroNum++;
         }
+    }
+
+    public void SetMonsterNum(int num)
+    {
+        monsterNum = num;
     }
 
     public void SetMonster(Vector3Int pos, GameObject monster)
     {
         BattleObject[pos] = monster;
-        monsterNum++;
     }
 
     public void Move(GameObject obj, Vector3Int beforepos, Vector3Int afterpos)
@@ -99,7 +100,8 @@ public class BattleManager_ : MonoBehaviour
         if (heroNum == 0)
         {
             GameManager.Instance.player.Health -= MonterDamage();
-            ShowExitPanel();
+            if(GameManager.Instance.player.Health <= 0)
+                ShowExitPanel();
         }
         // ?´ê²¼????
         else
@@ -114,8 +116,8 @@ public class BattleManager_ : MonoBehaviour
         TileReservation.Clear();
         GameManager.Instance.player.Battling = false;
         GameManager.Instance.player.Expplus();
-        GameManager.Instance.player.playerHero.UpgradeBattleHero();
-        SetEndHero(GameManager.Instance.player.playerHero.HeroOnBattle);
+        SetEndHero(GameManager.Instance.player.playerHero.BattleHero);
+        
         readyBtn.SetActive(true);
     }
 
@@ -137,22 +139,23 @@ public class BattleManager_ : MonoBehaviour
         return damage;
     }
 
-    public void SetEndHero(Dictionary<Vector3Int, Hero> HeroOnBattle)
+    public void SetEndHero(List<GameObject> BattleHero)
     {
-        foreach (KeyValuePair<Vector3Int, Hero> hero in HeroOnBattle)
+        foreach (GameObject hero in BattleHero)
         {
-            if (hero.Value != null)
+            hero.GetComponent<TraceS>().EndBattling();
+            hero.GetComponent<HeroAnimator>().Wait(true);
+            if (hero.activeSelf == false)
             {
-                //Debug.Log(hero.Key);
-                hero.Value.gameObject.transform.position = tilemap.CellToWorld(hero.Key);
-                hero.Value.gameObject.GetComponent<HeroAnimator>().Wait(true);
-                hero.Value.gameObject.GetComponent<TraceS>().EndBattling();
-                if (hero.Value.gameObject.activeSelf == false)
-                    hero.Value.gameObject.SetActive(true);
-                hero.Value.gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+                hero.GetComponent<UI_ObjBar>().objBar.gameObject.SetActive(true);
+                hero.SetActive(true);
             }
-
+            hero.transform.position = tilemap.CellToWorld(hero.GetComponent<Unit>().startPoint);
+            hero.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+            hero.GetComponent<UI_ObjBar>().hpBar.value = 1f;
+            hero.GetComponent<UI_ObjBar>().MpBar.value = 0f;
         }
+        GameManager.Instance.player.playerHero.UpgradeBattleHero();
     }
 
     [ContextMenu("ShowExitPanel")]
